@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.gamepad.easypad;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.movement.RobotMovement;
 
 import java.lang.reflect.InvocationTargetException;
