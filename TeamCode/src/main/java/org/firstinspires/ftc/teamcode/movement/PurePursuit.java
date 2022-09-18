@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.movement;
 
+import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.util.geometry.CurvePoint;
+import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 
 import java.util.ArrayList;
 
@@ -17,14 +19,14 @@ public class PurePursuit {
     }
 
     public void goToPosition(double x, double y, double movementSpeed, double preferredAngle, double turnSpeed) {
-        XyhVector position = this.odometry.getPosition();
+        Pose2d position = this.odometry.getPosition();
 
-        double distance = Math.hypot(x - position.x, y - position.y);
+        double distance = Math.hypot(x - position.getX(), y - position.getY());
 
-        double absoluteAngleToTarget = Math.atan2(y - position.y, x - position.x);
+        double absoluteAngleToTarget = Math.atan2(y - position.getY(), x - position.getX());
 
         // whats the difference between this aboslute and relative
-        double relativeAngleToTarget = AngleUnit.normalizeRadians(absoluteAngleToTarget - (position.h - Math.toRadians(90)));
+        double relativeAngleToTarget = AngleUnit.normalizeRadians(absoluteAngleToTarget - (position.getHeading() - Math.toRadians(90)));
 
         double relativeXToPoint = Math.cos(relativeAngleToTarget) * distance;
         double relativeYToPoint = Math.sin(relativeAngleToTarget) * distance;
@@ -39,12 +41,12 @@ public class PurePursuit {
         double movementTurn = Range.clip(relativeTurnAngle / Math.toRadians(30), -1, 1) * turnSpeed;
 
         // not sure if correct check video
-        this.movement.strafe(movementXPower, movementYPower, movementTurn);
+        // this.movement.strafe(movementXPower, movementYPower, movementTurn);
 
         if (distance < 10) {
             movementTurn = 0;
 
-            this.movement.strafe(movementXPower, movementYPower, movementTurn);
+            // this.movement.strafe(movementXPower, movementYPower, movementTurn);
         }
     }
 
@@ -112,10 +114,10 @@ public class PurePursuit {
             double closestAngle = Math.pow(10, 7);
 
             for(XyhVector thisIntersection : intersections) {
-                XyhVector currentPos = this.odometry.getPosition();
+                Pose2d currentPos = this.odometry.getPosition();
 
-                double angle = Math.atan2(thisIntersection.y - currentPos.y, thisIntersection.x - currentPos.x);
-                double deltaAngle = Math.abs(AngleUnit.normalizeRadians(angle - currentPos.h));
+                double angle = Math.atan2(thisIntersection.y - currentPos.getY(), thisIntersection.x - currentPos.getX());
+                double deltaAngle = Math.abs(AngleUnit.normalizeRadians(angle - currentPos.getHeading()));
 
                 if (deltaAngle < closestAngle) {
                     closestAngle = deltaAngle;
@@ -128,7 +130,11 @@ public class PurePursuit {
     }
 
     public void followCurve(ArrayList<CurvePoint> allPoints, double followAngle) {
-        CurvePoint followMe = getFollowPointPath(allPoints, this.odometry.getPosition(), allPoints.get(0).followDistance);
+        Pose2d position = this.odometry.getPosition();
+
+        XyhVector vector = new XyhVector(position.getX(), position.getY(), position.getHeading());
+
+        CurvePoint followMe = getFollowPointPath(allPoints, vector, allPoints.get(0).followDistance);
 
         goToPosition(followMe.x, followMe.y, followMe.moveSpeed, followAngle, followMe.turnSpeed);
     }

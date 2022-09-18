@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.util.geometry;
 
-import org.firstinspires.ftc.teamcode.models.XyhVector;
 
 public class CurvePoint {
     public double x;
@@ -31,7 +30,7 @@ public class CurvePoint {
         this.followDistance = thisPoint.followDistance;
         this.slowDownTurnRadians = thisPoint.slowDownTurnRadians;
         this.slowDownTurnAmount = thisPoint.slowDownTurnAmount;
-        this.pointLength = thisPoint.pointLength
+        this.pointLength = thisPoint.pointLength;
     }
 
     public XyhVector toPoint() {

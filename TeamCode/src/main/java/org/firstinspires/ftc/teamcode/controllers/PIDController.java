@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.controllers;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
+
 public class PIDController {
     public LinearOpMode opMode;
 
