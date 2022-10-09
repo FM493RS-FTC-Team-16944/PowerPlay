@@ -12,7 +12,7 @@ public class Robot {
     public final RobotHardware hardware;
     public final RobotMovement movement;
 
-    Robot(LinearOpMode teleOp) {
+    public Robot(LinearOpMode teleOp) {
         this.teleOp = teleOp;
 
         this.telemetry = new TelemLog(teleOp.telemetry);

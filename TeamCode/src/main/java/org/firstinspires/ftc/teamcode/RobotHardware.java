@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.movement.Odometry;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
+import org.firstinspires.ftc.teamcode.vision.ObjectDetector;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -18,10 +19,11 @@ public class RobotHardware {
         DECIMAL_FORMAT.setRoundingMode(RoundingMode.FLOOR);
     }
 
-    public final MecanumDriveTrain driveTrain;
+    public MecanumDriveTrain driveTrain;
     public final Robot.State state;
-    public final Odometry odometry;
+    public Odometry odometry;
     public final TelemLog telemetry;
+    public final ObjectDetector detector;
 
     public HardwareMap hardwareMap;
 
@@ -31,6 +33,7 @@ public class RobotHardware {
 
         this.telemetry = robot.telemetry;
 
+        /*
         this.driveTrain = new MecanumDriveTrain(
                 "FrontLeft",
                 "BackLeft",
@@ -44,6 +47,9 @@ public class RobotHardware {
         );
 
         this.odometry = new Odometry(this);
+*/
+
+        this.detector = new ObjectDetector(this);
     }
 
     public void outputReadings() {
