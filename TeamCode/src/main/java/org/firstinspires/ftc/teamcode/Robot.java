@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.movement.RobotMovement;
+import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
 
 public class Robot {
@@ -18,7 +18,7 @@ public class Robot {
         this.telemetry = new TelemLog(teleOp.telemetry);
         this.state = new State();
         this.hardware = new RobotHardware(this);
-        this.movement = new RobotMovement();
+        this.movement = new RobotMovement(this);
     }
 
     public static class State {}

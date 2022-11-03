@@ -11,6 +11,8 @@ public class MecanumDriveTrain {
     public final Motor backLeft;
     public final Motor topRight;
     public final Motor backRight;
+    public final Motor leftLift;
+    public final Motor rightLift;
     public final Motor leftEncoder;
     public final Motor rightEncoder;
     public final Motor auxEncoder;
@@ -21,6 +23,8 @@ public class MecanumDriveTrain {
             String backLeftName,
             String topRightName,
             String backRightName,
+            String leftLiftName,
+            String rightLiftName,
             String leftEncoderName,
             String rightEncoderName,
             String auxEncoderName,
@@ -32,9 +36,12 @@ public class MecanumDriveTrain {
         this.backLeft = new Motor(backLeftName, hardwareMap, DcMotor.Direction.REVERSE);
         this.backRight = new Motor(backRightName, hardwareMap, DcMotor.Direction.FORWARD);
 
-        this.leftEncoder = new Motor(leftEncoderName, hardwareMap);
+        this.leftLift = new Motor(leftLiftName, hardwareMap, DcMotor.Direction.FORWARD);
+        this.rightLift = new Motor(rightLiftName, hardwareMap, DcMotor.Direction.FORWARD);
+
+        this.leftEncoder = new Motor(leftEncoderName, hardwareMap, DcMotor.Direction.FORWARD);
         this.rightEncoder = new Motor(rightEncoderName, hardwareMap, DcMotor.Direction.REVERSE);
-        this.auxEncoder = new Motor(auxEncoderName, hardwareMap, DcMotor.Direction.REVERSE);
+        this.auxEncoder = new Motor(auxEncoderName, hardwareMap, DcMotor.Direction.FORWARD);
 
         // You can call the methods to set the motor modes
         this.leftEncoder.reset();
@@ -67,5 +74,17 @@ public class MecanumDriveTrain {
         telemetry.addData("Left Encoder Position Centimeters : " , leftEncoderT);
         telemetry.addData("Right Encoder Position Centimeters : " , rightEncoderT);
         telemetry.addData("Auxiliary Encoder Position Centimeters : " , auxEncoderT);
+    }
+    public void resetDriveEncoders() {
+        setEncodersMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setEncodersMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+    public void setEncodersMode(DcMotor.RunMode mode) {
+        leftLift.setMode(mode);
+        rightLift.setMode(mode);
+        backLeft.setMode(mode);
+        backRight.setMode(mode);
+        topLeft.setMode(mode);
+        topRight.setMode(mode);
     }
 }

@@ -45,4 +45,6 @@ public class Motor {
     public double getCurrentPosition(){
         return motor.getCurrentPosition() * CM_PER_TICK;
     }
+
+    public void setMode(DcMotor.RunMode mode) { motor.setMode(mode); }
 }

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.movement.RobotMovement;
+import org.firstinspires.ftc.teamcode.RobotMovement;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class IGamePad {
+public class IGamePad {
     private final Gamepad gamepad;
     private final HashMap<String, Object> previousState;
 
