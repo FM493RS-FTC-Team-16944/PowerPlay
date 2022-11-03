@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.operations;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 
 import org.firstinspires.ftc.teamcode.GamePad;
 import org.firstinspires.ftc.teamcode.gamepad.easypad.IGamePad;
@@ -11,7 +10,6 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.models.XyhVector;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 
 @TeleOp(name = "TeleOp")
@@ -29,41 +27,12 @@ public class TeleOP extends LinearOpMode {
         hardware = robot.hardware;
         gamepad = new GamePad(robot,gamepad1);
 
-        /*
-        XyhVector targetVector = new XyhVector(10, 0, Math.toRadians(0));
-        GoToPosition runToTarget = new GoToPosition(robot, targetVector, this);
-
-        XyhVector thirdTarget = new XyhVector(10, 0, Math.toRadians(90));
-        GoToPosition thirdPos = new GoToPosition(robot, thirdTarget, this);
-
-        XyhVector lastTarget = new XyhVector(0, 0, Math.toRadians(0));
-        GoToPosition backToOrigin = new GoToPosition(robot, lastTarget, this);
-
-        LinkedHashMap<GoToPosition, Boolean> waypoints = new LinkedHashMap<>();
-        waypoints.put(runToTarget, false);
-        waypoints.put(thirdPos, false);
-        //waypoints.put(backToOrigin, false);
-
-        SequentialMovements path = new SequentialMovements(waypoints, 3, this);
-
-        int navigator = 0;
-
-         */
-
         hardware.driveTrain.resetDriveEncoders();
 
         while (opModeIsActive() && !isStopRequested()) {
-            //hardware.odometry();
             gamepad.updateRobot();
+            hardware.odometry.updateIMUHead();
 
-            //path.runMovements();
-
-//            telemetry.addData("Position X", -hardware.robotPose.getX());
-//            telemetry.addData("Position Y", hardware.robotPose.getY());
-//            telemetry.addData("Posiion H", Math.toDegrees(hardware.robotPose.getHeading()));
-
-            // telemetry.addData("Claw Position", hardware.claw.getPosition());
-            // telemetry.addData("Arm Position", hardware.arm.getPosition());
 
             /**ODOM DEBUG **/
             // telemetry.addData("RightEncoder", hardware.currentRightPos);

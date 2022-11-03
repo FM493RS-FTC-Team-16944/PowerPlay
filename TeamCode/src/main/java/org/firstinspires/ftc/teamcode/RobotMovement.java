@@ -24,16 +24,17 @@ public class RobotMovement {
         hardware.driveTrain.backLeft.setPower(0.5*backLeftPower);
         hardware.driveTrain.topRight.setPower(0.5*frontRightPower);
         hardware.driveTrain.backRight.setPower(0.5*backRightPower);
+
     }
 
     public void strafeR(double x, double y, double h) {
-        double xR = -x * Math.cos(0) + y * Math.sin(0);
-        double yR = -x * Math.sin(0) - y * Math.cos(0);
+        double xR = -x * Math.cos(-hardware.globalAngleI) + y * Math.sin(-hardware.globalAngleI);
+        double yR = -x * Math.sin(-hardware.globalAngleI) - y * Math.cos(-hardware.globalAngleI);
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(h), 1);
 
-        double frontLeftPower = (yR + xR + h) / denominator;
-        double backLeftPower = (yR - xR + h) / denominator;
+        double frontLeftPower = (yR - xR + h) / denominator;
+        double backLeftPower = (yR + xR + h) / denominator;
         double frontRightPower = (yR + xR - h) / denominator;
         double backRightPower = (yR - xR - h) / denominator;
 

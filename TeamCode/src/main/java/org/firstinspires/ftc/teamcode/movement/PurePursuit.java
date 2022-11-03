@@ -1,14 +1,5 @@
 package org.firstinspires.ftc.teamcode.movement;
 
-import org.firstinspires.ftc.teamcode.models.Pose2d;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.util.geometry.CurvePoint;
-import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
-
-import java.util.ArrayList;
-
 //public class PurePursuit {
 //    private final Odometry odometry;
 //    private final RobotMovement movement;

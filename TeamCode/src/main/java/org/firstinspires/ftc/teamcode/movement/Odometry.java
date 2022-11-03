@@ -1,15 +1,24 @@
 package org.firstinspires.ftc.teamcode.movement;
 
-import org.firstinspires.ftc.teamcode.models.Pose2d;
-import org.firstinspires.ftc.teamcode.models.Rotation2d;
-import org.firstinspires.ftc.teamcode.models.Twist2d;
 
-
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.geometry.Twist2d;
+import org.firstinspires.ftc.teamcode.models.MiscMethods;
+
+
+
 
 public class Odometry {
+
+
     public static final double TRACK_WIDTH = 0.00;
     public static final double CENTER_WHEEL_OFFSET = 0.00;
 
@@ -19,6 +28,8 @@ public class Odometry {
     private Pose2d position;
     private Rotation2d previousAngle;
 
+
+
     private double prevLeftEncoder;
     private double prevRightEncoder;
     private double prevHorizontalEncoder;
@@ -26,7 +37,6 @@ public class Odometry {
     public Odometry(RobotHardware robotHardware) {
         this.hardware = robotHardware;
         this.telemetry = robotHardware.telemetry;
-
         this.position = new Pose2d();
     }
 
@@ -54,10 +64,10 @@ public class Odometry {
         prevLeftEncoder = leftEncoderPos;
         prevRightEncoder = rightEncoderPos;
         prevHorizontalEncoder = horizontalEncoderPos;
-        
+
         double dw = (angle.minus(previousAngle).getRadians());
-        double dx =(deltaLeftEncoder + deltaRightEncoder) / 2;
-        double dy = deltaHorizontalEncoder - (CENTER_WHEEL_OFFSET * dw);
+        double dy =(deltaLeftEncoder + deltaRightEncoder) / 2;
+        double dx = deltaHorizontalEncoder - (CENTER_WHEEL_OFFSET * dw);
 
         Twist2d twist2d = new Twist2d(dx, dy, dw);
         Pose2d newPose = this.position.exp(twist2d);
@@ -67,10 +77,18 @@ public class Odometry {
         this.position = new Pose2d(newPose.getTranslation(), angle);
     }
 
+
+    public void updateIMUHead(){
+        Orientation angles = hardware.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        float deltaAngle = angles.firstAngle - hardware.lastAngles.firstAngle;
+        hardware.globalAngleI = MiscMethods.angleWrap(deltaAngle);
+    }
     public void updateOdometryReadings() {
         this.telemetry.addData("Odometry X Position Centimeters : " , this.position.getTranslation().getX());
         this.telemetry.addData("Odometry Y Position Centimeters : " , this.position.getTranslation().getY());
         this.telemetry.addData("Odometry H Position Centimeters : " , this.position.getHeading());
         this.telemetry.addData("Odometry H Rotation Radians : " , this.position.getRotation().getRadians());
     }
+
+
 }

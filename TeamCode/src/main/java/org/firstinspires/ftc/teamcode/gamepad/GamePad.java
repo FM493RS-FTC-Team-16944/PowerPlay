@@ -33,25 +33,12 @@ public class GamePad {
             double y = gamepad.left_stick_y; // Remember, this is reversed!
             double h = gamepad.right_stick_x;
 
-            movement.strafe(x, y, h);
+            movement.strafeR(x, y, h);
         }
+
+        if (gamepad.a) {
+            hardware.resetAngle();
+        }
+
     }
-        // change mode
-//        if (gamepad.a) {
-//            this.hardware.resetAngle();
-            /*
-            switch (hardware.currentMode) {
-                case DRIVER_CONTROL:
-                    hardware.currentMode = Mode.AUTOMATIC_CONTROL;
-
-                case AUTOMATIC_CONTROL:
-                    hardware.currentMode = Mode.DRIVER_CONTROL;
-            }
-
-             */
-        //}
-
-
-
-    //}
 }
