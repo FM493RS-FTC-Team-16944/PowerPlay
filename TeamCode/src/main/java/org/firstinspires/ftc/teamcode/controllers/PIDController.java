@@ -24,17 +24,6 @@ public class PIDController {
         this.targetPosition = targetPosition;
     }
 
-    public double angleWrap(double radians) {
-        if (radians > Math.PI) {
-            radians -= 2 * Math.PI;
-        }
-
-        if (radians < -Math.PI) {
-            radians += 2 * Math.PI;
-        }
-
-        return radians;
-    }
 
     public XyhVector calculatePID(XyhVector currentPosition) {
         double currentPosErrX = targetPosition.x - currentPosition.x;

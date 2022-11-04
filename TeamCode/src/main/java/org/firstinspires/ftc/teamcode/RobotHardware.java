@@ -57,6 +57,8 @@ public class RobotHardware {
                 "leftEncoder",
                 "rightEncoder",
                 "leftLift",
+                "leftClaw",
+                "rightCLaw",
                 hardwareMap,
                 this.telemetry
         );
@@ -93,6 +95,7 @@ public class RobotHardware {
 
         globalAngleI = 0;
     }
+
 
 
 }

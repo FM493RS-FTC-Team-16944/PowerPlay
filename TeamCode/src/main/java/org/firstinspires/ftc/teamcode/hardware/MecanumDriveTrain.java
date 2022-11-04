@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
 
@@ -16,6 +15,8 @@ public class MecanumDriveTrain {
     public final Motor leftEncoder;
     public final Motor rightEncoder;
     public final Motor auxEncoder;
+    public final ServoMotor leftClaw;
+    public final ServoMotor rightClaw;
     private final TelemLog telemetry;
 
     public MecanumDriveTrain(
@@ -28,6 +29,8 @@ public class MecanumDriveTrain {
             String leftEncoderName,
             String rightEncoderName,
             String auxEncoderName,
+            String leftClawName,
+            String rightClawName,
             HardwareMap hardwareMap,
             TelemLog telemetry
     ) {
@@ -42,6 +45,9 @@ public class MecanumDriveTrain {
         this.leftEncoder = new Motor(leftEncoderName, hardwareMap, DcMotor.Direction.FORWARD);
         this.rightEncoder = new Motor(rightEncoderName, hardwareMap, DcMotor.Direction.REVERSE);
         this.auxEncoder = new Motor(auxEncoderName, hardwareMap, DcMotor.Direction.FORWARD);
+
+        this.leftClaw = new ServoMotor(leftClawName, hardwareMap);
+        this.rightClaw = new ServoMotor(rightClawName, hardwareMap);
 
         // You can call the methods to set the motor modes
         this.leftEncoder.reset();
@@ -87,4 +93,5 @@ public class MecanumDriveTrain {
         topLeft.setMode(mode);
         topRight.setMode(mode);
     }
+
 }

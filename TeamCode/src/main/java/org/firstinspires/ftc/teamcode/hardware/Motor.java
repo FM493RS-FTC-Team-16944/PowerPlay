@@ -47,4 +47,11 @@ public class Motor {
     }
 
     public void setMode(DcMotor.RunMode mode) { motor.setMode(mode); }
+
+    public void goToPosition(int position, double power){
+        this.reset();
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setTargetPosition(position);
+        motor.setPower(power);
+    }
 }

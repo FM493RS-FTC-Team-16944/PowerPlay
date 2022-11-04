@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.operations;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.GamePad;
+import org.firstinspires.ftc.teamcode.gamepad.GamePad;
 import org.firstinspires.ftc.teamcode.gamepad.easypad.IGamePad;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.RobotHardware;
