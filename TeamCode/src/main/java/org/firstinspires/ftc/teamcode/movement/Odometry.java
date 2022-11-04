@@ -88,6 +88,7 @@ public class Odometry {
         this.telemetry.addData("Odometry Y Position Centimeters : " , this.position.getTranslation().getY());
         this.telemetry.addData("Odometry H Position Centimeters : " , this.position.getHeading());
         this.telemetry.addData("Odometry H Rotation Radians : " , this.position.getRotation().getRadians());
+        telemetry.update();
     }
 
 

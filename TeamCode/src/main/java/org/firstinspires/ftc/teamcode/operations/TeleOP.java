@@ -32,19 +32,7 @@ public class TeleOP extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             gamepad.updateRobot();
             hardware.odometry.updateIMUHead();
-
-
-            /**ODOM DEBUG **/
-            // telemetry.addData("RightEncoder", hardware.currentRightPos);
-            // telemetry.addData("LeftEncoder", hardware.currentLeftPos);
-            // telemetry.addData("AuxEncoder", hardware.currentAuxPos);
-            // telemetry.addData("IMU Angle", hardware.globalAngle);
-            // telemetry.addData("RawLeft", hardware.leftEncoder.getCurrentPosition());
-            // telemetry.addData("RawRight", hardware.rightEncoder.getCurrentPosition());
-            // telemetry.addData("RawHori", hardware.auxEncoder.getCurrentPosition());
-
-
-            telemetry.update();
+            hardware.odometry.update();
         }
     }
 

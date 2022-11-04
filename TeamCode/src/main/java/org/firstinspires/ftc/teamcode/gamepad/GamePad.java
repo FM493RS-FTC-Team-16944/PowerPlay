@@ -11,12 +11,7 @@ public class GamePad {
     private final RobotHardware hardware;
     private final RobotMovement movement;
 
-    private boolean previousX = false;
-    private boolean previousY = false;
-    private boolean previousIn = false;
-    private boolean previousFly = false;
-    private boolean previousUp = false;
-    private boolean previousDown = false;
+
     private int i;
 
     public GamePad(Robot robot, Gamepad hardwareGamepad) {

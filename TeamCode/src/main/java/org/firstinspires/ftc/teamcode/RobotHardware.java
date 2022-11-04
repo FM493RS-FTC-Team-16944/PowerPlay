@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.models.Mode;
 import org.firstinspires.ftc.teamcode.models.XyhVector;
 import org.firstinspires.ftc.teamcode.movement.Odometry;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
+import org.firstinspires.ftc.teamcode.vision.ObjectDetector;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -35,6 +36,7 @@ public class RobotHardware {
     public Odometry odometry;
     public final TelemLog telemetry;
     public Mode currentMode = Mode.DRIVER_CONTROL;
+    public final ObjectDetector detector;
 
     public HardwareMap hardwareMap;
 
@@ -74,6 +76,8 @@ public class RobotHardware {
         imu.initialize(parameters);
 
         resetAngle();
+
+        this.detector = new ObjectDetector(this);
 
     }
 
