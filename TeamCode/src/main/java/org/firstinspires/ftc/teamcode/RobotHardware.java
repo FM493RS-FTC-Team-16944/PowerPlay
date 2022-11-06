@@ -58,7 +58,7 @@ public class RobotHardware {
                 "rightLift",
                 "leftEncoder",
                 "rightEncoder",
-                "leftLift",
+                "backRight",
                 "leftClaw",
                 "rightClaw",
                 hardwareMap,
@@ -68,7 +68,6 @@ public class RobotHardware {
         this.odometry = new Odometry(this);
 
 
-        imu = this.hardwareMap.get(BNO055IMU.class, "imu");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -76,6 +75,8 @@ public class RobotHardware {
         parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled      = false;
+
+        imu = this.hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
 
@@ -93,7 +94,7 @@ public class RobotHardware {
     }
 
     public void resetAngle() {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS);
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
         this.odometry.position = new Pose2d(odometry.position.getX(),odometry.position.getX(),new Rotation2d());
         this.odometry.previousAngle = new Rotation2d();
         globalAngleI = 0;

@@ -60,26 +60,26 @@ public class GamePad {
         Thread lt1 = new Thread(liftMacroUp1l);
         LiftMacro liftMacroUp2l = new LiftMacro(movement, 2500, hardware.driveTrain, "leftLift");
         Thread lt2 = new Thread(liftMacroUp2l);
-        LiftMacro liftMacroUp3l = new LiftMacro(movement, 4000, hardware.driveTrain, "leftLift");
+        LiftMacro liftMacroUp3l = new LiftMacro(movement, 3000, hardware.driveTrain, "leftLift");
         Thread lt3 = new Thread(liftMacroUp3l);
 
         LiftMacro liftMacroUp0r = new LiftMacro(movement, 0, hardware.driveTrain, "rightLift");
         Thread rt0 = new Thread(liftMacroUp0r);
-        LiftMacro liftMacroUp1r = new LiftMacro(movement, 1500, hardware.driveTrain, "rightLift");
+        LiftMacro liftMacroUp1r = new LiftMacro(movement, 750, hardware.driveTrain, "rightLift");
         Thread rt1 = new Thread(liftMacroUp1r);
-        LiftMacro liftMacroUp2r = new LiftMacro(movement, 2500, hardware.driveTrain, "rightLift");
+        LiftMacro liftMacroUp2r = new LiftMacro(movement, 2250, hardware.driveTrain, "rightLift");
         Thread rt2 = new Thread(liftMacroUp2r);
-        LiftMacro liftMacroUp3r = new LiftMacro(movement, 4000, hardware.driveTrain, "rightLift");
+        LiftMacro liftMacroUp3r = new LiftMacro(movement, 2750, hardware.driveTrain, "rightLift");
         Thread rt3 = new Thread(liftMacroUp3r);
-        if (gamepad.dpad_down && gamepad.a && !prevLeftLift && !prevA) {
+        if (gamepad.dpad_down && gamepad.x && !prevLeftLift && !prevX) {
             leftLiftUp = Lift.UP;
-            lt1.start();
+            lt3.start();
         } else if (gamepad.dpad_down && gamepad.b &&!prevLeftLift &&!prevB) {
             leftLiftUp = Lift.UP;
             lt2.start();
-        } else if(gamepad.dpad_down && gamepad.x &&!prevLeftLift &&!prevX){
+        } else if(gamepad.dpad_down && gamepad.a &&!prevLeftLift &&!prevA){
             leftLiftUp = Lift.UP;
-            lt3.start();
+            lt1.start();
         }else if (gamepad.dpad_down && !prevLeftLift) {
             if (leftLiftUp == Lift.UP) {
                 leftLiftUp = Lift.DOWN;
@@ -94,15 +94,15 @@ public class GamePad {
         prevB = gamepad.b;
         prevX = gamepad.x;
 
-        if(gamepad.dpad_up && gamepad.a && !prevRightLift && !prevA){
+        if(gamepad.dpad_up && gamepad.x && !prevRightLift && !prevX){
             rightLiftUp = Lift.UP;
-            rt1.start();
+            rt3.start();
         }else if(gamepad.dpad_up && gamepad.b && !prevRightLift && !prevB){
             rightLiftUp = Lift.UP;
             rt2.start();
-        }else if(gamepad.dpad_up && gamepad.x && !prevRightLift && !prevX){
+        }else if(gamepad.dpad_up && gamepad.a && !prevRightLift && !prevA){
             rightLiftUp = Lift.UP;
-            rt3.start();
+            rt1.start();
         }else if(gamepad.dpad_up && !prevRightLift){
             if(rightLiftUp == Lift.UP) {
                 rightLiftUp = Lift.DOWN;
@@ -137,7 +137,7 @@ public class GamePad {
                 hardware.driveTrain.rightClaw.setPosition(0);
             }else{
                 rightClawOpen = OpenClose.OPEN;
-                hardware.driveTrain.rightClaw.setPosition(1);
+                hardware.driveTrain.rightClaw.setPosition(0.8);
             }
         }
         prevRightClaw = gamepad.dpad_right;

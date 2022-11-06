@@ -39,15 +39,15 @@ public class MecanumDriveTrain {
         this.backLeft = new Motor(backLeftName, hardwareMap, DcMotor.Direction.REVERSE);
         this.backRight = new Motor(backRightName, hardwareMap, DcMotor.Direction.FORWARD);
 
-        this.leftLift = new Motor(leftLiftName, hardwareMap, DcMotor.Direction.FORWARD);
         this.rightLift = new Motor(rightLiftName, hardwareMap, DcMotor.Direction.FORWARD);
+        this.leftLift = new Motor(leftLiftName, hardwareMap, DcMotor.Direction.FORWARD);
 
-        this.leftEncoder = new Motor(leftEncoderName, hardwareMap, DcMotor.Direction.FORWARD);
-        this.rightEncoder = new Motor(rightEncoderName, hardwareMap, DcMotor.Direction.REVERSE);
+        this.rightEncoder = new Motor(rightEncoderName, hardwareMap, DcMotor.Direction.FORWARD);
+        this.leftEncoder = new Motor(leftEncoderName, hardwareMap, DcMotor.Direction.REVERSE);
         this.auxEncoder = new Motor(auxEncoderName, hardwareMap, DcMotor.Direction.FORWARD);
 
-        this.leftClaw = new ServoMotor(leftClawName, hardwareMap);
         this.rightClaw = new ServoMotor(rightClawName, hardwareMap);
+        this.leftClaw = new ServoMotor(leftClawName, hardwareMap);
 
         // You can call the methods to set the motor modes
         this.leftEncoder.reset();
