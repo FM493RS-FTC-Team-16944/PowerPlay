@@ -30,9 +30,10 @@ public class TeleOP extends LinearOpMode {
         hardware.driveTrain.resetDriveEncoders();
 
         while (opModeIsActive() && !isStopRequested()) {
-            gamepad.updateRobot();
-            hardware.odometry.updateIMUHead();
             hardware.odometry.update();
+            hardware.odometry.updateIMUHead();
+            hardware.odometry.updateOdometryReadings();
+            gamepad.updateRobot();
         }
     }
 

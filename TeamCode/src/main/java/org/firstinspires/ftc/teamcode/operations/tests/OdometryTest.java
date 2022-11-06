@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.operations.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.gamepad.GamePad;
 import org.firstinspires.ftc.teamcode.gamepad.easypad.IGamePad;
@@ -25,9 +26,10 @@ public class OdometryTest extends LinearOpMode{
         hardware.driveTrain.resetDriveEncoders();
 
         while (opModeIsActive() && !isStopRequested()) {
-            gamepad.updateRobot();
-            hardware.odometry.update();
+//            hardware.odometry.update();
+            hardware.odometry.updateIMUHead();
             hardware.odometry.updateOdometryReadings();
+            gamepad.updateRobot();
         }
     }
 }

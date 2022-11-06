@@ -24,9 +24,9 @@ public class LiftMacro implements Runnable {
     public void run() {
         int deltaHeight = aimHeight - height;
         if(lift == "leftLift"){
-            driveTrain.leftLift.goToPosition(deltaHeight, 0.5);
+            driveTrain.leftLift.goToPosition(aimHeight, 0.3);
         }else{
-            driveTrain.rightLift.goToPosition(deltaHeight, 0.5);
+            driveTrain.rightLift.goToPosition(aimHeight, 0.3);
         }
         this.height = aimHeight;
     }

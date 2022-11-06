@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,7 +15,7 @@ import org.firstinspires.ftc.teamcode.models.Mode;
 import org.firstinspires.ftc.teamcode.models.XyhVector;
 import org.firstinspires.ftc.teamcode.movement.Odometry;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
-import org.firstinspires.ftc.teamcode.vision.ObjectDetector;
+//import org.firstinspires.ftc.teamcode.vision.ObjectDetector;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -36,7 +38,7 @@ public class RobotHardware {
     public Odometry odometry;
     public final TelemLog telemetry;
     public Mode currentMode = Mode.DRIVER_CONTROL;
-    public final ObjectDetector detector;
+    //public final ObjectDetector detector;
 
     public HardwareMap hardwareMap;
 
@@ -58,7 +60,7 @@ public class RobotHardware {
                 "rightEncoder",
                 "leftLift",
                 "leftClaw",
-                "rightCLaw",
+                "rightClaw",
                 hardwareMap,
                 this.telemetry
         );
@@ -79,7 +81,7 @@ public class RobotHardware {
 
         resetAngle();
 
-        this.detector = new ObjectDetector(this);
+        //this.detector = new ObjectDetector(this);
 
     }
 
@@ -91,8 +93,9 @@ public class RobotHardware {
     }
 
     public void resetAngle() {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS);
+        this.odometry.position = new Pose2d(odometry.position.getX(),odometry.position.getX(),new Rotation2d());
+        this.odometry.previousAngle = new Rotation2d();
         globalAngleI = 0;
     }
 

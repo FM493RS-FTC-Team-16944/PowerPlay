@@ -88,10 +88,6 @@ public class MecanumDriveTrain {
     public void setEncodersMode(DcMotor.RunMode mode) {
         leftLift.setMode(mode);
         rightLift.setMode(mode);
-        backLeft.setMode(mode);
-        backRight.setMode(mode);
-        topLeft.setMode(mode);
-        topRight.setMode(mode);
     }
 
 }
