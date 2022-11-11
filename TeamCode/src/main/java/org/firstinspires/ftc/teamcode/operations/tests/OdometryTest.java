@@ -26,7 +26,7 @@ public class OdometryTest extends LinearOpMode{
         hardware.driveTrain.resetDriveEncoders();
 
         while (opModeIsActive() && !isStopRequested()) {
-//            hardware.odometry.update();
+            hardware.odometry.update();
             hardware.odometry1.update();
             hardware.odometry1.updateOdometryReadings();
 

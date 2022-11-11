@@ -103,7 +103,4 @@ public class RobotHardware {
         this.odometry.previousAngle = new Rotation2d();
         globalAngleI = 0;
     }
-
-
-
 }

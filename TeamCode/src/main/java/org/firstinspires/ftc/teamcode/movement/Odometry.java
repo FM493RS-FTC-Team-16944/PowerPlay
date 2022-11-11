@@ -8,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
+
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
@@ -15,11 +17,8 @@ import com.arcrobotics.ftclib.geometry.Twist2d;
 import org.firstinspires.ftc.teamcode.models.MiscMethods;
 
 
-
-
+@Config
 public class Odometry {
-
-
     public static final double TRACK_WIDTH = 38.10; //make sure to cahnge these two values
     public static final double CENTER_WHEEL_OFFSET = 5.60;
 

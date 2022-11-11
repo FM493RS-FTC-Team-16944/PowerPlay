@@ -13,7 +13,7 @@ import java.util.logging.SimpleFormatter;
 public class TelemLog {
     private final String BASE_FOLDER_NAME = "FIRST";
 
-    private final Telemetry telemetry;
+    public final Telemetry telemetry;
     private final Logger log;
 
     public TelemLog(Telemetry telemetry) {
