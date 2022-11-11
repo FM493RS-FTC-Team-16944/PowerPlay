@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.arcrobotics.ftclib.geometry.Twist2d;
 import org.firstinspires.ftc.teamcode.models.MiscMethods;
 
@@ -26,13 +27,13 @@ public class Odometry {
     private final TelemLog telemetry;
 
     public Pose2d position;
-    public Rotation2d previousAngle;
+    public Rotation2d previousAngle = new Pose2d(0,0, new Rotation2d()).getRotation();
 
 
 
-    private double prevLeftEncoder;
-    private double prevRightEncoder;
-    private double prevHorizontalEncoder;
+    private double prevLeftEncoder = 0;
+    private double prevRightEncoder = 0;
+    private double prevHorizontalEncoder = 0;
 
     public Odometry(RobotHardware robotHardware) {
         this.hardware = robotHardware;
@@ -66,16 +67,19 @@ public class Odometry {
         prevHorizontalEncoder = horizontalEncoderPos;
 
         double dw = (angle.minus(previousAngle).getRadians());
+
         double dx = (deltaLeftEncoder + deltaRightEncoder) / 2;
         double dy = deltaHorizontalEncoder - (CENTER_WHEEL_OFFSET * dw);
+
 
         Twist2d twist2d = new Twist2d(dx, dy, dw);
 
         Pose2d newPose = this.position.exp(twist2d);
         
+        Translation2d newTranslation = newPose.getTranslation().rotateBy(angle);
+        Rotation2d newAngle = previousAngle.plus(angle);
+        this.position = new Pose2d(newTranslation, newAngle);
         previousAngle = angle;
-        
-        this.position = new Pose2d(newPose.getTranslation(), angle);
     }
 
 
@@ -87,7 +91,6 @@ public class Odometry {
     public void updateOdometryReadings() {
         this.telemetry.addData("Odometry X Position Centimeters : " , (double)(this.position.getX()));
         this.telemetry.addData("Odometry Y Position Centimeters : " , (double)(this.position.getY()));
-        this.telemetry.addData("Odometry H Position Centimeters : " , (double)(this.position.getHeading()));
         this.telemetry.addData("Odometry H Rotation Degrees : " , (double)(position.getRotation().getDegrees()));
         this.telemetry.addData("IMU Heading Degrees: " , (double)(Math.toDegrees(hardware.globalAngleI)));
 //        this.telemetry.addData("Left Lift Encoder: " , (double)(hardware.driveTrain.leftLift.getCurrentPosition()));

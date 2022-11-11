@@ -84,10 +84,15 @@ public class MecanumDriveTrain {
     public void resetDriveEncoders() {
         setEncodersMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setEncodersMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void setEncodersMode(DcMotor.RunMode mode) {
         leftLift.setMode(mode);
         rightLift.setMode(mode);
+        leftEncoder.setMode(mode);
     }
 
 }

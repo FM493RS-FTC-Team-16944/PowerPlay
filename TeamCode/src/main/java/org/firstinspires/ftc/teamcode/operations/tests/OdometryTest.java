@@ -27,8 +27,11 @@ public class OdometryTest extends LinearOpMode{
 
         while (opModeIsActive() && !isStopRequested()) {
 //            hardware.odometry.update();
-            hardware.odometry.updateIMUHead();
-            hardware.odometry.updateOdometryReadings();
+            hardware.odometry1.update();
+            hardware.odometry1.updateOdometryReadings();
+
+//            hardware.odometry.updateIMUHead();
+//            hardware.odometry.updateOdometryReadings();
             gamepad.updateRobot();
         }
     }

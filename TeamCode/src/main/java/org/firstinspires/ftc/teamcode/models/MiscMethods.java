@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.models;
 
 public class MiscMethods {
-    public static float angleWrap(float angle){
+    public static double angleWrap(double angle){
         if (angle < -Math.PI)
             angle += 2 * Math.PI;
         else if (angle > Math.PI)
