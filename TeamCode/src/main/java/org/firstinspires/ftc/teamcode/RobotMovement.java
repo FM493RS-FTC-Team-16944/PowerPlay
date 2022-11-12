@@ -10,7 +10,7 @@ public class RobotMovement {
         this.hardware = robot.hardware;
     }
 
-    public void strafe(double x, double y, double h) {
+    public void     strafe(double x, double y, double h) {
         x *= 0.75;
         y *= 0.75;
 

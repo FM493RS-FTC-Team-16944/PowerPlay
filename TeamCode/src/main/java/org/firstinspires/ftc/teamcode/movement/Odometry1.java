@@ -21,7 +21,7 @@ public class Odometry1 {
     public static double cm_per_tick = 2.0 * Math.PI * R / N;
 
     private final RobotHardware hardware;
-    private final TelemLog telemetry;
+    public final TelemLog telemetry;
 
     public XyhVector pos = new XyhVector();
     public Pose2d pose2d = new Pose2d();

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 @Autonomous
 public class PurePursuitTest extends LinearOpMode {
     PurePursuit purePursuit;
+
     @Override
     public void runOpMode() {
         Robot robot = new Robot(this);
@@ -21,25 +22,25 @@ public class PurePursuitTest extends LinearOpMode {
                 robot.movement
         );
 
+        ArrayList<CurvePoint> allPoints = new ArrayList<>();
+
+        allPoints.add(
+                new CurvePoint(
+                        0, 0, 1.0, 1.0, 50, Math.toRadians(50), 1.0
+                )
+        );
+
+        allPoints.add(
+                new CurvePoint(
+                        100, 0, 1.0, 1.0, 50, Math.toRadians(50), 1.0
+                )
+        );
+
         waitForStart();
 
         while(opModeIsActive() && !isStopRequested()) {
             robot.hardware.odometry1.update();
             robot.hardware.odometry1.updateOdometryReadings();
-
-            ArrayList<CurvePoint> allPoints = new ArrayList<>();
-
-            allPoints.add(
-                    new CurvePoint(
-                            0, 0, 1.0, 1.0, 50, Math.toRadians(50), 1.0
-                    )
-            );
-
-            allPoints.add(
-                    new CurvePoint(
-                            100, 0, 1.0, 1.0, 50, Math.toRadians(50), 1.0
-                    )
-            );
 
             this.purePursuit.followCurve(allPoints, Math.toRadians(90));
         }

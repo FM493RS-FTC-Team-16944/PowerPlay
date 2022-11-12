@@ -42,6 +42,14 @@ public class PurePursuit {
         double movementTurn = Range.clip(relativeTurnAngle / Math.toRadians(30), -1, 1) * turnSpeed;
 
         // not sure if correct check video
+
+        this.odometry.telemetry.addData("X Power", movementXPower);
+        this.odometry.telemetry.addData("Y Power", movementYPower);
+        this.odometry.telemetry.addData("H Power", movementTurn);
+
+        this.odometry.update();
+
+
         this.movement.strafe(movementXPower, movementYPower, movementTurn);
 
         if (distance < 10) {
@@ -54,14 +62,14 @@ public class PurePursuit {
     public ArrayList<XyhVector> lineCircleIntersection(XyhVector circleCenter, double radius,
                                                        XyhVector linePoint1, XyhVector linePoint2) {
         if(Math.abs(linePoint1.y - linePoint2.y) < 0.003) {
-            linePoint1.y = linePoint2.y + 3;
+            linePoint1.y = linePoint2.y + 0.003;
         }
 
         if(Math.abs(linePoint1.x - linePoint2.x) < 0.003) {
-            linePoint1.x = linePoint2.x + 3;
+            linePoint1.x = linePoint2.x + 0.003;
         }
 
-        double m1 = linePoint2.y - linePoint1.y / (linePoint2.x - linePoint2.y);
+        double m1 = (linePoint2.y - linePoint1.y) / (linePoint2.x - linePoint2.y);
 
         double quadraticA = 1.0 + Math.pow(m1, 2);
 
@@ -97,7 +105,10 @@ public class PurePursuit {
             if(xRoot2 > minX && xRoot2 < maxX) {
                 allPoints.add(new XyhVector(xRoot2, yRoot2, 0));
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            this.odometry.telemetry.addData("Error", e);
+            this.odometry.telemetry.update();
+        }
 
         return allPoints;
     }
@@ -111,6 +122,8 @@ public class PurePursuit {
 
             ArrayList<XyhVector> intersections = lineCircleIntersection(robotLocation, followRadius,
                     startLine.toPoint(), endLine.toPoint());
+
+            this.odometry.telemetry.addData("Intersections", intersections);
 
             double closestAngle = Math.pow(10, 7);
 
