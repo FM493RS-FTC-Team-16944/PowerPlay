@@ -70,6 +70,8 @@ public class RobotHardware {
         this.odometry = new Odometry(this);
         this.odometry1 = new Odometry1(this);
 
+        globalAngleI = this.odometry1.getPosition().h;
+
 
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

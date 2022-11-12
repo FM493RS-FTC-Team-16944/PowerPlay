@@ -31,17 +31,19 @@ public class RobotMovement {
         double xR = x * Math.cos(hardware.globalAngleI) - y * Math.sin(hardware.globalAngleI);
         double yR = x * Math.sin(hardware.globalAngleI) + y * Math.cos(hardware.globalAngleI);
 
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(hardware.globalAngleI), 1);
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(h), 1);
 
         double frontLeftPower = (yR - xR + h) / denominator;
         double backLeftPower = (yR + xR + h) / denominator;
         double frontRightPower = (yR + xR - h) / denominator;
         double backRightPower = (yR - xR - h) / denominator;
 
-        hardware.driveTrain.topLeft.setPower(0.5*frontLeftPower);
-        hardware.driveTrain.backLeft.setPower(0.5*backLeftPower);
-        hardware.driveTrain.topRight.setPower(0.5*frontRightPower);
-        hardware.driveTrain.backRight.setPower(0.5*backRightPower);
+        double cap = 1;
+
+        hardware.driveTrain.topLeft.setPower(cap * frontLeftPower);
+        hardware.driveTrain.backLeft.setPower(cap * backLeftPower);
+        hardware.driveTrain.topRight.setPower(cap * frontRightPower);
+        hardware.driveTrain.backRight.setPower(cap * backRightPower);
     }
 
 

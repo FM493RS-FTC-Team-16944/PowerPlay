@@ -92,8 +92,8 @@ public class Odometry {
         this.telemetry.addData("Odometry Y Position Centimeters : " , (double)(this.position.getY()));
         this.telemetry.addData("Odometry H Rotation Degrees : " , (double)(position.getRotation().getDegrees()));
         this.telemetry.addData("IMU Heading Degrees: " , (double)(Math.toDegrees(hardware.globalAngleI)));
-//        this.telemetry.addData("Left Lift Encoder: " , (double)(hardware.driveTrain.leftLift.getCurrentPosition()));
-//        this.telemetry.addData("Right Lift Encoder: " , (double)(hardware.driveTrain.rightLift.getCurrentPosition()));
+        this.telemetry.addData("Left Lift Encoder: " , (double)(hardware.driveTrain.leftLift.getCurrentPosition()));
+        this.telemetry.addData("Right Lift Encoder: " , (double)(hardware.driveTrain.rightLift.getCurrentPosition()));
         telemetry.update();
     }
 

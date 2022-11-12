@@ -67,7 +67,12 @@ public class Odometry1 {
         pos.x += dx * Math.sin(theta) + dy * Math.cos(theta);
         pos.h += dtheta;
 
-        pos.h = pos.h % (2 * Math.PI);
+        if(pos.h > Math.toRadians(180)){
+            pos.h -= 2 * Math.PI;
+        }
+        if(pos.h < Math.toRadians(-180)){
+            pos.h += 2 * Math.PI;
+        }
 
         pose2d = new Pose2d(
                 pos.x, pos.y,
