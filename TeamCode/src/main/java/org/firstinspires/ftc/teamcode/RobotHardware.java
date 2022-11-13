@@ -5,13 +5,10 @@ import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.models.Mode;
-import org.firstinspires.ftc.teamcode.models.XyhVector;
+import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 import org.firstinspires.ftc.teamcode.movement.Odometry;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
 import org.firstinspires.ftc.teamcode.vision.ObjectDetector;

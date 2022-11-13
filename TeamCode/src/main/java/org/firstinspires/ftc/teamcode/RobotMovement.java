@@ -4,13 +4,11 @@ package org.firstinspires.ftc.teamcode;
 public class RobotMovement {
     RobotHardware hardware;
 
-    public int open = 0;
-
     RobotMovement(Robot robot) {
         this.hardware = robot.hardware;
     }
 
-    public void     strafe(double x, double y, double h) {
+    public void strafe(double x, double y, double h) {
         x *= 0.75;
         y *= 0.75;
 
@@ -20,10 +18,10 @@ public class RobotMovement {
         double frontRightPower = (y + x - h) / denominator;
         double backRightPower = (y - x - h) / denominator;
 
-        hardware.driveTrain.topLeft.setPower(0.5*frontLeftPower);
-        hardware.driveTrain.backLeft.setPower(0.5*backLeftPower);
-        hardware.driveTrain.topRight.setPower(0.5*frontRightPower);
-        hardware.driveTrain.backRight.setPower(0.5*backRightPower);
+        hardware.driveTrain.topLeft.setPower(0.5 * frontLeftPower);
+        hardware.driveTrain.backLeft.setPower(0.5 * backLeftPower);
+        hardware.driveTrain.topRight.setPower(0.5 * frontRightPower);
+        hardware.driveTrain.backRight.setPower(0.5 * backRightPower);
 
     }
 
@@ -38,13 +36,9 @@ public class RobotMovement {
         double frontRightPower = (yR + xR - h) / denominator;
         double backRightPower = (yR - xR - h) / denominator;
 
-        double cap = 1;
-
-        hardware.driveTrain.topLeft.setPower(cap * frontLeftPower);
-        hardware.driveTrain.backLeft.setPower(cap * backLeftPower);
-        hardware.driveTrain.topRight.setPower(cap * frontRightPower);
-        hardware.driveTrain.backRight.setPower(cap * backRightPower);
+        hardware.driveTrain.topLeft.setPower(frontLeftPower);
+        hardware.driveTrain.backLeft.setPower(backLeftPower);
+        hardware.driveTrain.topRight.setPower(frontRightPower);
+        hardware.driveTrain.backRight.setPower(backRightPower);
     }
-
-
 }

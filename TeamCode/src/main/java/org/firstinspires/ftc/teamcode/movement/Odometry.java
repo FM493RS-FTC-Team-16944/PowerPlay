@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.movement;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.models.XyhVector;
+import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
 
 
@@ -23,8 +21,8 @@ public class Odometry {
     private final RobotHardware hardware;
     public final TelemLog telemetry;
 
-    public XyhVector pos = new XyhVector();
-    public Pose2d pose2d = new Pose2d();
+    public XyhVector pos;
+    public Pose2d pose2d;
 
     private double prevLeftEncoder = 0;
     private double prevRightEncoder = 0;
@@ -37,7 +35,9 @@ public class Odometry {
     public Odometry(RobotHardware robotHardware) {
         this.hardware = robotHardware;
         this.telemetry = robotHardware.telemetry;
+
         this.pos = new XyhVector();
+        this.pose2d = new Pose2d();
     }
 
     public XyhVector getPosition() {
