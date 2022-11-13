@@ -1,10 +1,17 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
 
+
+@Config
 public class MecanumDriveTrain {
     public final Motor topLeft;
     public final Motor backLeft;
@@ -18,6 +25,10 @@ public class MecanumDriveTrain {
     public final ServoMotor leftClaw;
     public final ServoMotor rightClaw;
     private final TelemLog telemetry;
+
+    public static final double NEW_P = 2.5;
+    public static final double NEW_I = 0.1;
+    public static final double NEW_D = 0.2;
 
     public MecanumDriveTrain(
             String topLeftName,
@@ -56,6 +67,8 @@ public class MecanumDriveTrain {
 
         this.stop();
 
+        setPIDCoefficients();
+
         // This part is depends on your preference for zero power behavior. For the implementation on my robot, I will set it to break mode.
         this.topLeft.setBreakMode();
         this.backLeft.setBreakMode();
@@ -63,6 +76,18 @@ public class MecanumDriveTrain {
         this.backRight.setBreakMode();
 
         this.telemetry = telemetry;
+    }
+
+    public void setPIDCoefficients() {
+        DcMotorEx rightLift = (DcMotorEx) this.rightLift;
+        DcMotorEx leftLift = (DcMotorEx) this.rightLift;
+
+        PIDFCoefficients newPIDCoefficients = new PIDFCoefficients(
+                new PIDCoefficients(NEW_P, NEW_I ,NEW_D)
+        );
+
+        rightLift.setPIDFCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, newPIDCoefficients);
+        leftLift.setPIDFCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, newPIDCoefficients);
     }
 
     public void stop() {
@@ -81,18 +106,20 @@ public class MecanumDriveTrain {
         telemetry.addData("Right Encoder Position Centimeters : " , rightEncoderT);
         telemetry.addData("Auxiliary Encoder Position Centimeters : " , auxEncoderT);
     }
+
     public void resetDriveEncoders() {
         setEncodersMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setEncodersMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
     public void setEncodersMode(DcMotor.RunMode mode) {
         leftLift.setMode(mode);
         rightLift.setMode(mode);
         leftEncoder.setMode(mode);
     }
-
 }

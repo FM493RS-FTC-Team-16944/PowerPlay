@@ -8,7 +8,7 @@ public class Motor {
     private static final double N = 8192;
     private static final double CM_PER_TICK = 2.0 * Math.PI * R / N;
 
-    private final DcMotor motor;
+    public final DcMotor motor;
 
     public Motor(String name, HardwareMap hardwareMap) {
         this.motor = hardwareMap.dcMotor.get(name);
