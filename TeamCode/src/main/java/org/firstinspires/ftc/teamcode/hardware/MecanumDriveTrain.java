@@ -26,9 +26,9 @@ public class MecanumDriveTrain {
     public final ServoMotor rightClaw;
     private final TelemLog telemetry;
 
-    public static double NEW_P = 2.5;
-    public static double NEW_I = 0.1;
-    public static double NEW_D = 0.2;
+    public static double NEW_KP = 2.5;
+    public static double NEW_KI = 0.1;
+    public static double NEW_KD = 0.2;
 
     public MecanumDriveTrain(
             String topLeftName,
@@ -67,7 +67,7 @@ public class MecanumDriveTrain {
 
         this.stop();
 
-        setPIDCoefficients();
+        // setPIDCoefficients();
 
         // This part is depends on your preference for zero power behavior. For the implementation on my robot, I will set it to break mode.
         this.topLeft.setBreakMode();
@@ -79,15 +79,15 @@ public class MecanumDriveTrain {
     }
 
     public void setPIDCoefficients() {
-        DcMotorEx rightLift = (DcMotorEx) this.rightLift;
-        DcMotorEx leftLift = (DcMotorEx) this.rightLift;
+        DcMotorEx rightLift = (DcMotorEx) this.rightLift.motor;
+        DcMotorEx leftLift = (DcMotorEx) this.rightLift.motor;
 
         PIDFCoefficients newPIDCoefficients = new PIDFCoefficients(
-                new PIDCoefficients(NEW_P, NEW_I ,NEW_D)
+                new PIDCoefficients(NEW_KP, NEW_KI ,NEW_KD)
         );
 
-        rightLift.setPIDFCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, newPIDCoefficients);
-        leftLift.setPIDFCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, newPIDCoefficients);
+        rightLift.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, newPIDCoefficients);
+        leftLift.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, newPIDCoefficients);
     }
 
     public void stop() {
@@ -101,15 +101,19 @@ public class MecanumDriveTrain {
         String leftEncoderT = RobotHardware.DECIMAL_FORMAT.format(leftEncoder.getCurrentPosition());
         String rightEncoderT = RobotHardware.DECIMAL_FORMAT.format(rightEncoder.getCurrentPosition());
         String auxEncoderT = RobotHardware.DECIMAL_FORMAT.format(auxEncoder.getCurrentPosition());
+        String leftLiftEncoderT = RobotHardware.DECIMAL_FORMAT.format(leftLift.getCurrentPosition());
+        String rightLiftEncoderT = RobotHardware.DECIMAL_FORMAT.format(rightLift.getCurrentPosition());
 
-        telemetry.addData("Left Encoder Position Centimeters : " , leftEncoderT);
-        telemetry.addData("Right Encoder Position Centimeters : " , rightEncoderT);
-        telemetry.addData("Auxiliary Encoder Position Centimeters : " , auxEncoderT);
+        telemetry.addData("Left Encoder Position (cm)" , leftEncoderT);
+        telemetry.addData("Right Encoder Position (cm)" , rightEncoderT);
+        telemetry.addData("Auxiliary Encoder Position (cm)" , auxEncoderT);
+        telemetry.addData("Left Lift Encoder Position (cm)", leftLiftEncoderT);
+        telemetry.addData("Right Lift Encoder Position (cm)", rightLiftEncoderT);
     }
 
     public void resetDriveEncoders() {
         setEncodersMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setEncodersMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setEncodersMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

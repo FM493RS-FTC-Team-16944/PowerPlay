@@ -73,14 +73,12 @@ public class Odometry {
     }
 
     public void updateOdometryReadings() {
-        this.telemetry.addData("Odometry X Position Centimeters : ", pos.x);
-        this.telemetry.addData("Odometry Y Position Centimeters : ", pos.y);
-        this.telemetry.addData("Odometry H Rotation Degrees : ", Math.toDegrees(pos.h));
-        this.telemetry.addData("IMU Heading Degrees: ", (double) (Math.toDegrees(hardware.globalAngleI)));
+        this.telemetry.addData("Odometry X Position (cm)", RobotHardware.DECIMAL_FORMAT.format(pos.x));
+        this.telemetry.addData("Odometry Y Position (cm)", RobotHardware.DECIMAL_FORMAT.format(pos.y));
+        this.telemetry.addData("Odometry H Rotation (deg)",
+                RobotHardware.DECIMAL_FORMAT.format(Math.toDegrees(pos.h)));
 
 //        this.telemetry.addData("Left Lift Encoder: " , (double)(hardware.driveTrain.leftLift.getCurrentPosition()));
 //        this.telemetry.addData("Right Lift Encoder: " , (double)(hardware.driveTrain.rightLift.getCurrentPosition()));
-
-        telemetry.update();
     }
 }

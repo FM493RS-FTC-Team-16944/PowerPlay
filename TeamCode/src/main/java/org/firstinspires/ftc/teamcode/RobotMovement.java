@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 
+@Config
 public class RobotMovement {
     RobotHardware hardware;
-
+    
+    public static double SPEED_CAP = 0.5;
+    
     RobotMovement(Robot robot) {
         this.hardware = robot.hardware;
     }
@@ -18,11 +22,10 @@ public class RobotMovement {
         double frontRightPower = (y + x - h) / denominator;
         double backRightPower = (y - x - h) / denominator;
 
-        hardware.driveTrain.topLeft.setPower(0.5 * frontLeftPower);
-        hardware.driveTrain.backLeft.setPower(0.5 * backLeftPower);
-        hardware.driveTrain.topRight.setPower(0.5 * frontRightPower);
-        hardware.driveTrain.backRight.setPower(0.5 * backRightPower);
-
+        hardware.driveTrain.topLeft.setPower(SPEED_CAP * frontLeftPower);
+        hardware.driveTrain.backLeft.setPower(SPEED_CAP * backLeftPower);
+        hardware.driveTrain.topRight.setPower(SPEED_CAP * frontRightPower);
+        hardware.driveTrain.backRight.setPower(SPEED_CAP * backRightPower);
     }
 
     public void strafeR(double x, double y, double h) {
@@ -36,9 +39,9 @@ public class RobotMovement {
         double frontRightPower = (yR + xR - h) / denominator;
         double backRightPower = (yR - xR - h) / denominator;
 
-        hardware.driveTrain.topLeft.setPower(frontLeftPower);
-        hardware.driveTrain.backLeft.setPower(backLeftPower);
-        hardware.driveTrain.topRight.setPower(frontRightPower);
-        hardware.driveTrain.backRight.setPower(backRightPower);
+        hardware.driveTrain.topLeft.setPower(SPEED_CAP * frontLeftPower);
+        hardware.driveTrain.backLeft.setPower(SPEED_CAP * backLeftPower);
+        hardware.driveTrain.topRight.setPower(SPEED_CAP * frontRightPower);
+        hardware.driveTrain.backRight.setPower(SPEED_CAP * backRightPower);
     }
 }

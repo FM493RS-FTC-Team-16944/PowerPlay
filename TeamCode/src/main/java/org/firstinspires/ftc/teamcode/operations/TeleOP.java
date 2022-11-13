@@ -31,10 +31,11 @@ public class TeleOP extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             hardware.odometry.update();
-            hardware.odometry.updateOdometryReadings();
 
             gamepad.updateRobot();
             buttonGamepad.updateRobot();
+
+            hardware.outputReadings();
         }
     }
 
