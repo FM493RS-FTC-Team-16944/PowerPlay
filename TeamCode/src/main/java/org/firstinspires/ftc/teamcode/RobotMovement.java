@@ -5,8 +5,9 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class RobotMovement {
     RobotHardware hardware;
-    
-    public static double SPEED_CAP = 0.5;
+
+    public static double SPEED_CAP_AUTON = 0.5;
+    public static double SPEED_CAP_TELEOP = 0.5;
     
     RobotMovement(Robot robot) {
         this.hardware = robot.hardware;
@@ -22,10 +23,10 @@ public class RobotMovement {
         double frontRightPower = (y + x - h) / denominator;
         double backRightPower = (y - x - h) / denominator;
 
-        hardware.driveTrain.topLeft.setPower(SPEED_CAP * frontLeftPower);
-        hardware.driveTrain.backLeft.setPower(SPEED_CAP * backLeftPower);
-        hardware.driveTrain.topRight.setPower(SPEED_CAP * frontRightPower);
-        hardware.driveTrain.backRight.setPower(SPEED_CAP * backRightPower);
+        hardware.driveTrain.topLeft.setPower(SPEED_CAP_AUTON * frontLeftPower);
+        hardware.driveTrain.backLeft.setPower(SPEED_CAP_AUTON * backLeftPower);
+        hardware.driveTrain.topRight.setPower(SPEED_CAP_AUTON * frontRightPower);
+        hardware.driveTrain.backRight.setPower(SPEED_CAP_AUTON * backRightPower);
     }
 
     public void strafeR(double x, double y, double h) {
@@ -39,9 +40,9 @@ public class RobotMovement {
         double frontRightPower = (yR + xR - h) / denominator;
         double backRightPower = (yR - xR - h) / denominator;
 
-        hardware.driveTrain.topLeft.setPower(SPEED_CAP * frontLeftPower);
-        hardware.driveTrain.backLeft.setPower(SPEED_CAP * backLeftPower);
-        hardware.driveTrain.topRight.setPower(SPEED_CAP * frontRightPower);
-        hardware.driveTrain.backRight.setPower(SPEED_CAP * backRightPower);
+        hardware.driveTrain.topLeft.setPower(SPEED_CAP_TELEOP * frontLeftPower);
+        hardware.driveTrain.backLeft.setPower(SPEED_CAP_TELEOP * backLeftPower);
+        hardware.driveTrain.topRight.setPower(SPEED_CAP_TELEOP * frontRightPower);
+        hardware.driveTrain.backRight.setPower(SPEED_CAP_TELEOP * backRightPower);
     }
 }

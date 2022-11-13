@@ -62,8 +62,8 @@ public class Odometry {
         double dy = cm_per_tick * (dn3 - (dn2 - dn1) * CENTER_WHEEL_OFFSET / TRACK_WIDTH);
         double theta = pos.h + (dtheta / 2.0);
 
-        pos.y += dx * Math.cos(theta) - dy * Math.sin(theta);
-        pos.x += dx * Math.sin(theta) + dy * Math.cos(theta);
+        pos.x += dx * Math.cos(theta) - dy * Math.sin(theta);
+        pos.y += dx * Math.sin(theta) + dy * Math.cos(theta);
         pos.h += AngleUnit.normalizeRadians(dtheta);
 
         pose2d = new Pose2d(
