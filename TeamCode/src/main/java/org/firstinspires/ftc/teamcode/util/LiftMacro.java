@@ -1,33 +1,73 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDriveTrain;
 
 public class LiftMacro implements Runnable {
-    RobotMovement movement;
-    public boolean complete;
-    int height;
-    int aimHeight;
-    public MecanumDriveTrain driveTrain;
-    String lift;
+    private MecanumDriveTrain driveTrain;
 
-    public LiftMacro(RobotMovement movement, int height, MecanumDriveTrain driveTrain, String lift) {
-        this.movement = movement;
+    public boolean complete = false;
+    private final int aimHeight;
+    private final String lift;
+
+    public LiftMacro(int height, MecanumDriveTrain driveTrain, String lift) {
         this.aimHeight = height;
         this.driveTrain = driveTrain;
+
         this.lift = lift;
     }
 
     @Override
     public void run() {
-        int deltaHeight = aimHeight - height;
-        if(lift == "leftLift"){
+        if (lift.equals("leftLift")) {
             driveTrain.leftLift.goToPosition(aimHeight, 0.3);
-        }else{
+        } else {
             driveTrain.rightLift.goToPosition(aimHeight, 0.3);
         }
-        this.height = aimHeight;
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(aimHeight > 0) {
+            if (lift.equals("leftLift")) {
+                driveTrain.leftClaw.setPosition(0.75);
+            } else {
+                driveTrain.rightClaw.setPosition(0.75);
+            }
+        } else {
+            if (lift.equals("leftLift")) {
+                driveTrain.leftClaw.setPosition(0);
+            } else {
+                driveTrain.rightClaw.setPosition(0);
+            }
+        }
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if (lift.equals("leftLift")) {
+            driveTrain.leftClaw.setPosition(0);
+        } else {
+            driveTrain.rightClaw.setPosition(0);
+        }
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if (lift.equals("leftLift")) {
+            driveTrain.leftLift.goToPosition(0, 0.3);
+        } else {
+            driveTrain.rightLift.goToPosition(0, 0.3);
+        }
+
+        this.complete = true;
     }
 }

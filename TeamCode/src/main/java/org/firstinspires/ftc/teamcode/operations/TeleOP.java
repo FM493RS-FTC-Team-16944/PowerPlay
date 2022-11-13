@@ -4,20 +4,18 @@ package org.firstinspires.ftc.teamcode.operations;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.gamepad.GamePad;
-import org.firstinspires.ftc.teamcode.gamepad.easypad.IGamePad;
+import org.firstinspires.ftc.teamcode.gamepad.ButtonGamePad;
+import org.firstinspires.ftc.teamcode.gamepad.MovementGamePad;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.models.XyhVector;
-
-import java.util.LinkedHashMap;
 
 @TeleOp(name = "TeleOp")
 public class TeleOP extends LinearOpMode {
     public Robot robot;
 
     public RobotHardware hardware;
-    public GamePad gamepad;
+    public MovementGamePad gamepad;
+    private ButtonGamePad otherGamepad;
 
     @Override
     public void runOpMode() {
@@ -25,7 +23,9 @@ public class TeleOP extends LinearOpMode {
 
         robot = new Robot(this);
         hardware = robot.hardware;
-        gamepad = new GamePad(robot,gamepad1);
+
+        gamepad = new MovementGamePad(robot,gamepad1);
+        otherGamepad = new ButtonGamePad(robot, gamepad2);
 
         hardware.driveTrain.resetDriveEncoders();
 
@@ -34,6 +34,7 @@ public class TeleOP extends LinearOpMode {
             hardware.odometry.updateOdometryReadings();
 
             gamepad.updateRobot();
+            otherGamepad.updateRobot();
         }
     }
 

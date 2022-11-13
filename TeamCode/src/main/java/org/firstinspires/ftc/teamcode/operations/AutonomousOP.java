@@ -4,52 +4,93 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.purepursuit.Path;
 import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint;
+import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
+import com.arcrobotics.ftclib.purepursuit.waypoints.InterruptWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.movement.ImageCommand;
-import org.firstinspires.ftc.teamcode.movement.TrackingPathFinder;
+import org.firstinspires.ftc.teamcode.util.LiftMacro;
+import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Autonomous
 @Config
 public class AutonomousOP extends LinearOpMode {
     public Robot robot;
-    private TrackingPathFinder trackingPathFinder;
+
+    public XyhVector absolutePosition = new XyhVector(-83, 0, 0);
+    private XyhVector lastDestination;
 
     @Override
     public void runOpMode() throws InterruptedException {
         this.robot = new Robot(this);
-        this.trackingPathFinder = new TrackingPathFinder(this);
+
+        LiftMacro liftMacroLeft = new LiftMacro(1900, this.robot.hardware.driveTrain, "leftLift");
+        Thread lt0 = new Thread(liftMacroLeft);
+
+        LiftMacro liftMacroRight = new LiftMacro(0, this.robot.hardware.driveTrain, "rightLift");
+        Thread rt0 = new Thread(liftMacroRight);
 
         waitForStart();
 
         while(opModeIsActive()) {
             movePath(new Path(
                     new StartWaypoint(0, 0),
-                    new EndWaypoint(
-                            400, 0, 0, 0.5,
-                            0.5, 30, 0.8, 1
-                    )
+                    new InterruptWaypoint(
+                            10 - this.absolutePosition.x, 0 - this.absolutePosition.y, 0, 0.5,
+                            0.5, 30, 0.8, 1,
+                            this::detectObjects
+                    ),
+                    new GeneralWaypoint(-144.5 - this.absolutePosition.x, 0 - this.absolutePosition.y),
+                    new InterruptWaypoint(-144.5 - this.absolutePosition.x, 102 - this.absolutePosition.y, 0, 0.5,
+                            0.5, 30, 0.8, 1,
+                            lt0::start),
+                    new GeneralWaypoint(-144.5 - this.absolutePosition.x, 75.5 - this.absolutePosition.y),
+                    new InterruptWaypoint(-95 - this.absolutePosition.x, 75.5 - this.absolutePosition.y, Math.toRadians(90), 0.5,
+                            0.5, 30, 0.8, 1,
+                            () -> { this.robot.hardware.driveTrain.rightClaw.setPosition(0.75); this.robot.hardware.driveTrain.rightClaw.setPosition(0); }),
+                    new GeneralWaypoint(-73 - this.absolutePosition.x, 75.5 - this.absolutePosition.y),
+                    new GeneralWaypoint(-73 - this.absolutePosition.x, 135 - this.absolutePosition.y),
+                    new GeneralWaypoint(-124 - this.absolutePosition.x, 135 - this.absolutePosition.y),
+                    new InterruptWaypoint(-124 - this.absolutePosition.x, 160 - this.absolutePosition.y, 0, 0.5,
+                            0.5, 30, 0.8 ,1,
+                            rt0::start),
+                    new GeneralWaypoint(-124 - this.absolutePosition.x, 135 - this.absolutePosition.y),
+                    new EndWaypoint(this.lastDestination.x - this.absolutePosition.x, this.lastDestination.y - this.absolutePosition.y,
+                            0, 0.5, 0.5, 30, 0.8, 1)
             ));
-
-            List<String> detectedObjects = this.robot.hardware.detector.getObjects();
-
-            for (String label : detectedObjects) {
-                try {
-                    this.trackingPathFinder.invoke(label);
-                } catch (InvocationTargetException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
 
             this.robot.hardware.odometry.update();
             this.robot.telemetry.update();
+            this.updateAbsolutePosition();
         }
+    }
+
+    public void detectObjects() {
+        List<String> detectedObjects = this.robot.hardware.detector.getObjects();
+
+        for (String label : detectedObjects) {
+            switch (label) {
+                case "1 Bolt":
+                    lastDestination = new XyhVector(-14, 135, 0);
+                    break;
+                case "2 Bulb":
+                    lastDestination = new XyhVector(-71, 135, 0);
+                    break;
+                case "3 Panel":
+                    lastDestination = new XyhVector(-124, 135, 0);
+                    break;
+            }
+        }
+    }
+
+    public void updateAbsolutePosition() {
+        this.absolutePosition.x += this.robot.hardware.odometry.pose2d.getX();
+        this.absolutePosition.y += this.robot.hardware.odometry.pose2d.getY();
+        this.absolutePosition.h += this.robot.hardware.odometry.pose2d.getHeading();
     }
 
     public void movePath(Path path) throws InterruptedException {
@@ -65,21 +106,7 @@ public class AutonomousOP extends LinearOpMode {
 
             this.robot.movement.strafe(speeds[0], speeds[1], speeds[2]);
             this.robot.hardware.odometry.update();
+            this.updateAbsolutePosition();
         }
-    }
-
-    @ImageCommand(name="1 Bolt")
-    public void boltPath() {
-        this.telemetry.addData("Object", "Bolt");
-    }
-
-    @ImageCommand(name="2 Bulb")
-    public void bulbPath() {
-        this.telemetry.addData("Object", "Bulb");
-    }
-
-    @ImageCommand(name="3 Panel")
-    public void panelPath() {
-        this.telemetry.addData("Object", "Panel");
     }
 }
