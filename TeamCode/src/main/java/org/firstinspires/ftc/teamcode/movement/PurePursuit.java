@@ -11,10 +11,10 @@ import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 import java.util.ArrayList;
 
 public class PurePursuit {
-    private final Odometry1 odometry;
+    private final Odometry odometry;
     private final RobotMovement movement;
 
-    public PurePursuit(Odometry1 odometry, RobotMovement movement) {
+    public PurePursuit(Odometry odometry, RobotMovement movement) {
         this.odometry = odometry;
         this.movement = movement;
     }

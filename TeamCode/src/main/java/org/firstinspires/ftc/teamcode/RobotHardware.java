@@ -3,20 +3,18 @@ package org.firstinspires.ftc.teamcode;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
 import org.firstinspires.ftc.teamcode.hardware.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.models.Mode;
 import org.firstinspires.ftc.teamcode.models.XyhVector;
 import org.firstinspires.ftc.teamcode.movement.Odometry;
-import org.firstinspires.ftc.teamcode.movement.Odometry1;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
-//import org.firstinspires.ftc.teamcode.vision.ObjectDetector;
+import org.firstinspires.ftc.teamcode.vision.ObjectDetector;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -37,10 +35,9 @@ public class RobotHardware {
     public MecanumDriveTrain driveTrain;
     public final Robot.State state;
     public Odometry odometry;
-    public Odometry1 odometry1;
     public final TelemLog telemetry;
     public Mode currentMode = Mode.DRIVER_CONTROL;
-    //public final ObjectDetector detector;
+    public final ObjectDetector detector;
 
     public HardwareMap hardwareMap;
 
@@ -68,12 +65,10 @@ public class RobotHardware {
         );
 
         this.odometry = new Odometry(this);
-        this.odometry1 = new Odometry1(this);
 
-        globalAngleI = this.odometry1.getPosition().h;
+        globalAngleI = this.odometry.getPosition().h;
 
-
-
+        /*
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
         parameters.mode                = BNO055IMU.SensorMode.IMU;
@@ -84,11 +79,11 @@ public class RobotHardware {
         imu = this.hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
+         */
 
         resetAngle();
 
-        //this.detector = new ObjectDetector(this);
-
+        this.detector = new ObjectDetector(this);
     }
 
     public void outputReadings() {
@@ -99,10 +94,11 @@ public class RobotHardware {
     }
 
     public void resetAngle() {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        this.odometry.position = new Pose2d(odometry.position.getX(),odometry.position.getX(),new Rotation2d());
-        this.odometry1.pos = new XyhVector(odometry1.pos.x,odometry1.pos.y,0);
-        this.odometry.previousAngle = new Rotation2d();
+        // lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        this.odometry.pose2d = new Pose2d(odometry.pose2d.getX(),odometry.pose2d.getX(),new Rotation2d());
+        this.odometry.pos = new XyhVector(odometry.pos.x, odometry.pos.y,0);
+
+        // this.odometry.previousAngle = new Rotation2d();
         globalAngleI = 0;
     }
 }
