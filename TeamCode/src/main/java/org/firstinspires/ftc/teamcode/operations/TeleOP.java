@@ -15,7 +15,7 @@ public class TeleOP extends LinearOpMode {
 
     public RobotHardware hardware;
     public MovementGamePad gamepad;
-    private ButtonGamePad otherGamepad;
+    private ButtonGamePad buttonGamepad;
 
     @Override
     public void runOpMode() {
@@ -25,7 +25,7 @@ public class TeleOP extends LinearOpMode {
         hardware = robot.hardware;
 
         gamepad = new MovementGamePad(robot,gamepad1);
-        otherGamepad = new ButtonGamePad(robot, gamepad2);
+        buttonGamepad = new ButtonGamePad(robot, gamepad2);
 
         hardware.driveTrain.resetDriveEncoders();
 
@@ -34,7 +34,7 @@ public class TeleOP extends LinearOpMode {
             hardware.odometry.updateOdometryReadings();
 
             gamepad.updateRobot();
-            otherGamepad.updateRobot();
+            buttonGamepad.updateRobot();
         }
     }
 

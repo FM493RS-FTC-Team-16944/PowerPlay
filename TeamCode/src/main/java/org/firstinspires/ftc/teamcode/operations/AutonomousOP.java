@@ -21,7 +21,6 @@ import java.util.List;
 public class AutonomousOP extends LinearOpMode {
     public Robot robot;
 
-    public XyhVector absolutePosition = new XyhVector(-83, 0, 0);
     private XyhVector lastDestination;
 
     @Override
@@ -38,34 +37,33 @@ public class AutonomousOP extends LinearOpMode {
 
         while(opModeIsActive()) {
             movePath(new Path(
-                    new StartWaypoint(0, 0),
+                    new StartWaypoint(-83, 0),
                     new InterruptWaypoint(
-                            10 - this.absolutePosition.x, 0 - this.absolutePosition.y, 0, 0.5,
+                            10, 0, 0, 0.5,
                             0.5, 30, 0.8, 1,
                             this::detectObjects
                     ),
-                    new GeneralWaypoint(-144.5 - this.absolutePosition.x, 0 - this.absolutePosition.y),
-                    new InterruptWaypoint(-144.5 - this.absolutePosition.x, 102 - this.absolutePosition.y, 0, 0.5,
+                    new GeneralWaypoint(-144.5, 0),
+                    new InterruptWaypoint(-144.5, 102, 0, 0.5,
                             0.5, 30, 0.8, 1,
                             lt0::start),
-                    new GeneralWaypoint(-144.5 - this.absolutePosition.x, 75.5 - this.absolutePosition.y),
-                    new InterruptWaypoint(-95 - this.absolutePosition.x, 75.5 - this.absolutePosition.y, Math.toRadians(90), 0.5,
+                    new GeneralWaypoint(-144.5, 75.5),
+                    new InterruptWaypoint(-95, 75.5, Math.toRadians(90), 0.5,
                             0.5, 30, 0.8, 1,
                             () -> { this.robot.hardware.driveTrain.rightClaw.setPosition(0.75); this.robot.hardware.driveTrain.rightClaw.setPosition(0); }),
-                    new GeneralWaypoint(-73 - this.absolutePosition.x, 75.5 - this.absolutePosition.y),
-                    new GeneralWaypoint(-73 - this.absolutePosition.x, 135 - this.absolutePosition.y),
-                    new GeneralWaypoint(-124 - this.absolutePosition.x, 135 - this.absolutePosition.y),
-                    new InterruptWaypoint(-124 - this.absolutePosition.x, 160 - this.absolutePosition.y, 0, 0.5,
+                    new GeneralWaypoint(-73, 75.5),
+                    new GeneralWaypoint(-73, 135),
+                    new GeneralWaypoint(-124, 135),
+                    new InterruptWaypoint(-124, 160, 0, 0.5,
                             0.5, 30, 0.8 ,1,
                             rt0::start),
-                    new GeneralWaypoint(-124 - this.absolutePosition.x, 135 - this.absolutePosition.y),
-                    new EndWaypoint(this.lastDestination.x - this.absolutePosition.x, this.lastDestination.y - this.absolutePosition.y,
+                    new GeneralWaypoint(-124, 135),
+                    new EndWaypoint(this.lastDestination.x, this.lastDestination.y,
                             0, 0.5, 0.5, 30, 0.8, 1)
             ));
 
             this.robot.hardware.odometry.update();
             this.robot.telemetry.update();
-            this.updateAbsolutePosition();
         }
     }
 
@@ -87,12 +85,6 @@ public class AutonomousOP extends LinearOpMode {
         }
     }
 
-    public void updateAbsolutePosition() {
-        this.absolutePosition.x += this.robot.hardware.odometry.pose2d.getX();
-        this.absolutePosition.y += this.robot.hardware.odometry.pose2d.getY();
-        this.absolutePosition.h += this.robot.hardware.odometry.pose2d.getHeading();
-    }
-
     public void movePath(Path path) throws InterruptedException {
         while (!path.isFinished()) {
             if (path.timedOut())
@@ -106,7 +98,6 @@ public class AutonomousOP extends LinearOpMode {
 
             this.robot.movement.strafe(speeds[0], speeds[1], speeds[2]);
             this.robot.hardware.odometry.update();
-            this.updateAbsolutePosition();
         }
     }
 }

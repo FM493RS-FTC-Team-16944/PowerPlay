@@ -18,7 +18,7 @@ public class PurePursuitTest extends LinearOpMode {
         Robot robot = new Robot(this);
 
         this.purePursuit = new PurePursuit(
-                robot.hardware.odometry1,
+                robot.hardware.odometry,
                 robot.movement
         );
 
@@ -39,8 +39,8 @@ public class PurePursuitTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive() && !isStopRequested()) {
-            robot.hardware.odometry1.update();
-            robot.hardware.odometry1.updateOdometryReadings();
+            robot.hardware.odometry.update();
+            robot.hardware.odometry.updateOdometryReadings();
 
             this.purePursuit.followCurve(allPoints, Math.toRadians(90));
         }
