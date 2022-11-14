@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.util.LiftMacro;
 import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 
 import java.util.List;
@@ -21,7 +20,7 @@ import java.util.List;
 public class AutonomousOP extends LinearOpMode {
     public Robot robot;
 
-    private XyhVector lastDestination = new XyhVector(14, 135, 0);
+    private XyhVector lastDestination = new XyhVector(-181, 4, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -29,45 +28,59 @@ public class AutonomousOP extends LinearOpMode {
 
         this.robot = new Robot(this);
 
-        LiftMacro liftMacroLeft = new LiftMacro(1900, this.robot.hardware.driveTrain, "leftLift");
-        Thread lt0 = new Thread(liftMacroLeft);
-
-        LiftMacro liftMacroRight = new LiftMacro(0, this.robot.hardware.driveTrain, "rightLift");
-        Thread rt0 = new Thread(liftMacroRight);
-
-        this.robot.hardware.odometry.pose2d = new Pose2d(-83, 0, new Rotation2d());
-
-        this.robot.hardware.odometry.pos = new XyhVector(-83, 0, 0);
+        this.robot.hardware.odometry.pose2d = new Pose2d(-67.3, 0, new Rotation2d());
+        this.robot.hardware.odometry.pos = new XyhVector(-67.3, 0, 0);
 
         while (opModeIsActive()) {
             this.robot.hardware.odometry.update();
 
+            this.robot.hardware.driveTrain.leftClaw.setPosition(0);
+            this.robot.hardware.driveTrain.leftLift.goToPosition(3725, 0.3);
+
             movePath(new Path(
-                    new StartWaypoint(-83, 0),
-//                    new InterruptWaypoint(
-//                            -93, 0, 0, 0.5,
-//                            0.5, 30, 0.8, 1,
-//                            this::detectObjects
-//                    ),
-                    new GeneralWaypoint(-144.5, 10, 0, 1,
+                    new StartWaypoint(-67.3, 0),
+                    new EndWaypoint(
+                            -70, 30, 0, 1,
+                            0.5, 30, 2, 0.3
+                    )));
+
+            this.robot.hardware.telemetry.addData("finished going to path", "yes");
+            this.robot.hardware.outputReadings();
+
+            this.detectObjects();
+
+            this.robot.hardware.telemetry.addData("finished vision going to nedxt path", "yes");
+            this.robot.hardware.outputReadings();
+
+            movePath(new Path(
+                    new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
+                    new GeneralWaypoint(-83, 2, 0, 1,
                             0.5, 30),
-//                    new InterruptWaypoint(-144.5, 102, 0, 0.5,
-//                            0.5, 30, 0.8, 1,
-//                            lt0::start),
-                    new GeneralWaypoint(-144.5, 75.5),
-//                    new InterruptWaypoint(-95, 75.5, Math.toRadians(90), 0.5,
-//                            0.5, 30, 0.8, 1,
-//                            () -> { this.robot.hardware.driveTrain.rightClaw.setPosition(0.75); this.robot.hardware.driveTrain.rightClaw.setPosition(0); }),
-                    new GeneralWaypoint(-73, 75.5),
-                    new GeneralWaypoint(-73, 135),
-                    new GeneralWaypoint(-124, 135),
-//                    new InterruptWaypoint(-124, 160, 0, 0.5,
-//                            0.5, 30, 0.8 ,1,
-//                            rt0::start),
-                    new GeneralWaypoint(-124, 135),
+                    new GeneralWaypoint(-155, 2, 0, 1,
+                            0.5, 30),
+                    new GeneralWaypoint(-155, 77, 0, 1,
+                            0.5, 30),
+                    new EndWaypoint(-174.44, 77, 0, 1,
+                            0.5, 30, 1, 0.2)
+                    )
+            );
+
+            sleep(1000);
+            this.robot.hardware.driveTrain.leftClaw.setPosition(0.75);
+            sleep(1000);
+
+
+            movePath(new Path(
+                    new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
+                    new GeneralWaypoint(-160, 77, 0, 1,
+                            0.5, 30),
+                    new GeneralWaypoint(-160, 85, 0, 1,
+                            0.5, 30),
                     new EndWaypoint(this.lastDestination.x, this.lastDestination.y,
-                            0, 0.5, 0.5, 30, 0.8, 1)
+                            0, 1, 0.5, 30, 2, 1)
             ));
+            this.robot.hardware.driveTrain.leftLift.goToPosition(0, 0.3);
+            sleep(2000);
 
             this.robot.hardware.outputReadings();
         }
@@ -78,42 +91,48 @@ public class AutonomousOP extends LinearOpMode {
 
         for (String label : detectedObjects) {
             switch (label) {
-                case "1 Bolt":
-                    lastDestination = new XyhVector(-14, 135, 0);
+                case "SQUARE":
+                    lastDestination = new XyhVector(-14, 110, 0);
+                    this.telemetry.addData("Object Recognized: ", "SQUARE");
                     break;
-                case "2 Bulb":
-                    lastDestination = new XyhVector(-71, 135, 0);
+                case "CIRCLE":
+                    lastDestination = new XyhVector(-71, 110, 0);
+                    this.telemetry.addData("Object Recognized: ", "CIRCLE");
                     break;
-                case "3 Panel":
-                    lastDestination = new XyhVector(-124, 135, 0);
+                case "TRIANGLE":
+                    lastDestination = new XyhVector(-160, 110, 0);
+                    this.telemetry.addData("Object Recognized: ", "TRIANGLE");
                     break;
             }
         }
+        this.telemetry.update();
+
+
     }
 
     public void movePath(Path path) throws InterruptedException {
         path.init();
+        path.setWaypointTimeouts(5000);
 
         while (!path.isFinished()) {
             if (path.timedOut())
                 throw new InterruptedException("Timed out");
 
-            Pose2d position = this.robot.hardware.odometry.pose2d;
+            XyhVector position = this.robot.hardware.odometry.pos;
 
             // return the motor speeds
-            double[] speeds = path.loop(position.getX(), position.getY(),
-                    position.getHeading());
+            double[] speeds = path.loop(position.x, position.y, position.h);
 
             this.robot.telemetry.addData("Speed 0", speeds[0]);
             this.robot.telemetry.addData("Speed 1", speeds[1]);
             this.robot.telemetry.addData("Speed 2", speeds[2]);
 
-            this.robot.movement.strafe(-speeds[0], -speeds[1], speeds[2]);
+            this.robot.telemetry.addData("Is Path Finished?",path.isFinished());
+
+            this.robot.movement.strafe(-speeds[0], speeds[1], speeds[2]);
 
             this.robot.hardware.odometry.update();
             this.robot.hardware.outputReadings();
         }
-
-        stop();
     }
 }

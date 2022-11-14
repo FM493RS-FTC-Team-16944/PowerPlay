@@ -19,9 +19,8 @@ import java.text.DecimalFormat;
 public class RobotHardware {
     public static final DecimalFormat DECIMAL_FORMAT;
 
-    public BNO055IMU imu;
+    //public BNO055IMU imu;
     public Orientation lastAngles = new Orientation();
-    public double globalAngleI = 0;
 
     static {
         DECIMAL_FORMAT = new DecimalFormat("#.###");
@@ -63,7 +62,6 @@ public class RobotHardware {
 
         this.odometry = new Odometry(this);
 
-        globalAngleI = this.odometry.getPosition().h;
 
         /*
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -96,6 +94,5 @@ public class RobotHardware {
         this.odometry.pos = new XyhVector(odometry.pos.x, odometry.pos.y,0);
 
         // this.odometry.previousAngle = new Rotation2d();
-        globalAngleI = 0;
     }
 }

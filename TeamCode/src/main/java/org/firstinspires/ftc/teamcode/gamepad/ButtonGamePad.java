@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.RobotMovement;
+import org.firstinspires.ftc.teamcode.hardware.Motor;
 import org.firstinspires.ftc.teamcode.models.Lift;
 import org.firstinspires.ftc.teamcode.models.OpenClose;
 
@@ -20,6 +21,9 @@ public class ButtonGamePad {
 
     private final RobotHardware hardware;
     private final RobotMovement movement;
+
+    public Motor currentLift;
+    public boolean prevSwitched = false;
 
     public boolean prevRightClaw = false;
     public boolean prevLeftClaw = false;
@@ -105,5 +109,25 @@ public class ButtonGamePad {
             }
         }
         prevRightClaw = gamepad.dpad_right;
+        prevRightClaw = gamepad.dpad_right;
+
+        if(gamepad.right_trigger > 0 && gamepad.left_trigger > 0 && !prevSwitched){
+            if(currentLift == hardware.driveTrain.leftLift){
+                currentLift = hardware.driveTrain.rightLift;
+            }else{
+                currentLift = hardware.driveTrain.leftLift;
+            }
+        }
+        prevSwitched = (gamepad.right_trigger > 0 && gamepad.left_trigger > 0);
+
+        if(gamepad.right_trigger > 0){
+            currentLift.setPower(0.3);
+        }else if(gamepad.left_trigger > 0){
+            currentLift.setPower(-0.3);
+        }else if(gamepad.left_trigger == 0 && gamepad.right_trigger == 0){
+            currentLift.setPower(0);
+        }
     }
+
+
 }

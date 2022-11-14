@@ -30,8 +30,8 @@ public class RobotMovement {
     }
 
     public void strafeR(double x, double y, double h) {
-        double xR = x * Math.cos(hardware.globalAngleI) - y * Math.sin(hardware.globalAngleI);
-        double yR = x * Math.sin(hardware.globalAngleI) + y * Math.cos(hardware.globalAngleI);
+        double xR = x * Math.cos(hardware.odometry.pos.h) - y * Math.sin(hardware.odometry.pos.h);
+        double yR = x * Math.sin(hardware.odometry.pos.h) + y * Math.cos(hardware.odometry.pos.h);
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(h), 1);
 
@@ -44,5 +44,6 @@ public class RobotMovement {
         hardware.driveTrain.backLeft.setPower(SPEED_CAP_TELEOP * backLeftPower);
         hardware.driveTrain.topRight.setPower(SPEED_CAP_TELEOP * frontRightPower);
         hardware.driveTrain.backRight.setPower(SPEED_CAP_TELEOP * backRightPower);
+
     }
 }
