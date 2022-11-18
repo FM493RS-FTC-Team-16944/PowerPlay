@@ -9,10 +9,12 @@ import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous
@@ -24,9 +26,13 @@ public class AutonomousOP extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        this.robot = new Robot(this);
+        robot.hardware.driveTrain.leftClaw.setPosition(0);
+
         waitForStart();
 
-        this.robot = new Robot(this);
+        ElapsedTime timer = new ElapsedTime();
+
 
         this.robot.hardware.odometry.pose2d = new Pose2d(-67.3, 0, new Rotation2d());
         this.robot.hardware.odometry.pos = new XyhVector(-67.3, 0, 0);
@@ -40,69 +46,80 @@ public class AutonomousOP extends LinearOpMode {
             movePath(new Path(
                     new StartWaypoint(-67.3, 0),
                     new EndWaypoint(
-                            -70, 30, 0, 1,
+                            -70, 35, 0, 1,
                             0.5, 30, 2, 0.3
                     )));
 
             this.robot.hardware.telemetry.addData("finished going to path", "yes");
             this.robot.hardware.outputReadings();
 
-            this.detectObjects();
-
+            sleep(1000);
+            timer.reset();
+            this.detectObjects(timer);
+            sleep(4000);
             this.robot.hardware.telemetry.addData("finished vision going to nedxt path", "yes");
             this.robot.hardware.outputReadings();
 
-            movePath(new Path(
-                    new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
-                    new GeneralWaypoint(-83, 2, 0, 1,
-                            0.5, 30),
-                    new GeneralWaypoint(-155, 2, 0, 1,
-                            0.5, 30),
-                    new GeneralWaypoint(-155, 77, 0, 1,
-                            0.5, 30),
-                    new EndWaypoint(-174.44, 77, 0, 1,
-                            0.5, 30, 1, 0.2)
-                    )
-            );
+            if(timer.seconds() >= 2.0) {
+                movePath(new Path(
+                                new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
+                                new GeneralWaypoint(-70, 2, 0, 1,
+                                        0.5, 30),
+                                new GeneralWaypoint(-155, 2, 0, 1,
+                                        0.5, 30),
+                                new GeneralWaypoint(-155, 78, 0, 1,
+                                        0.5, 30),
+                                new EndWaypoint(-173.44, 78, 0, 1,
+                                        0.5, 30, 1, 0.2)
+                        )
+                );
 
-            sleep(1000);
-            this.robot.hardware.driveTrain.leftClaw.setPosition(0.75);
-            sleep(1000);
+                sleep(1000);
+                this.robot.hardware.driveTrain.leftClaw.setPosition(0.75);
+                sleep(1000);
 
 
-            movePath(new Path(
-                    new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
-                    new GeneralWaypoint(-160, 77, 0, 1,
-                            0.5, 30),
-                    new GeneralWaypoint(-160, 85, 0, 1,
-                            0.5, 30),
-                    new EndWaypoint(this.lastDestination.x, this.lastDestination.y,
-                            0, 1, 0.5, 30, 2, 1)
-            ));
-            this.robot.hardware.driveTrain.leftLift.goToPosition(0, 0.3);
-            sleep(2000);
+                movePath(new Path(
+                        new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
+                        new GeneralWaypoint(-160, 77, 0, 1,
+                                0.5, 30),
+                        new GeneralWaypoint(-160, 85, 0, 1,
+                                0.5, 30),
+                        new EndWaypoint(this.lastDestination.x, this.lastDestination.y,
+                                0, 1, 0.5, 30, 2, 1)
+                ));
+                this.robot.hardware.driveTrain.leftLift.goToPosition(0, 0.3);
+                sleep(2000);
 
-            this.robot.hardware.outputReadings();
+                this.robot.hardware.outputReadings();
+            }
         }
     }
 
-    public void detectObjects() {
-        List<String> detectedObjects = this.robot.hardware.detector.getObjects();
-
-        for (String label : detectedObjects) {
-            switch (label) {
-                case "SQUARE":
-                    lastDestination = new XyhVector(-14, 110, 0);
-                    this.telemetry.addData("Object Recognized: ", "SQUARE");
-                    break;
-                case "CIRCLE":
-                    lastDestination = new XyhVector(-71, 110, 0);
-                    this.telemetry.addData("Object Recognized: ", "CIRCLE");
-                    break;
-                case "TRIANGLE":
-                    lastDestination = new XyhVector(-160, 110, 0);
-                    this.telemetry.addData("Object Recognized: ", "TRIANGLE");
-                    break;
+    public void detectObjects(ElapsedTime timer) {
+        List<String> detectedObjects = new ArrayList<>();
+        detectedObjects.add(" ");
+        telemetry.addData("Timer:", timer.seconds());
+        if(timer.seconds() < 2.0){
+            detectedObjects.clear();
+            detectedObjects.addAll(this.robot.hardware.detector.getObjects());
+        }else {
+            sleep(1000);
+            for (String label : detectedObjects) {
+                switch (label) {
+                    case "SQUARE":
+                        lastDestination = new XyhVector(-14, 110, 0);
+                        this.telemetry.addData("Object Recognized: ", "SQUARE");
+                        break;
+                    case "CIRCLE":
+                        lastDestination = new XyhVector(-71, 110, 0);
+                        this.telemetry.addData("Object Recognized: ", "CIRCLE");
+                        break;
+                    case "TRIANGLE":
+                        lastDestination = new XyhVector(-160, 110, 0);
+                        this.telemetry.addData("Object Recognized: ", "TRIANGLE");
+                        break;
+                }
             }
         }
         this.telemetry.update();

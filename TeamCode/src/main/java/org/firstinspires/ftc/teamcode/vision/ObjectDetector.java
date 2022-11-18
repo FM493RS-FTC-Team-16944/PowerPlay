@@ -23,8 +23,8 @@ public class ObjectDetector {
     //private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     private static final String[] LABELS = {
-            "SQUARE",
             "CIRCLE",
+            "SQUARE",
             "TRIANGLE"
     };
 
