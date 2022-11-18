@@ -35,6 +35,8 @@ public class RobotHardware {
     public Mode currentMode = Mode.DRIVER_CONTROL;
     public final ObjectDetector detector;
 
+    public String objectDetected;
+
     public HardwareMap hardwareMap;
 
     public RobotHardware(Robot robot) {
@@ -84,7 +86,7 @@ public class RobotHardware {
     public void outputReadings() {
         this.odometry.updateOdometryReadings();
         this.driveTrain.updateEncoderReadings();
-
+        this.telemetry.addData("Object Detected: ", objectDetected);
         this.telemetry.update();
     }
 

@@ -31,7 +31,7 @@ public class MovementGamePad {
             movement.strafeR(x, y, h);
         }
 
-        if (gamepad.x && !prevX) {
+        if (gamepad.x && gamepad.x != prevX) {
             hardware.resetAngle();
         }
 

@@ -22,7 +22,7 @@ import java.util.List;
 public class AutonomousOP extends LinearOpMode {
     public Robot robot;
 
-    private XyhVector lastDestination = new XyhVector(-181, 4, 0);
+    private XyhVector lastDestination = new XyhVector(-158, 110, 0); // prev -181 4 0
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -40,13 +40,12 @@ public class AutonomousOP extends LinearOpMode {
         while (opModeIsActive()) {
             this.robot.hardware.odometry.update();
 
-            this.robot.hardware.driveTrain.leftClaw.setPosition(0);
-            this.robot.hardware.driveTrain.leftLift.goToPosition(3725, 0.3);
+            this.robot.hardware.driveTrain.leftLift.goToPosition(3500, 0.3);
 
             movePath(new Path(
                     new StartWaypoint(-67.3, 0),
                     new EndWaypoint(
-                            -70, 35, 0, 1,
+                            -73, 42, 0, 0.65,
                             0.5, 30, 2, 0.3
                     )));
 
@@ -63,27 +62,36 @@ public class AutonomousOP extends LinearOpMode {
             if(timer.seconds() >= 2.0) {
                 movePath(new Path(
                                 new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
-                                new GeneralWaypoint(-70, 2, 0, 1,
+                                new GeneralWaypoint(-73, 2, 0, 1,
                                         0.5, 30),
-                                new GeneralWaypoint(-155, 2, 0, 1,
+                                new GeneralWaypoint(-150, 2, 0, 1,
                                         0.5, 30),
-                                new GeneralWaypoint(-155, 78, 0, 1,
-                                        0.5, 30),
-                                new EndWaypoint(-173.44, 78, 0, 1,
-                                        0.5, 30, 1, 0.2)
+                                new EndWaypoint(-150, 95, 0, 1,
+                                0.5, 30, 2, 0.2)
+
                         )
                 );
+
+                movePath(new Path(
+                        new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
+                        new EndWaypoint(-165, 95, 0, 1,
+                                0.5, 30, 2, 0.2)
+                ));
 
                 sleep(1000);
                 this.robot.hardware.driveTrain.leftClaw.setPosition(0.75);
                 sleep(1000);
 
-
                 movePath(new Path(
                         new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
-                        new GeneralWaypoint(-160, 77, 0, 1,
+                        new EndWaypoint(-158, 95, 0, 1,
+                                0.5, 30, 2, 0.2)
+                ));
+                movePath(new Path(
+                        new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
+                        new GeneralWaypoint(-158, 95, 0, 1,
                                 0.5, 30),
-                        new GeneralWaypoint(-160, 85, 0, 1,
+                        new GeneralWaypoint(-158, 110, 0, 1,
                                 0.5, 30),
                         new EndWaypoint(this.lastDestination.x, this.lastDestination.y,
                                 0, 1, 0.5, 30, 2, 1)
@@ -110,14 +118,17 @@ public class AutonomousOP extends LinearOpMode {
                     case "SQUARE":
                         lastDestination = new XyhVector(-14, 110, 0);
                         this.telemetry.addData("Object Recognized: ", "SQUARE");
+                        robot.hardware.objectDetected = "SQUARE";
                         break;
                     case "CIRCLE":
                         lastDestination = new XyhVector(-71, 110, 0);
                         this.telemetry.addData("Object Recognized: ", "CIRCLE");
+                        robot.hardware.objectDetected = "CIRCLE";
                         break;
                     case "TRIANGLE":
                         lastDestination = new XyhVector(-160, 110, 0);
                         this.telemetry.addData("Object Recognized: ", "TRIANGLE");
+                        robot.hardware.objectDetected = "TRIANGLE";
                         break;
                 }
             }
