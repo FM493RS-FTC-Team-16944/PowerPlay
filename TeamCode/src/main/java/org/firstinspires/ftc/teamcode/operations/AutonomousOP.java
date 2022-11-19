@@ -112,8 +112,7 @@ public class AutonomousOP extends LinearOpMode {
         List<String> detectedObjects = new ArrayList<>();
         detectedObjects.add(" ");
         telemetry.addData("Timer:", timer.seconds());
-        if(timer.seconds() < 3.5){
-            detectedObjects.clear();
+        if(timer.seconds() < 3.5 || detectedObjects.size() == 0) {
             detectedObjects.addAll(this.robot.hardware.detector.getObjects());
         }else {
             sleep(1000);
