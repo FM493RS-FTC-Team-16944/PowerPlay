@@ -35,7 +35,7 @@ public class RobotHardware {
     public Mode currentMode = Mode.DRIVER_CONTROL;
     public final ObjectDetector detector;
 
-    public String objectDetected;
+    public String objectDetected = "";
 
     public HardwareMap hardwareMap;
 

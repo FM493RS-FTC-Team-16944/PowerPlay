@@ -60,20 +60,20 @@ public class CombinedGamePad {
 
         if (gamepad.dpad_down && gamepad.y && !prevLeftLift) {
             leftLiftUp = Lift.UP;
-            this.hardware.driveTrain.leftLift.goToPosition(3725, 0.3);
+            this.hardware.driveTrain.leftLift.goToPosition(3500, 0.3);
         } else if (gamepad.dpad_down && gamepad.b && !prevLeftLift) {
             leftLiftUp = Lift.UP;
-            this.hardware.driveTrain.leftLift.goToPosition(2800, 0.3);
+            this.hardware.driveTrain.leftLift.goToPosition(2575, 0.3);
         } else if (gamepad.dpad_down && gamepad.a && !prevLeftLift) {
             leftLiftUp = Lift.UP;
-            this.hardware.driveTrain.leftLift.goToPosition(1900, 0.3);
+            this.hardware.driveTrain.leftLift.goToPosition(1675, 0.3);
         } else if (gamepad.dpad_down && !prevLeftLift) {
             if (leftLiftUp == Lift.UP) {
                 leftLiftUp = Lift.DOWN;
                 this.hardware.driveTrain.leftLift.goToPosition(0, 0.3);
             } else {
                 leftLiftUp = Lift.UP;
-                this.hardware.driveTrain.leftLift.goToPosition(3725, 0.3);
+                this.hardware.driveTrain.leftLift.goToPosition(3500, 0.3);
             }
         }
         prevLeftLift = gamepad.dpad_down;
