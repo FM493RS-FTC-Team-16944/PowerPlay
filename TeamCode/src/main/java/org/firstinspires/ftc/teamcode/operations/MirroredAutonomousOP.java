@@ -113,7 +113,7 @@ public class MirroredAutonomousOP extends LinearOpMode {
         detectedObjects.add(" ");
         telemetry.addData("Timer:", timer.seconds());
         if(timer.seconds() < 3.5 || detectedObjects.size() == 0) {
-            detectedObjects.addAll(this.robot.hardware.detector.getObjects());
+            detectedObjects.add(this.robot.hardware.detector.getLatestResult());
         }else {
             sleep(1000);
             for (String label : detectedObjects) {

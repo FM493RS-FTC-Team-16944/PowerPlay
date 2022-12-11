@@ -33,7 +33,6 @@ public class AutonomousOP extends LinearOpMode {
 
         ElapsedTime timer = new ElapsedTime();
 
-
         this.robot.hardware.odometry.pose2d = new Pose2d(-67.3, 0, new Rotation2d());
         this.robot.hardware.odometry.pos = new XyhVector(-67.3, 0, 0);
 
@@ -113,25 +112,25 @@ public class AutonomousOP extends LinearOpMode {
         detectedObjects.add(" ");
         telemetry.addData("Timer:", timer.seconds());
         if(timer.seconds() < 3.5 || detectedObjects.size() == 0) {
-            detectedObjects.addAll(this.robot.hardware.detector.getObjects());
+            detectedObjects.add(this.robot.hardware.detector.getLatestResult());
         }else {
             sleep(1000);
             for (String label : detectedObjects) {
                 switch (label) {
-                    case "SQUARE":
+                    case "1":
                         lastDestination = new XyhVector(-14, 102, 0);
-                        this.telemetry.addData("Object Recognized: ", "SQUARE");
-                        robot.hardware.objectDetected = "SQUARE";
+                        this.telemetry.addData("Object Recognized: ", "1");
+                        robot.hardware.objectDetected = "1";
                         break;
-                    case "CIRCLE":
+                    case "2":
                         lastDestination = new XyhVector(-71, 102, 0);
-                        this.telemetry.addData("Object Recognized: ", "CIRCLE");
-                        robot.hardware.objectDetected = "CIRCLE";
+                        this.telemetry.addData("Object Recognized: ", "2");
+                        robot.hardware.objectDetected = "2";
                         break;
-                    case "TRIANGLE":
+                    case "3":
                         lastDestination = new XyhVector(-160, 102, 0);
-                        this.telemetry.addData("Object Recognized: ", "TRIANGLE");
-                        robot.hardware.objectDetected = "TRIANGLE";
+                        this.telemetry.addData("Object Recognized: ", "3");
+                        robot.hardware.objectDetected = "3";
                         break;
                 }
             }

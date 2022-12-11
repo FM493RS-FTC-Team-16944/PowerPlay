@@ -12,12 +12,14 @@ import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 import org.firstinspires.ftc.teamcode.movement.Odometry;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
 import org.firstinspires.ftc.teamcode.vision.ObjectDetector;
+import org.firstinspires.ftc.teamcode.vision.QRCodeDetection;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class RobotHardware {
     public static final DecimalFormat DECIMAL_FORMAT;
+    public final Robot robot;
 
     //public BNO055IMU imu;
     public Orientation lastAngles = new Orientation();
@@ -33,7 +35,7 @@ public class RobotHardware {
     public Odometry odometry;
     public final TelemLog telemetry;
     public Mode currentMode = Mode.DRIVER_CONTROL;
-    public final ObjectDetector detector;
+    public QRCodeDetection detector;
 
     public String objectDetected = "";
 
@@ -42,9 +44,9 @@ public class RobotHardware {
     public RobotHardware(Robot robot) {
         this.hardwareMap = robot.teleOp.hardwareMap;
         this.state = robot.state;
+        this.robot = robot;
 
         this.telemetry = robot.telemetry;
-
 
         this.driveTrain = new MecanumDriveTrain(
                 "frontLeft",
@@ -80,7 +82,8 @@ public class RobotHardware {
 
         resetAngle();
 
-        this.detector = new ObjectDetector(this);
+        // this.detector = new QRCodeDetection(this);
+        // this.detector.initDetector();
     }
 
     public void outputReadings() {

@@ -36,60 +36,16 @@ public class ButtonGamePad {
     }
 
     public void updateRobot() {
-        if (gamepad.dpad_down && gamepad.y && !prevLeftLift) {
-            leftLiftUp = Lift.UP;
-            this.hardware.driveTrain.leftLift.goToPosition(3725, 0.3);
-        } else if (gamepad.dpad_down && gamepad.b && !prevLeftLift) {
-            leftLiftUp = Lift.UP;
-            this.hardware.driveTrain.leftLift.goToPosition(2800, 0.3);
-        } else if (gamepad.dpad_down && gamepad.a && !prevLeftLift) {
-            leftLiftUp = Lift.UP;
-            this.hardware.driveTrain.leftLift.goToPosition(1900, 0.3);
-        } else if (gamepad.dpad_down && !prevLeftLift) {
-            if (leftLiftUp == Lift.UP) {
-                leftLiftUp = Lift.DOWN;
-                this.hardware.driveTrain.leftLift.goToPosition(0, 0.3);
-            } else {
-                leftLiftUp = Lift.UP;
-                this.hardware.driveTrain.leftLift.goToPosition(3725, 0.3);
-            }
-        }
-        prevLeftLift = gamepad.dpad_down;
-        prevA = gamepad.a;
-        prevB = gamepad.b;
-        prevY = gamepad.y;
-
-        if (gamepad.dpad_up && gamepad.y && !prevRightLift) {
-            rightLiftUp = Lift.UP;
-            this.hardware.driveTrain.rightLift.goToPosition(2900, 0.3);
-        } else if (gamepad.dpad_up && gamepad.b && !prevRightLift) {
-            rightLiftUp = Lift.UP;
-            this.hardware.driveTrain.rightLift.goToPosition(2150, 0.3);
-        } else if (gamepad.dpad_up && gamepad.a && !prevRightLift) {
-            rightLiftUp = Lift.UP;
-            this.hardware.driveTrain.rightLift.goToPosition(1250, 0.3);
-        } else if (gamepad.dpad_up && !prevRightLift) {
-            if (rightLiftUp == Lift.UP) {
-                rightLiftUp = Lift.DOWN;
-                this.hardware.driveTrain.rightLift.goToPosition(0, 0.3);
-            } else {
-                rightLiftUp = Lift.UP;
-                this.hardware.driveTrain.rightLift.goToPosition(2900, 0.3);
-            }
-        }
-
         prevRightLift = gamepad.dpad_up;
-        prevA = gamepad.a;
-        prevB = gamepad.b;
 
         if (gamepad.dpad_left && gamepad.dpad_left != prevLeftClaw) {
             prevLeftClaw = false;
             if (leftClawOpen == OpenClose.OPEN) {
                 leftClawOpen = OpenClose.CLOSE;
-                hardware.driveTrain.leftClaw.setPosition(0);
+                hardware.driveTrain.leftClaw.setPosition(0.6);
             } else {
                 leftClawOpen = OpenClose.OPEN;
-                hardware.driveTrain.leftClaw.setPosition(0.75);
+                hardware.driveTrain.leftClaw.setPosition(0);
             }
         }
         prevLeftClaw = gamepad.dpad_left;
@@ -98,10 +54,10 @@ public class ButtonGamePad {
             prevRightClaw = false;
             if (rightClawOpen == OpenClose.OPEN) {
                 rightClawOpen = OpenClose.CLOSE;
-                hardware.driveTrain.rightClaw.setPosition(0);
+                hardware.driveTrain.rightClaw.setPosition(0.6);
             } else {
                 rightClawOpen = OpenClose.OPEN;
-                hardware.driveTrain.rightClaw.setPosition(0.75);
+                hardware.driveTrain.rightClaw.setPosition(0);
             }
         }
         prevRightClaw = gamepad.dpad_right;

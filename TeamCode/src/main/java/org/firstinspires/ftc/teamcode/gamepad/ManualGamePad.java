@@ -61,7 +61,7 @@ public class ManualGamePad {
             prevLeftClaw = false;
             if (leftClawOpen == OpenClose.OPEN) {
                 leftClawOpen = OpenClose.CLOSE;
-                hardware.driveTrain.leftClaw.setPosition(0);
+                hardware.driveTrain.leftClaw.setPosition(0.6);
             } else {
                 leftClawOpen = OpenClose.OPEN;
                 hardware.driveTrain.leftClaw.setPosition(0.75);
@@ -73,7 +73,7 @@ public class ManualGamePad {
             prevRightClaw = false;
             if (rightClawOpen == OpenClose.OPEN) {
                 rightClawOpen = OpenClose.CLOSE;
-                hardware.driveTrain.rightClaw.setPosition(0);
+                hardware.driveTrain.rightClaw.setPosition(0.6);
             } else {
                 rightClawOpen = OpenClose.OPEN;
                 hardware.driveTrain.rightClaw.setPosition(0.75);
@@ -81,19 +81,20 @@ public class ManualGamePad {
         }
         prevRightClaw = gamepad.dpad_right;
 
-        if(gamepad.right_trigger > 0 && gamepad.left_trigger > 0 && !prevSwitched){
-            if(currentLift == hardware.driveTrain.leftLift){
-                currentLift = hardware.driveTrain.rightLift;
-            }else{
-                currentLift = hardware.driveTrain.leftLift;
-            }
+        if(gamepad.right_bumper) {
+            currentLift = hardware.driveTrain.rightLift;
         }
-        prevSwitched = (gamepad.right_trigger > 0 && gamepad.left_trigger > 0);
+
+        if(gamepad.left_bumper) {
+            currentLift = hardware.driveTrain.leftLift;
+        }
+
+        prevSwitched = (gamepad.right_bumper || gamepad.left_bumper);
 
         if(gamepad.right_trigger > 0){
-            currentLift.setPower(0.3);
+            currentLift.setPower(gamepad.right_trigger);
         }else if(gamepad.left_trigger > 0){
-            currentLift.setPower(-0.3);
+            currentLift.setPower(-gamepad.left_trigger);
         }else if(gamepad.left_trigger == 0 && gamepad.right_trigger == 0){
             currentLift.setPower(0);
         }

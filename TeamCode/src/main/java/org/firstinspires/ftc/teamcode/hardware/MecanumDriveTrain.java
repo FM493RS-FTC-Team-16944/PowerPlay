@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -51,7 +52,7 @@ public class MecanumDriveTrain {
         this.backRight = new Motor(backRightName, hardwareMap, DcMotor.Direction.FORWARD);
 
         this.rightLift = new Motor(rightLiftName, hardwareMap, DcMotor.Direction.FORWARD);
-        this.leftLift = new Motor(leftLiftName, hardwareMap, DcMotor.Direction.FORWARD);
+        this.leftLift = new Motor(leftLiftName, hardwareMap, DcMotor.Direction.REVERSE);
 
         this.rightEncoder = new Motor(rightEncoderName, hardwareMap, DcMotor.Direction.FORWARD);
         this.leftEncoder = new Motor(leftEncoderName, hardwareMap, DcMotor.Direction.REVERSE);
