@@ -13,9 +13,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
+import org.openftc.apriltag.AprilTagDetection;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Autonomous
 @Config
@@ -23,6 +23,11 @@ public class MirroredAutonomousOP extends LinearOpMode {
     public Robot robot;
 
     private XyhVector lastDestination = new XyhVector(-14, 102, 0); // prev -181 4 0
+    private int numFramesWithoutDetection = 0;
+    private final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
+    private final float DECIMATION_LOW = 2;
+    private final double THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
+    private final float DECIMATION_HIGH = 3;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -53,17 +58,17 @@ public class MirroredAutonomousOP extends LinearOpMode {
             timer.reset();
             int i = 0;
 
-            while(this.robot.hardware.objectDetected.equals("")) {
+            while (this.robot.hardware.objectDetected.equals("")) {
                 this.detectObjects(timer);
 
-                if(timer.seconds() > 2.0) {
+                if (timer.seconds() > 2.0) {
                     break;
                 }
             }
 
             sleep(4000);
 
-            if(timer.seconds() >= 2.0) {
+            if (timer.seconds() >= 2.0) {
                 movePath(new Path(
                                 new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
                                 new GeneralWaypoint(-73, 364, 0, 1,
@@ -71,7 +76,7 @@ public class MirroredAutonomousOP extends LinearOpMode {
                                 new GeneralWaypoint(-150, 364, 0, 1,
                                         0.5, 30),
                                 new EndWaypoint(-150, 280, 0, 1,
-                                0.5, 30, 2, 0.2)
+                                        0.5, 30, 2, 0.2)
                         )
                 );
 
@@ -109,36 +114,40 @@ public class MirroredAutonomousOP extends LinearOpMode {
     }
 
     public void detectObjects(ElapsedTime timer) {
-        List<String> detectedObjects = new ArrayList<>();
-        detectedObjects.add(" ");
-        telemetry.addData("Timer:", timer.seconds());
-        if(timer.seconds() < 3.5 || detectedObjects.size() == 0) {
-            detectedObjects.add(this.robot.hardware.detector.getLatestResult());
-        }else {
-            sleep(1000);
-            for (String label : detectedObjects) {
-                switch (label) {
-                    case "SQUARE":
-                        lastDestination = new XyhVector(-14, 264, 0);
-                        this.telemetry.addData("Object Recognized: ", "SQUARE");
-                        robot.hardware.objectDetected = "SQUARE";
-                        break;
-                    case "CIRCLE":
-                        lastDestination = new XyhVector(-71, 264, 0);
-                        this.telemetry.addData("Object Recognized: ", "CIRCLE");
-                        robot.hardware.objectDetected = "CIRCLE";
-                        break;
-                    case "TRIANGLE":
-                        lastDestination = new XyhVector(-160, 264, 0);
-                        this.telemetry.addData("Object Recognized: ", "TRIANGLE");
-                        robot.hardware.objectDetected = "TRIANGLE";
-                        break;
+        while(true) {
+            ArrayList<AprilTagDetection> detections = this.robot.hardware.detector.getDetectionsUpdate();
+
+            if (detections != null) {
+                if (detections.size() == 0) {
+                    numFramesWithoutDetection++;
+
+                    if (numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
+                        this.robot.hardware.detector.setDecimation(DECIMATION_LOW);
+                    }
+                } else {
+                    numFramesWithoutDetection = 0;
+
+                    if (detections.get(0).pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS) {
+                        this.robot.hardware.detector.setDecimation(DECIMATION_HIGH);
+                    }
+
+                    for (AprilTagDetection detection : detections) {
+                        this.telemetry.addData("Found thing: ", detection.id);
+                        this.telemetry.update();
+
+                        if (detection.id == 0) {
+                            lastDestination = new XyhVector(-14, 102, 0);
+                        } else if (detection.id == 3) {
+                            lastDestination = new XyhVector(-71, 102, 0);
+                        } else if (detection.id == 6) {
+                            lastDestination = new XyhVector(-160, 102, 0);;
+                        }
+                    }
+
+                    break;
                 }
             }
         }
-        this.telemetry.update();
-
-
     }
 
     public void movePath(Path path) throws InterruptedException {

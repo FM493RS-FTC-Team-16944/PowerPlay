@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -11,8 +10,7 @@ import org.firstinspires.ftc.teamcode.models.Mode;
 import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 import org.firstinspires.ftc.teamcode.movement.Odometry;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
-import org.firstinspires.ftc.teamcode.vision.ObjectDetector;
-import org.firstinspires.ftc.teamcode.vision.QRCodeDetection;
+import org.firstinspires.ftc.teamcode.vision.AprilTagDetection;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -35,7 +33,7 @@ public class RobotHardware {
     public Odometry odometry;
     public final TelemLog telemetry;
     public Mode currentMode = Mode.DRIVER_CONTROL;
-    public QRCodeDetection detector;
+    public AprilTagDetection detector;
 
     public String objectDetected = "";
 
@@ -82,8 +80,8 @@ public class RobotHardware {
 
         resetAngle();
 
-        // this.detector = new QRCodeDetection(this);
-        // this.detector.initDetector();
+        this.detector = new AprilTagDetection(this);
+        this.detector.initDetector();
     }
 
     public void outputReadings() {
