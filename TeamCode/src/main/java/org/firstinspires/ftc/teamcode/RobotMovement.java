@@ -7,7 +7,7 @@ public class RobotMovement {
     RobotHardware hardware;
 
     public static double SPEED_CAP_AUTON = 0.5;
-    public static double SPEED_CAP_TELEOP = 0.5;
+    public double SPEED_CAP_TELEOP = 0.5;
     
     RobotMovement(Robot robot) {
         this.hardware = robot.hardware;

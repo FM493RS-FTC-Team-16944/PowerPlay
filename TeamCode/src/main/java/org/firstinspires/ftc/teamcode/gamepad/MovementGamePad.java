@@ -23,16 +23,12 @@ public class MovementGamePad {
     private final RobotMovement movement;
 
     public Motor currentLift;
-    public boolean prevSwitched = false;
 
-    public boolean prevRightClaw = false;
-    public boolean prevLeftClaw = false;
-    public boolean prevLeftLift = false;
-    public boolean prevRightLift = false;
-    public boolean prevA = false;
-    public boolean prevB = false;
+
     public boolean prevY = false;
     private boolean prevX = false;
+
+    private double speed = 0.5;
 
     public MovementGamePad(Robot robot, Gamepad hardwareGamepad) {
         this.hardware = robot.hardware;
@@ -57,36 +53,19 @@ public class MovementGamePad {
 
         prevX = gamepad.x;
 
-        if (gamepad.dpad_left && gamepad.dpad_left != prevLeftClaw) {
-            prevLeftClaw = false;
-            if (leftClawOpen == OpenClose.OPEN) {
-                leftClawOpen = OpenClose.CLOSE;
-                hardware.driveTrain.leftClaw.setPosition(0.6);
-            } else {
-                leftClawOpen = OpenClose.OPEN;
-                hardware.driveTrain.leftClaw.setPosition(0.75);
+        if(gamepad.y && !prevY){
+            if(speed == 0.425){
+                speed = 0.375;
+            }else{
+                speed = 0.425;
             }
-        }
-        prevLeftClaw = gamepad.dpad_left;
 
-        prevRightClaw = gamepad.dpad_right;
-
-        if(gamepad.right_bumper) {
-            currentLift = hardware.driveTrain.rightLift;
+            movement.SPEED_CAP_TELEOP = speed;
         }
 
-        if(gamepad.left_bumper) {
-            currentLift = hardware.driveTrain.leftLift;
-        }
+        prevY = gamepad.y;
 
-        prevSwitched = (gamepad.right_bumper || gamepad.left_bumper);
 
-        if(gamepad.right_trigger > 0){
-            currentLift.setPower(gamepad.right_trigger);
-        }else if(gamepad.left_trigger > 0){
-            currentLift.setPower(-gamepad.left_trigger);
-        }else if(gamepad.left_trigger == 0 && gamepad.right_trigger == 0){
-            currentLift.setPower(0);
-        }
+
     }
 }
