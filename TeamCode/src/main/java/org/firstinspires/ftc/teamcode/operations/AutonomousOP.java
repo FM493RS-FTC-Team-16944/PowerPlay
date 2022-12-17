@@ -24,7 +24,7 @@ public class AutonomousOP extends LinearOpMode {
 
     private XyhVector lastDestination = new XyhVector(-14, 102, 0); // prev -181 4 0
     private int numFramesWithoutDetection = 0;
-    private final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 10;
+    private final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 30;
     private final float DECIMATION_LOW = 2;
     private final double THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
     private final float DECIMATION_HIGH = 3;
@@ -73,13 +73,13 @@ public class AutonomousOP extends LinearOpMode {
 
                 movePath(new Path(
                         new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
-                        new EndWaypoint(-130, 90, 0, 0.65,
+                        new EndWaypoint(-138, 90, 0, 0.65,
                                 0.5, 10, 1, 0.2)
                 ));
 
                 movePath(new Path(
                         new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
-                        new EndWaypoint(-144, 90, 0, 0.65,
+                        new EndWaypoint(-148, 90, 0, 0.65,
                                 0.5, 10, 1, 0.2)
                 ));
 
@@ -91,7 +91,7 @@ public class AutonomousOP extends LinearOpMode {
                         new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
                         new GeneralWaypoint(-138, 87, 0, 1,
                                 0.5, 30),
-                        new GeneralWaypoint(-138, 102, 0, 1,
+                        new GeneralWaypoint(-138, 110, 0, 1,
                                 0.5, 30),
                         new EndWaypoint(this.lastDestination.x, this.lastDestination.y,
                                 0, 1, 0.5, 30, 2, 1)
