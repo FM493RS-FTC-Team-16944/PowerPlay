@@ -54,10 +54,10 @@ public class MovementGamePad {
         prevX = gamepad.x;
 
         if(gamepad.y && !prevY){
-            if(speed == 0.425){
-                speed = 0.375;
-            }else{
+            if(speed == 0.5) {
                 speed = 0.425;
+            } else{
+                speed = 0.5;
             }
 
             movement.SPEED_CAP_TELEOP = speed;

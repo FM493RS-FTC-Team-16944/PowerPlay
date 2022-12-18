@@ -24,7 +24,7 @@ public class AutonomousOP extends LinearOpMode {
 
     private XyhVector lastDestination = new XyhVector(-14, 102, 0); // prev -181 4 0
     private int numFramesWithoutDetection = 0;
-    private final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 30;
+    private final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 15;
     private final float DECIMATION_LOW = 2;
     private final double THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
     private final float DECIMATION_HIGH = 3;
@@ -44,7 +44,9 @@ public class AutonomousOP extends LinearOpMode {
         while (opModeIsActive()) {
             this.robot.hardware.odometry.update();
 
-            this.robot.hardware.driveTrain.leftLift.goToPosition(3500, 0.3);
+            this.robot.hardware.driveTrain.leftLift.goToPosition(3300, 0.3);
+
+            this.detectObjects();
 
             movePath(new Path(
                     new StartWaypoint(-67.3, 0),
@@ -55,7 +57,9 @@ public class AutonomousOP extends LinearOpMode {
 
             sleep(1000);
 
-            this.detectObjects();
+            if(!this.robot.hardware.objectDetected.equals("")) {
+                this.detectObjects();
+            }
 
             sleep(4000);
 
@@ -66,20 +70,20 @@ public class AutonomousOP extends LinearOpMode {
                                         0.5, 30),
 //                                new GeneralWaypoint(-150, 2, 0, 1,
 //                                        0.5, 30),
-                                new EndWaypoint(-130, 2, 0, 1,
+                                new EndWaypoint(-138, 2, 0, 1,
                                         0.5, 30, 2, 0.2)
                         )
                 );
 
                 movePath(new Path(
                         new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
-                        new EndWaypoint(-138, 90, 0, 0.65,
+                        new EndWaypoint(-138, 88, 0, 0.65,
                                 0.5, 10, 1, 0.2)
                 ));
 
                 movePath(new Path(
                         new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
-                        new EndWaypoint(-148, 90, 0, 0.65,
+                        new EndWaypoint(-142, 88, 0, 0.65,
                                 0.5, 10, 1, 0.2)
                 ));
 
@@ -89,7 +93,7 @@ public class AutonomousOP extends LinearOpMode {
 
                 movePath(new Path(
                         new StartWaypoint(this.robot.hardware.odometry.pos.x, this.robot.hardware.odometry.pos.y),
-                        new GeneralWaypoint(-138, 87, 0, 1,
+                        new GeneralWaypoint(-138, 88, 0, 1,
                                 0.5, 30),
                         new GeneralWaypoint(-138, 110, 0, 1,
                                 0.5, 30),
@@ -106,21 +110,26 @@ public class AutonomousOP extends LinearOpMode {
     }
 
     public void detectObjects() {
-        boolean running = true;
-        while(running) {
+        int failed = 0;
+
+        while(true) {
             ArrayList<AprilTagDetection> detections = this.robot.hardware.detector.getDetectionsUpdate();
 
             if (detections != null) {
                 if (detections.size() == 0) {
                     numFramesWithoutDetection++;
 
+                    if(failed > 75) {
+                        break;
+                    }
+
                     if (numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
                         this.robot.hardware.detector.setDecimation(DECIMATION_LOW);
-                        running = false;
                         this.telemetry.addData("lowered decimation", "lol");
                         this.telemetry.update();
-
                     }
+
+                    failed++;
                 } else {
                     numFramesWithoutDetection = 0;
 
@@ -134,10 +143,13 @@ public class AutonomousOP extends LinearOpMode {
 
                         if (detection.id == 0) {
                             lastDestination = new XyhVector(-14, 102, 0);
+                            this.robot.hardware.objectDetected = "0";
                         } else if (detection.id == 3) {
                             lastDestination = new XyhVector(-71, 102, 0);
+                            this.robot.hardware.objectDetected = "3";
                         } else if (detection.id == 6) {
-                            lastDestination = new XyhVector(-132, 102, 0);;
+                            lastDestination = new XyhVector(-132, 102, 0);
+                            this.robot.hardware.objectDetected = "6";
                         }
                     }
 
