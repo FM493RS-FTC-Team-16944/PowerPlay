@@ -4,32 +4,39 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-//import org.openftc.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
+import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class AprilTagDetection {
+public class AprilTagDetector {
     private final HardwareMap hardwareMap;
     private final RobotHardware hardware;
     private OpenCvWebcam webcam;
-    public AprilTagDetectionPipeline pipeline;
+    public AprilTagPipeline pipeline;
 
     double fx = 578.272;
     double fy = 578.272;
     double cx = 402.145;
     double cy = 221.506;
 
+    int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 15;
+    float DECIMATION_LOW = 2;
+    double THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
+    float DECIMATION_HIGH = 3;
+
     // UNITS ARE METERS
     double tagsize = 0.166;
 
-    public AprilTagDetection(RobotHardware hardware) {
+    public AprilTagDetector(RobotHardware hardware) {
         this.hardware = hardware;
         this.hardwareMap = hardware.hardwareMap;
-        this.pipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+        this.pipeline = new AprilTagPipeline(tagsize, fx, fy, cx, cy);
     }
 
     public void initDetector() {
@@ -52,11 +59,36 @@ public class AprilTagDetection {
         });
     }
 
-    public ArrayList<org.openftc.apriltag.AprilTagDetection> getDetectionsUpdate() {
-        return this.pipeline.getDetectionsUpdate();
-    }
+    public ArrayList<AprilTagDetection> detectObjects() {
+        int failed = 0;
+        int numFramesWithoutDetection = 0;
 
-    public void setDecimation(float val) {
-        this.pipeline.setDecimation(val);
+        while(true) {
+            ArrayList<AprilTagDetection> detections = this.pipeline.getDetectionsUpdate();
+
+            if (detections != null) {
+                if (detections.size() == 0) {
+                    numFramesWithoutDetection++;
+
+                    if(failed > 75) {
+                        break;
+                    }
+
+                    if (numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
+                        this.pipeline.setDecimation(DECIMATION_LOW);
+                    }
+
+                    failed++;
+                } else {
+                    if (detections.get(0).pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS) {
+                        this.pipeline.setDecimation(DECIMATION_HIGH);
+                    }
+
+                    return detections;
+                }
+            }
+        }
+
+        return null;
     }
 }

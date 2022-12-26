@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.models.Mode;
 import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 import org.firstinspires.ftc.teamcode.movement.Odometry;
 import org.firstinspires.ftc.teamcode.util.TelemLog;
-import org.firstinspires.ftc.teamcode.vision.AprilTagDetection;
+import org.firstinspires.ftc.teamcode.vision.AprilTagDetector;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -33,7 +33,7 @@ public class RobotHardware {
     public Odometry odometry;
     public final TelemLog telemetry;
     public Mode currentMode = Mode.DRIVER_CONTROL;
-    public AprilTagDetection detector;
+    public AprilTagDetector detector;
 
     public String objectDetected = "";
 
@@ -80,7 +80,7 @@ public class RobotHardware {
 
         resetAngle();
 
-        this.detector = new AprilTagDetection(this);
+        this.detector = new AprilTagDetector(this);
         this.detector.initDetector();
     }
 
