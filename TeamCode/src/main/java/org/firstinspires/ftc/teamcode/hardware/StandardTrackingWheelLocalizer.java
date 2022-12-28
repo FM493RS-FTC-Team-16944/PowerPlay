@@ -9,7 +9,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.util.Encoder;
+import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,14 +32,34 @@ import java.util.List;
  */
 @Config
 public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer {
-    public static double TICKS_PER_REV = 0;
-    public static double WHEEL_RADIUS = 2; // in
+    public static double X_MULTIPLIER = 0.977; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 1; // Multiplier in the Y direction
+    public static double TICKS_PER_REV = 8192;
+    public static double WHEEL_RADIUS = 1; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 10; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = 4; // in; offset of the lateral wheel
+    public static double LATERAL_DISTANCE = 16.75; // in; distance between the left and right wheels
+    public static double FORWARD_OFFSET = 0.75; // in; offset of the lateral wheel
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
+
+
+    public static double TRACK_WIDTH = 39.40; //make sure to cahnge these two values
+    public static double CENTER_WHEEL_OFFSET = 5.60;
+    public static double R = 1;
+    public static double N = 8192;
+    public static double in_per_tick = 2.0 * Math.PI * R / N;
+
+    public XyhVector pos;
+    public Pose2d pose2d;
+
+    private double prevLeftEncoder = 0;
+    private double prevRightEncoder = 0;
+    private double prevHorizontalEncoder = 0;
+
+    private double currentLeftEncoder = 0;
+    private double currentRightEncoder = 0;
+    private double currentHorizontalEncoder = 0;
 
     public StandardTrackingWheelLocalizer(HardwareMap hardwareMap) {
         super(Arrays.asList(
@@ -44,9 +68,13 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
                 new Pose2d(FORWARD_OFFSET, 0, Math.toRadians(90)) // front
         ));
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftEncoder"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightEncoder"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontEncoder"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontLeft"));
+        rightEncoder.setDirection(Encoder.Direction.REVERSE);
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
+
+        this.pos = new XyhVector();
+        this.pose2d = new Pose2d();
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }
@@ -59,9 +87,9 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     @Override
     public List<Double> getWheelPositions() {
         return Arrays.asList(
-                encoderTicksToInches(leftEncoder.getCurrentPosition()),
-                encoderTicksToInches(rightEncoder.getCurrentPosition()),
-                encoderTicksToInches(frontEncoder.getCurrentPosition())
+                encoderTicksToInches(leftEncoder.getCurrentPosition()) * X_MULTIPLIER,
+                encoderTicksToInches(rightEncoder.getCurrentPosition()) * X_MULTIPLIER,
+                encoderTicksToInches(frontEncoder.getCurrentPosition()) * Y_MULTIPLIER
         );
     }
 
@@ -73,9 +101,46 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         //  compensation method
 
         return Arrays.asList(
-                encoderTicksToInches(leftEncoder.getRawVelocity()),
-                encoderTicksToInches(rightEncoder.getRawVelocity()),
-                encoderTicksToInches(frontEncoder.getRawVelocity())
+                encoderTicksToInches(leftEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
+                encoderTicksToInches(rightEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
+                encoderTicksToInches(frontEncoder.getCorrectedVelocity()) * Y_MULTIPLIER
         );
+    }
+
+    public Pose2d updateOdom(){
+        prevLeftEncoder = currentLeftEncoder;
+        prevRightEncoder = currentRightEncoder;
+        prevHorizontalEncoder = currentHorizontalEncoder;
+
+        currentRightEncoder = rightEncoder.getCurrentPosition();
+        currentLeftEncoder = leftEncoder.getCurrentPosition();
+        currentHorizontalEncoder = frontEncoder.getCurrentPosition();
+
+        double dn1 = currentLeftEncoder - prevLeftEncoder;
+        double dn2 = currentRightEncoder - prevRightEncoder;
+        double dn3 = currentHorizontalEncoder - prevHorizontalEncoder;
+
+        double dtheta = in_per_tick * (dn2 - dn1) / TRACK_WIDTH;
+        double dx = -in_per_tick * (dn1 + dn2) / 2.0;
+        double dy = -in_per_tick * (dn3 - (dn2 - dn1) * CENTER_WHEEL_OFFSET / TRACK_WIDTH);
+        double theta = pos.h + (dtheta / 2.0);
+
+        pos.y += -(dx * Math.cos(theta) - dy * Math.sin(theta));
+        pos.x += dx * Math.sin(theta) + dy * Math.cos(theta);
+        pos.h += AngleUnit.normalizeRadians(dtheta);
+
+        pose2d = new Pose2d(
+                pos.x, pos.y,
+                pos.h
+        );
+        return pose2d;
+    }
+
+    public List<Integer> getEncoderValues(){
+        List<Integer> returnList = new ArrayList<>();
+        returnList.add(leftEncoder.getCurrentPosition());
+        returnList.add(rightEncoder.getCurrentPosition());
+        returnList.add(frontEncoder.getCurrentPosition());
+        return returnList;
     }
 }

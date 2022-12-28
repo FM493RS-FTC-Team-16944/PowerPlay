@@ -54,6 +54,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
+
+    public StandardTrackingWheelLocalizer odometry;
     public static double LATERAL_MULTIPLIER = 1;
 
     public static double VX_WEIGHT = 1;
@@ -67,7 +69,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront, verticalLift, horizontalLift;
+    private DcMotorEx leftFront, leftRear, rightRear, rightFront, verticalLift1, verticalLift2, horizontalLift;
     private Servo horizontalClaw, verticalClaw;
     private List<DcMotorEx> motors;
 
@@ -116,16 +118,19 @@ public class SampleMecanumDrive extends MecanumDrive {
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
         // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
+        rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
+        rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        verticalLift = hardwareMap.get(DcMotorEx.class, "verticalLift");
-        horizontalLift = hardwareMap.get(DcMotorEx.class, "horizontalLift");
+        verticalLift1 = hardwareMap.get(DcMotorEx.class, "verticalLift1");
+        verticalLift2 = hardwareMap.get(DcMotorEx.class, "verticalLift1");
+        horizontalLift = hardwareMap.get(DcMotorEx.class, "horizontalSlide");
 
-        horizontalClaw = hardwareMap.servo.get("horizontalClaw");
-        verticalClaw = hardwareMap.servo.get("verticalClaw");
+//        horizontalClaw = hardwareMap.servo.get("horizontalClaw");
+//        verticalClaw = hardwareMap.servo.get("verticalClaw");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -145,10 +150,11 @@ public class SampleMecanumDrive extends MecanumDrive {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
 
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
+
         leftRear.setDirection(DcMotor.Direction.REVERSE);
 
         setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+        odometry = new StandardTrackingWheelLocalizer(hardwareMap);
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
     }
@@ -245,33 +251,35 @@ public class SampleMecanumDrive extends MecanumDrive {
     }
 
     public void setVerticalLift(int position, double power) {
-        this.verticalLift.setTargetPosition(position);
-        this.verticalLift.setPower(power);
+        this.verticalLift1.setTargetPosition(position);
+        this.verticalLift2.setTargetPosition(position);
+        this.verticalLift1.setPower(power);
+        this.verticalLift2.setPower(power);
     }
 
-    public void setHorizontalClaw(int position) {
-        this.horizontalClaw.setPosition(position);
-    }
+//    public void setHorizontalClaw(int position) {
+//        this.horizontalClaw.setPosition(position);
+//    }
 
-    public void setVerticalClaw(int position) {
-        this.verticalClaw.setPosition(position);
-    }
+//    public void setVerticalClaw(int position) {
+//        this.verticalClaw.setPosition(position);
+//    }
 
     public int getHorizontalLiftPosition() {
         return this.horizontalLift.getCurrentPosition();
     }
 
     public int getVerticalLiftPosition() {
-        return this.verticalLift.getCurrentPosition();
+        return this.verticalLift1.getCurrentPosition();
     }
 
-    public double getHorizontalClawPosition() {
-        return this.horizontalClaw.getPosition();
-    }
-
-    public double getVerticalClawPosition() {
-        return this.verticalClaw.getPosition();
-    }
+//    public double getHorizontalClawPosition() {
+//        return this.horizontalClaw.getPosition();
+//    }
+//
+//    public double getVerticalClawPosition() {
+//        return this.verticalClaw.getPosition();
+//    }
 
     public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {
         PIDFCoefficients compensatedCoefficients = new PIDFCoefficients(
@@ -303,6 +311,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         setDrivePower(vel);
     }
+
 
     @NonNull
     @Override
