@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceRunner;
@@ -54,6 +55,37 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
+    public static double HORIZONTAL_SLIDE_POWER = 0.00;
+    public static double VERTICAL_LIFT_POWER = 0.80;
+
+    public static double OPEN_CLAW_POSITION = 0.80;
+    public static double CLOSE_CLAW_POSITION = 1.00;
+
+    public static double ARM_CLAW_POSITION_FIRST_CONE = 0.35;
+    public static double ARM_CLAW_POSITION_SECOND_CONE = 0.31;
+    public static double ARM_CLAW_POSITION_THIRD_CONE = 0.22;
+    public static double ARM_CLAW_POSITION_FOURTH_CONE = 0.20;
+    public static double ARM_CLAW_POSITION_FIFTH_CONE = 0.00;
+
+    public static double SECOND_PART_UP_ARM_CLAW_POSITION_FIRST_CONE = 0.00;
+    public static double SECOND_PART_UP_ARM_CLAW_POSITION_SECOND_CONE = 0.00;
+    public static double SECOND_PART_UP_ARM_CLAW_POSITION_THIRD_CONE = 0.00;
+    public static double SECOND_PART_UP_ARM_CLAW_POSITION_FOURTH_CONE = 0.20;
+    public static double SECOND_PART_UP_ARM_CLAW_POSITION_FIFTH_CONE = 0.00;
+
+    public static double DROP_ARM_CLAW_POSITION = 0.48;
+
+    public static double NEUTRAL_CLAW_TILT_POSITION = 0.55;
+    public static double UP_CLAW_TILT_POSITION = 0.00;
+    public static double DROP_CLAW_TILT_POSITION = 0.00; // this is the tilt when it's gonna drop it on the red thing
+
+    public static double NORMAL_ROTATOR_POSITION = 1.00;
+    public static double ONE_EIGHTY_ROTATOR_POSITION = 0.25;
+
+    public static int NEUTRAL_VERTICAL_LIFT_POSITION = 0;
+    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 1300;
+    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 660;
+    public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 290;
 
     public StandardTrackingWheelLocalizer odometry;
     public static double LATERAL_MULTIPLIER = 1;
@@ -61,6 +93,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
+    public RobotMovement movement;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -69,8 +102,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront, verticalLift1, verticalLift2, horizontalLift;
-    private Servo horizontalClaw, verticalClaw;
+    private DcMotorEx leftFront, leftRear, rightRear, rightFront,
+            verticalLiftNoEncoder, verticalLiftEncoder, horizontalSlide;
+
+    private Servo leftClaw, rightClaw, rotatorClaw, tiltClaw, armClaw;
     private List<DcMotorEx> motors;
 
     private BNO055IMU imu;
@@ -125,12 +160,33 @@ public class SampleMecanumDrive extends MecanumDrive {
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        verticalLift1 = hardwareMap.get(DcMotorEx.class, "verticalLift1");
-        verticalLift2 = hardwareMap.get(DcMotorEx.class, "verticalLift1");
-        horizontalLift = hardwareMap.get(DcMotorEx.class, "horizontalSlide");
+        verticalLiftNoEncoder = hardwareMap.get(DcMotorEx.class, "verticalLiftNoEncoder");
+        verticalLiftEncoder = hardwareMap.get(DcMotorEx.class, "verticalLiftEncoder");
 
-//        horizontalClaw = hardwareMap.servo.get("horizontalClaw");
-//        verticalClaw = hardwareMap.servo.get("verticalClaw");
+        verticalLiftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalLiftNoEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        verticalLiftNoEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        verticalLiftEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalLiftNoEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        horizontalSlide = hardwareMap.get(DcMotorEx.class, "horizontalSlide");
+
+        rotatorClaw = hardwareMap.get(Servo.class, "rotatorClaw");
+
+        leftClaw = hardwareMap.get(Servo.class, "leftClaw");
+        rightClaw = hardwareMap.get(Servo.class, "rightClaw");
+        tiltClaw = hardwareMap.get(Servo.class, "tiltClaw");
+        armClaw = hardwareMap.get(Servo.class, "armClaw");
+
+        this.armClaw.setDirection(Servo.Direction.REVERSE);
+        this.tiltClaw.setDirection(Servo.Direction.REVERSE);
+
+        this.leftClaw.setDirection(Servo.Direction.REVERSE);
+
+        this.movement = new RobotMovement(this);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -245,41 +301,51 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
     }
 
-    public void setHorizontalLift(int position, double power) {
-        this.horizontalLift.setTargetPosition(position);
-        this.horizontalLift.setPower(power);
-    }
-
     public void setVerticalLift(int position, double power) {
-        this.verticalLift1.setTargetPosition(position);
-        this.verticalLift2.setTargetPosition(position);
-        this.verticalLift1.setPower(power);
-        this.verticalLift2.setPower(power);
+        this.verticalLiftEncoder.setTargetPosition(position);
+        this.verticalLiftNoEncoder.setTargetPosition(position);
+        this.verticalLiftEncoder.setPower(power);
+        this.verticalLiftNoEncoder.setPower(power);
+
+        this.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.verticalLiftNoEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-//    public void setHorizontalClaw(int position) {
-//        this.horizontalClaw.setPosition(position);
-//    }
+    public void setHorizontalSlide(int position) {
+        this.horizontalSlide.setTargetPosition(position);
+        this.horizontalSlide.setPower(HORIZONTAL_SLIDE_POWER);
+    }
 
-//    public void setVerticalClaw(int position) {
-//        this.verticalClaw.setPosition(position);
-//    }
-
-    public int getHorizontalLiftPosition() {
-        return this.horizontalLift.getCurrentPosition();
+    public int getHorizontalSlidePosition() {
+        return this.horizontalSlide.getCurrentPosition();
     }
 
     public int getVerticalLiftPosition() {
-        return this.verticalLift1.getCurrentPosition();
+        return this.verticalLiftEncoder.getCurrentPosition();
     }
 
-//    public double getHorizontalClawPosition() {
-//        return this.horizontalClaw.getPosition();
-//    }
-//
-//    public double getVerticalClawPosition() {
-//        return this.verticalClaw.getPosition();
-//    }
+    public void openClaw() {
+        this.leftClaw.setPosition(OPEN_CLAW_POSITION);
+        this.rightClaw.setPosition(OPEN_CLAW_POSITION);
+    }
+
+    public void closeClaw() {
+        this.leftClaw.setPosition(CLOSE_CLAW_POSITION);
+        this.rightClaw.setPosition(CLOSE_CLAW_POSITION);
+    }
+
+    public void setArmClawPosition(double position) {
+        this.armClaw.setPosition(position);
+    }
+
+    public void setTiltClawPosition(double position) {
+        this.tiltClaw.setPosition(position);
+    }
+
+    public void setRotatorClawPosition(double position) {
+        this.rotatorClaw.setPosition(position);
+    }
+
 
     public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {
         PIDFCoefficients compensatedCoefficients = new PIDFCoefficients(

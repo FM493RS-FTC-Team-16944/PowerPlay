@@ -1,16 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
+
+import java.util.List;
 
 @Config
 public class RobotMovement {
-    RobotHardware hardware;
+    SampleMecanumDrive robot;
 
     public static double SPEED_CAP_AUTON = 0.5;
     public double SPEED_CAP_TELEOP = 0.5;
     
-    RobotMovement(Robot robot) {
-        this.hardware = robot.hardware;
+    public RobotMovement(SampleMecanumDrive robot) {
+        this.robot = robot;
     }
 
     public void strafe(double x, double y, double h) {
@@ -23,15 +28,19 @@ public class RobotMovement {
         double frontRightPower = (y + x - h) / denominator;
         double backRightPower = (y - x - h) / denominator;
 
-        hardware.driveTrain.topLeft.setPower(SPEED_CAP_AUTON * frontLeftPower);
-        hardware.driveTrain.backLeft.setPower(SPEED_CAP_AUTON * backLeftPower);
-        hardware.driveTrain.topRight.setPower(SPEED_CAP_AUTON * frontRightPower);
-        hardware.driveTrain.backRight.setPower(SPEED_CAP_AUTON * backRightPower);
+        robot.setMotorPowers(
+                SPEED_CAP_AUTON * frontLeftPower,
+                SPEED_CAP_AUTON * backLeftPower,
+                SPEED_CAP_AUTON * frontRightPower,
+                SPEED_CAP_AUTON * backRightPower
+        );
     }
 
     public void strafeR(double x, double y, double h) {
-        double xR = x * Math.cos(hardware.odometry.pos.h) - y * Math.sin(hardware.odometry.pos.h);
-        double yR = x * Math.sin(hardware.odometry.pos.h) + y * Math.cos(hardware.odometry.pos.h);
+        Double heading = robot.odometry.getWheelPositions().get(2);
+
+        double xR = x * Math.cos(heading) - y * Math.sin(heading);
+        double yR = x * Math.sin(heading) + y * Math.cos(heading);
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(h), 1);
 
@@ -40,10 +49,11 @@ public class RobotMovement {
         double frontRightPower = (yR + xR - h) / denominator;
         double backRightPower = (yR - xR - h) / denominator;
 
-        hardware.driveTrain.topLeft.setPower(SPEED_CAP_TELEOP * frontLeftPower);
-        hardware.driveTrain.backLeft.setPower(SPEED_CAP_TELEOP * backLeftPower);
-        hardware.driveTrain.topRight.setPower(SPEED_CAP_TELEOP * frontRightPower);
-        hardware.driveTrain.backRight.setPower(SPEED_CAP_TELEOP * backRightPower);
-
+        robot.setMotorPowers(
+                SPEED_CAP_TELEOP * frontLeftPower,
+                SPEED_CAP_TELEOP * backLeftPower,
+                SPEED_CAP_TELEOP * frontRightPower,
+                SPEED_CAP_TELEOP * backRightPower
+        );
     }
 }

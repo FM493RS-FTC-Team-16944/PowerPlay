@@ -1,23 +1,43 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import static org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive.DROP_CLAW_TILT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive.NORMAL_ROTATOR_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive.ONE_EIGHTY_ROTATOR_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive.UP_CLAW_TILT_POSITION;
+
 import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
 
 public class LiftMacro implements Runnable {
+    private final double armClawPosition;
+    private final boolean secondTilt;
     private SampleMecanumDrive robot;
 
-    int EXTEND_LIFT_POSITION = 0;
-
-    double HORIZONTAL_LIFT_POWER = 0.00;
-    double VERTICAL_LIFT_POWER = 0.00;
-
-    public LiftMacro(SampleMecanumDrive robot) {
+    public LiftMacro(SampleMecanumDrive robot, double armClawPosition, boolean secondTilt) {
         this.robot = robot;
+        this.armClawPosition = armClawPosition;
+        this.secondTilt = secondTilt;
     }
 
     @Override
     public void run() {
-        this.robot.setHorizontalLift(EXTEND_LIFT_POSITION, VERTICAL_LIFT_POWER);
+        this.robot.openClaw();
+        this.robot.setArmClawPosition(armClawPosition);
 
+        this.robot.closeClaw();
 
+        if(secondTilt) {
+            this.robot.setTiltClawPosition(UP_CLAW_TILT_POSITION);
+        }
+
+        this.robot.setTiltClawPosition(0);
+        this.robot.setArmClawPosition(0);
+
+        this.robot.setRotatorClawPosition(ONE_EIGHTY_ROTATOR_POSITION);
+        this.robot.setTiltClawPosition(DROP_CLAW_TILT_POSITION);
+
+        this.robot.openClaw();
+
+        this.robot.setTiltClawPosition(0);
+        this.robot.setRotatorClawPosition(NORMAL_ROTATOR_POSITION);
     }
 }
