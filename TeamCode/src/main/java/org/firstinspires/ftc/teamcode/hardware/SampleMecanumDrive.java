@@ -42,6 +42,7 @@ import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.vision.AprilTagDetector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,6 +87,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 1300;
     public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 660;
     public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 290;
+
+    public final AprilTagDetector detector;
 
     public StandardTrackingWheelLocalizer odometry;
     public static double LATERAL_MULTIPLIER = 1;
@@ -211,6 +214,9 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
         odometry = new StandardTrackingWheelLocalizer(hardwareMap);
+
+        detector = new AprilTagDetector(hardwareMap);
+        this.detector.initDetector();
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
     }

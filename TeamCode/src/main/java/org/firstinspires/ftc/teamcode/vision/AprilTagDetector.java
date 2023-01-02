@@ -59,7 +59,7 @@ public class AprilTagDetector {
         });
     }
 
-    public ArrayList<AprilTagDetection> detectObjects() {
+    public AprilTagDetection detectObjects() {
         int failed = 0;
         int numFramesWithoutDetection = 0;
 
@@ -84,7 +84,7 @@ public class AprilTagDetector {
                         this.pipeline.setDecimation(DECIMATION_HIGH);
                     }
 
-                    return detections;
+                    return detections.get(0);
                 }
             }
         }
