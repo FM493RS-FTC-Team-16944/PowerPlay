@@ -107,35 +107,6 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         );
     }
 
-    public Pose2d updateOdom(){
-        prevLeftEncoder = currentLeftEncoder;
-        prevRightEncoder = currentRightEncoder;
-        prevHorizontalEncoder = currentHorizontalEncoder;
-
-        currentRightEncoder = rightEncoder.getCurrentPosition();
-        currentLeftEncoder = leftEncoder.getCurrentPosition();
-        currentHorizontalEncoder = frontEncoder.getCurrentPosition();
-
-        double dn1 = currentLeftEncoder - prevLeftEncoder;
-        double dn2 = currentRightEncoder - prevRightEncoder;
-        double dn3 = currentHorizontalEncoder - prevHorizontalEncoder;
-
-        double dtheta = in_per_tick * (dn2 - dn1) / TRACK_WIDTH;
-        double dx = -in_per_tick * (dn1 + dn2) / 2.0;
-        double dy = -in_per_tick * (dn3 - (dn2 - dn1) * CENTER_WHEEL_OFFSET / TRACK_WIDTH);
-        double theta = pos.h + (dtheta / 2.0);
-
-        pos.y += -(dx * Math.cos(theta) - dy * Math.sin(theta));
-        pos.x += dx * Math.sin(theta) + dy * Math.cos(theta);
-        pos.h += AngleUnit.normalizeRadians(dtheta);
-
-        pose2d = new Pose2d(
-                pos.x, pos.y,
-                pos.h
-        );
-        return pose2d;
-    }
-
     public List<Integer> getEncoderValues(){
         List<Integer> returnList = new ArrayList<>();
         returnList.add(leftEncoder.getCurrentPosition());
