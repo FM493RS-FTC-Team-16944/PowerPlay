@@ -80,7 +80,7 @@ public class RobotHardware {
 
         resetAngle();
 
-        this.detector = new AprilTagDetector(this);
+        this.detector = new AprilTagDetector(this.hardwareMap);
         this.detector.initDetector();
     }
 

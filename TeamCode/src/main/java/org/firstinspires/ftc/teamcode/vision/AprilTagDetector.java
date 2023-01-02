@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class AprilTagDetector {
     private final HardwareMap hardwareMap;
-    private final RobotHardware hardware;
+
     private OpenCvWebcam webcam;
     public AprilTagPipeline pipeline;
 
@@ -33,9 +33,8 @@ public class AprilTagDetector {
     // UNITS ARE METERS
     double tagsize = 0.166;
 
-    public AprilTagDetector(RobotHardware hardware) {
-        this.hardware = hardware;
-        this.hardwareMap = hardware.hardwareMap;
+    public AprilTagDetector(HardwareMap hardware) {
+        this.hardwareMap = hardware;
         this.pipeline = new AprilTagPipeline(tagsize, fx, fy, cx, cy);
     }
 
@@ -53,9 +52,7 @@ public class AprilTagDetector {
             }
 
             @Override
-            public void onError(int errorCode) {
-                hardware.telemetry.addData("error code", errorCode);
-            }
+            public void onError(int errorCode) {}
         });
     }
 
