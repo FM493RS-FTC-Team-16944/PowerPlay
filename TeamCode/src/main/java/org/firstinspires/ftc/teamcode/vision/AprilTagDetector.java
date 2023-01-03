@@ -52,7 +52,8 @@ public class AprilTagDetector {
             }
 
             @Override
-            public void onError(int errorCode) {}
+            public void onError(int errorCode) {
+            }
         });
     }
 

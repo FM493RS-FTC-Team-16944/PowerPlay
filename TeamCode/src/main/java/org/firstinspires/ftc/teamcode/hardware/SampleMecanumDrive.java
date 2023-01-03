@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_POWER;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.OPEN_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.VERTICAL_LIFT_POWER;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ANG_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ANG_VEL;
@@ -55,38 +59,6 @@ import java.util.List;
 public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
-
-    public static double HORIZONTAL_SLIDE_POWER = 0.00;
-    public static double VERTICAL_LIFT_POWER = 0.80;
-
-    public static double OPEN_CLAW_POSITION = 0.80;
-    public static double CLOSE_CLAW_POSITION = 1.00;
-
-    public static double ARM_CLAW_POSITION_FIRST_CONE = 0.35;
-    public static double ARM_CLAW_POSITION_SECOND_CONE = 0.31;
-    public static double ARM_CLAW_POSITION_THIRD_CONE = 0.22;
-    public static double ARM_CLAW_POSITION_FOURTH_CONE = 0.20;
-    public static double ARM_CLAW_POSITION_FIFTH_CONE = 0.00;
-
-    public static double SECOND_PART_UP_ARM_CLAW_POSITION_FIRST_CONE = 0.00;
-    public static double SECOND_PART_UP_ARM_CLAW_POSITION_SECOND_CONE = 0.00;
-    public static double SECOND_PART_UP_ARM_CLAW_POSITION_THIRD_CONE = 0.00;
-    public static double SECOND_PART_UP_ARM_CLAW_POSITION_FOURTH_CONE = 0.20;
-    public static double SECOND_PART_UP_ARM_CLAW_POSITION_FIFTH_CONE = 0.00;
-
-    public static double DROP_ARM_CLAW_POSITION = 0.48;
-
-    public static double NEUTRAL_CLAW_TILT_POSITION = 0.55;
-    public static double UP_CLAW_TILT_POSITION = 0.00;
-    public static double DROP_CLAW_TILT_POSITION = 0.00; // this is the tilt when it's gonna drop it on the red thing
-
-    public static double NORMAL_ROTATOR_POSITION = 1.00;
-    public static double ONE_EIGHTY_ROTATOR_POSITION = 0.25;
-
-    public static int NEUTRAL_VERTICAL_LIFT_POSITION = 0;
-    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 1300;
-    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 660;
-    public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 290;
 
     public final AprilTagDetector detector;
 
@@ -177,6 +149,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         horizontalSlide = hardwareMap.get(DcMotorEx.class, "horizontalSlide");
 
+        horizontalSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         rotatorClaw = hardwareMap.get(Servo.class, "rotatorClaw");
 
         leftClaw = hardwareMap.get(Servo.class, "leftClaw");
@@ -208,7 +182,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
-
 
         leftRear.setDirection(DcMotor.Direction.REVERSE);
 
@@ -307,11 +280,11 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
     }
 
-    public void setVerticalLift(int position, double power) {
+    public void setVerticalLift(int position) {
         this.verticalLiftEncoder.setTargetPosition(position);
         this.verticalLiftNoEncoder.setTargetPosition(position);
-        this.verticalLiftEncoder.setPower(power);
-        this.verticalLiftNoEncoder.setPower(power);
+        this.verticalLiftEncoder.setPower(VERTICAL_LIFT_POWER);
+        this.verticalLiftNoEncoder.setPower(VERTICAL_LIFT_POWER);
 
         this.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.verticalLiftNoEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -320,6 +293,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     public void setHorizontalSlide(int position) {
         this.horizontalSlide.setTargetPosition(position);
         this.horizontalSlide.setPower(HORIZONTAL_SLIDE_POWER);
+
+        this.horizontalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public int getHorizontalSlidePosition() {

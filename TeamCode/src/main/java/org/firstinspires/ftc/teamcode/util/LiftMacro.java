@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import static org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive.DROP_CLAW_TILT_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive.NORMAL_ROTATOR_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive.ONE_EIGHTY_ROTATOR_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive.UP_CLAW_TILT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_CLAW_TILT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NEUTRAL_CLAW_TILT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NORMAL_ROTATOR_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ONE_EIGHTY_ROTATOR_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.UP_CLAW_TILT_POSITION;
 
 import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
 
@@ -29,7 +30,7 @@ public class LiftMacro implements Runnable {
             this.robot.setTiltClawPosition(UP_CLAW_TILT_POSITION);
         }
 
-        this.robot.setTiltClawPosition(0);
+        this.robot.setTiltClawPosition(NEUTRAL_CLAW_TILT_POSITION);
         this.robot.setArmClawPosition(0);
 
         this.robot.setRotatorClawPosition(ONE_EIGHTY_ROTATOR_POSITION);
@@ -37,7 +38,7 @@ public class LiftMacro implements Runnable {
 
         this.robot.openClaw();
 
-        this.robot.setTiltClawPosition(0);
+        this.robot.setTiltClawPosition(NEUTRAL_CLAW_TILT_POSITION);
         this.robot.setRotatorClawPosition(NORMAL_ROTATOR_POSITION);
     }
 }
