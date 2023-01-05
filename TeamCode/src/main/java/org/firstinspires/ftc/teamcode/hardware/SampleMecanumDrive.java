@@ -141,6 +141,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         verticalLiftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
         verticalLiftNoEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalLiftNoEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         verticalLiftNoEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -149,10 +151,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         horizontalSlide = hardwareMap.get(DcMotorEx.class, "horizontalSlide");
 
+        horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rotatorClaw = hardwareMap.get(Servo.class, "rotatorClaw");
-
         leftClaw = hardwareMap.get(Servo.class, "leftClaw");
         rightClaw = hardwareMap.get(Servo.class, "rightClaw");
         tiltClaw = hardwareMap.get(Servo.class, "tiltClaw");
@@ -325,6 +327,30 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public void setRotatorClawPosition(double position) {
         this.rotatorClaw.setPosition(position);
+    }
+
+    public void groundIntake() {
+        this.armClaw.setPosition(0.05);
+        this.tiltClaw.setPosition(1);
+        this.rotatorClaw.setPosition(0.25);
+    }
+
+    public void hangingIntake() {
+        this.armClaw.setPosition(0.3);
+        this.tiltClaw.setPosition(0.3);
+        this.rotatorClaw.setPosition(0.25);
+    }
+
+    public void rotatedHangingIntake() {
+        this.armClaw.setPosition(0.3);
+        this.tiltClaw.setPosition(0);
+        this.rotatorClaw.setPosition(1);
+    }
+
+    public void transferIntake() {
+        this.armClaw.setPosition(0.4);
+        this.tiltClaw.setPosition(0);
+        this.rotatorClaw.setPosition(1);
     }
 
 

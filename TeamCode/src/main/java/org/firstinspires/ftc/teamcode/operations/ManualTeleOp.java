@@ -7,6 +7,8 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.gamepad.CombinedGamePad;
 import org.firstinspires.ftc.teamcode.gamepad.ManualGamePad;
+import org.firstinspires.ftc.teamcode.gamepad.TestGamePad;
+import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
 
 @TeleOp(name = "ManualTeleOp")
 public class ManualTeleOp extends LinearOpMode {
@@ -20,19 +22,12 @@ public class ManualTeleOp extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
 
-        robot = new Robot(this);
-        hardware = robot.hardware;
-
-        gamepad = new ManualGamePad(robot,gamepad1);
-
-        hardware.driveTrain.resetDriveEncoders();
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        ManualGamePad gamePad = new ManualGamePad(drive, this.gamepad1, this.telemetry);
 
         while (opModeIsActive() && !isStopRequested()) {
-            hardware.odometry.update();
-
-            gamepad.updateRobot();
-
-            hardware.outputReadings();
+            gamePad.updateRobot();
+            telemetry.update();
         }
     }
 }

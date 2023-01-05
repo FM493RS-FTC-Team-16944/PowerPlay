@@ -2,31 +2,41 @@ package org.firstinspires.ftc.teamcode.gamepad;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.hardware.Motor;
+import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.models.Lift;
 import org.firstinspires.ftc.teamcode.models.Mode;
 import org.firstinspires.ftc.teamcode.models.OpenClose;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 public class ManualGamePad {
     private final Gamepad gamepad;
+    private final SampleMecanumDrive robot;
+    private final Telemetry telemetry;
 
-    Lift leftLiftUp = Lift.DOWN;
-    Lift rightLiftUp = Lift.DOWN;
+    public static int armClawPosition = 1;
+    public static int rotatorPosition = 1;
+    public static int clawTiltPosition = 1;
+    public static int horizontalSlidePosition = 1;
+    public static int verticalLiftPosition = 1;
 
-    OpenClose leftClawOpen = OpenClose.CLOSE;
+    private int position = 3;
+    private int lift = 1;
+    private int slide = 1;
+
+    OpenClose ClawOpen = OpenClose.CLOSE;
     OpenClose rightClawOpen = OpenClose.CLOSE;
 
-    private final RobotHardware hardware;
-    private final RobotMovement movement;
 
     public Motor currentLift;
     public boolean prevSwitched = false;
 
     public boolean prevRightClaw = false;
-    public boolean prevLeftClaw = false;
+    public boolean prevClaw = false;
     public boolean prevLeftLift = false;
     public boolean prevRightLift = false;
     public boolean prevA = false;
@@ -34,70 +44,95 @@ public class ManualGamePad {
     public boolean prevY = false;
     private boolean prevX = false;
 
-    public ManualGamePad(Robot robot, Gamepad hardwareGamepad) {
-        this.hardware = robot.hardware;
-        this.movement = robot.movement;
+    public ManualGamePad(SampleMecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
         this.gamepad = hardwareGamepad;
-        this.currentLift = hardware.driveTrain.leftLift;
+        this.robot = robot;
+        this.telemetry = telemetry;
     }
 
     public void updateRobot() {
 
-        if (hardware.currentMode == Mode.DRIVER_CONTROL) {
-            double x = -gamepad.left_stick_x;
-            double y = -gamepad.left_stick_y; // Remember, this is reversed!
-            double h = gamepad.right_stick_x;
+        robot.setWeightedDrivePower(
+                new Pose2d(
+                        -gamepad.left_stick_y,
+                        -gamepad.left_stick_x,
+                        -gamepad.right_stick_x
+                )
+        );
 
-            movement.strafeR(x, y, h);
+        Pose2d poseEstimate = robot.getPoseEstimate();
+        telemetry.addData("x", poseEstimate.getX());
+        telemetry.addData("y", poseEstimate.getY());
+        telemetry.addData("heading", poseEstimate.getHeading());
+        telemetry.addData("horizontal slide position", robot.getHorizontalSlidePosition());
+        telemetry.addData("vertical slide position", robot.getVerticalLiftPosition());
+
+
+
+        if (gamepad.x && gamepad.x != prevX) {
+            if (ClawOpen == OpenClose.OPEN) {
+                ClawOpen = OpenClose.CLOSE;
+                this.robot.closeClaw();
+            } else {
+                ClawOpen = OpenClose.OPEN;
+                this.robot.openClaw();
+            }
         }
-
-        if (gamepad.x && !prevX) {
-            hardware.resetAngle();
-        }
-
         prevX = gamepad.x;
 
-        if (gamepad.dpad_left && gamepad.dpad_left != prevLeftClaw) {
-            prevLeftClaw = false;
-            if (leftClawOpen == OpenClose.OPEN) {
-                leftClawOpen = OpenClose.CLOSE;
-                hardware.driveTrain.leftClaw.setPosition(0.6);
-            } else {
-                leftClawOpen = OpenClose.OPEN;
-                hardware.driveTrain.leftClaw.setPosition(0.75);
+        if (gamepad.dpad_up) {
+            this.robot.setVerticalLift(this.robot.getVerticalLiftPosition()+30);
+        }
+        if (gamepad.dpad_down) {
+            this.robot.setVerticalLift(this.robot.getVerticalLiftPosition()-30);
+        }
+        if (gamepad.dpad_right) {
+            this.robot.setHorizontalSlide(this.robot.getHorizontalSlidePosition()+30);
+        }
+        if (gamepad.dpad_left) {
+            this.robot.setHorizontalSlide(this.robot.getHorizontalSlidePosition()-30);
+        }
+
+        if (gamepad.a && gamepad.a != prevA) {
+            lift++;
+            lift %= 2;
+            if (lift==0) {
+                this.robot.setVerticalLift(0);
+            } else if (lift == 1) {
+                this.robot.setVerticalLift(1200);
             }
         }
-        prevLeftClaw = gamepad.dpad_left;
+        prevA = gamepad.a;
 
-        if (gamepad.dpad_right && gamepad.dpad_right != prevRightClaw) {
-            prevRightClaw = false;
-            if (rightClawOpen == OpenClose.OPEN) {
-                rightClawOpen = OpenClose.CLOSE;
-                hardware.driveTrain.rightClaw.setPosition(0.6);
-            } else {
-                rightClawOpen = OpenClose.OPEN;
-                hardware.driveTrain.rightClaw.setPosition(0.75);
+        if (gamepad.y && gamepad.y != prevY) {
+            lift++;
+            lift %= 2;
+            if (lift==0) {
+                this.robot.setVerticalLift(0);
+            } else if (lift == 1) {
+                this.robot.setVerticalLift(1200);
             }
         }
-        prevRightClaw = gamepad.dpad_right;
+        prevY = gamepad.Y;
 
-        if(gamepad.right_bumper) {
-            currentLift = hardware.driveTrain.rightLift;
+        if (gamepad.b && gamepad.b != prevB) {
+            position++;
+            position %= 4;
+            if (position==0) {
+                this.robot.groundIntake();
+            } else if (position == 1) {
+                this.robot.hangingIntake();
+            } else if (position == 2) {
+                this.robot.rotatedHangingIntake();
+            } else if (position == 3) {
+                this.robot.transferIntake();
+            }
         }
+        prevB = gamepad.b;
 
-        if(gamepad.left_bumper) {
-            currentLift = hardware.driveTrain.leftLift;
-        }
+        telemetry.addData("Position:", position);
+        telemetry.addData("claw", ClawOpen);
 
-        prevSwitched = (gamepad.right_bumper || gamepad.left_bumper);
-
-        if(gamepad.right_trigger > 0){
-            currentLift.setPower(gamepad.right_trigger);
-        }else if(gamepad.left_trigger > 0){
-            currentLift.setPower(-gamepad.left_trigger);
-        }else if(gamepad.left_trigger == 0 && gamepad.right_trigger == 0){
-            currentLift.setPower(0);
-        }
 
 
     }

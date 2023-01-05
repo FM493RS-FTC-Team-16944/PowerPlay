@@ -5,9 +5,9 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class ArmConstants {
     public static double HORIZONTAL_SLIDE_POWER = 0.60;
-    public static double VERTICAL_LIFT_POWER = 0.60;
+    public static double VERTICAL_LIFT_POWER = 0.40;
 
-    public static double OPEN_CLAW_POSITION = 0.80;
+    public static double OPEN_CLAW_POSITION = 0.70;
     public static double CLOSE_CLAW_POSITION = 1.00;
 
     public static double ARM_CLAW_POSITION_FIRST_CONE = 0.40;
