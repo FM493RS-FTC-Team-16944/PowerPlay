@@ -1,8 +1,15 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FIFTH_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_CLAW_TILT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_POWER;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NEUTRAL_CLAW_TILT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NORMAL_ROTATOR_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ONE_EIGHTY_ROTATOR_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.OPEN_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.UP_CLAW_TILT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.VERTICAL_LIFT_POWER;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ANG_ACCEL;
@@ -41,11 +48,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 import org.firstinspires.ftc.teamcode.vision.AprilTagDetector;
 
 import java.util.ArrayList;
@@ -57,6 +66,9 @@ import java.util.List;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
+
+    private HardwareMap hardwareMap;
+
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
@@ -67,6 +79,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
+    public static double SPEED_CAP_TELEOP = 0.7;
     public static double OMEGA_WEIGHT = 1;
     public RobotMovement movement;
 
@@ -77,10 +90,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront,
-            verticalLiftNoEncoder, verticalLiftEncoder, horizontalSlide;
+    public DcMotorEx leftFront, leftRear, rightRear, rightFront, verticalLiftEncoder,horizontalSlide;
 
-    private Servo leftClaw, rightClaw, rotatorClaw, tiltClaw, armClaw;
+
+    public Servo leftClaw, rightClaw, rotatorClaw, tiltClaw, armClaw;
     private List<DcMotorEx> motors;
 
     private BNO055IMU imu;
@@ -88,7 +101,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
-
+        this.hardwareMap = hardwareMap;
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
 
@@ -135,24 +148,19 @@ public class SampleMecanumDrive extends MecanumDrive {
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        verticalLiftNoEncoder = hardwareMap.get(DcMotorEx.class, "verticalLiftNoEncoder");
         verticalLiftEncoder = hardwareMap.get(DcMotorEx.class, "verticalLiftEncoder");
 
-        verticalLiftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
-        verticalLiftNoEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
         verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalLiftNoEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        verticalLiftNoEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         verticalLiftEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        verticalLiftNoEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         horizontalSlide = hardwareMap.get(DcMotorEx.class, "horizontalSlide");
 
         horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        horizontalSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        horizontalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         rotatorClaw = hardwareMap.get(Servo.class, "rotatorClaw");
         leftClaw = hardwareMap.get(Servo.class, "leftClaw");
@@ -282,14 +290,19 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
     }
 
+    public void resetOdom(){
+        this.odometry = new StandardTrackingWheelLocalizer(this.hardwareMap);
+    }
+
     public void setVerticalLift(int position) {
         this.verticalLiftEncoder.setTargetPosition(position);
-        this.verticalLiftNoEncoder.setTargetPosition(position);
         this.verticalLiftEncoder.setPower(VERTICAL_LIFT_POWER);
-        this.verticalLiftNoEncoder.setPower(VERTICAL_LIFT_POWER);
 
         this.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.verticalLiftNoEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void setVerticalMode(DcMotor.RunMode mode){
+        this.verticalLiftEncoder.setMode(mode);
     }
 
     public void setHorizontalSlide(int position) {
@@ -307,12 +320,23 @@ public class SampleMecanumDrive extends MecanumDrive {
         return this.verticalLiftEncoder.getCurrentPosition();
     }
 
-    public void openClaw() {
+    public void resetHorizontalSlidePosition(){
+        horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void resetVerticalSlidePosition(){
+        verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void openClaw() {//2 //8
         this.leftClaw.setPosition(OPEN_CLAW_POSITION);
         this.rightClaw.setPosition(OPEN_CLAW_POSITION);
     }
+    //3 move horizontal
 
-    public void closeClaw() {
+    public void closeClaw() {//4
         this.leftClaw.setPosition(CLOSE_CLAW_POSITION);
         this.rightClaw.setPosition(CLOSE_CLAW_POSITION);
     }
@@ -329,28 +353,30 @@ public class SampleMecanumDrive extends MecanumDrive {
         this.rotatorClaw.setPosition(position);
     }
 
-    public void groundIntake() {
-        this.armClaw.setPosition(0.05);
-        this.tiltClaw.setPosition(1);
-        this.rotatorClaw.setPosition(0.25);
+    public void groundIntake(double constant) {//1
+        this.armClaw.setPosition(constant);
+        this.tiltClaw.setPosition(NEUTRAL_CLAW_TILT_POSITION);
+        this.rotatorClaw.setPosition(NORMAL_ROTATOR_POSITION);
     }
 
-    public void hangingIntake() {
-        this.armClaw.setPosition(0.3);
-        this.tiltClaw.setPosition(0.3);
-        this.rotatorClaw.setPosition(0.25);
+    public void hangingIntake() {//5
+        this.armClaw.setPosition(DROP_ARM_CLAW_POSITION);
+        this.tiltClaw.setPosition(UP_CLAW_TILT_POSITION);
+        this.rotatorClaw.setPosition(NORMAL_ROTATOR_POSITION);
     }
 
-    public void rotatedHangingIntake() {
-        this.armClaw.setPosition(0.3);
-        this.tiltClaw.setPosition(0);
-        this.rotatorClaw.setPosition(1);
+    //6 retract horizontal
+
+    public void rotatedHangingIntake() {//7
+        this.armClaw.setPosition(DROP_ARM_CLAW_POSITION);
+        this.tiltClaw.setPosition(DROP_CLAW_TILT_POSITION);
+        this.rotatorClaw.setPosition(ONE_EIGHTY_ROTATOR_POSITION);
     }
 
     public void transferIntake() {
         this.armClaw.setPosition(0.4);
-        this.tiltClaw.setPosition(0);
-        this.rotatorClaw.setPosition(1);
+        this.tiltClaw.setPosition(DROP_CLAW_TILT_POSITION);
+        this.rotatorClaw.setPosition(ONE_EIGHTY_ROTATOR_POSITION);
     }
 
 
@@ -383,6 +409,26 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         setDrivePower(vel);
+    }
+
+    public void strafeR(double x, double y, double h) {
+        Pose2d currentPosition = odometry.getPoseEstimate();
+        XyhVector position = new XyhVector(currentPosition.getX(), currentPosition.getY(), currentPosition.getHeading());
+        double xR = x * Math.cos(position.h) - y * Math.sin(position.h);
+        double yR = x * Math.sin(position.h) + y * Math.cos(position.h);
+
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(h), 1);
+
+        double frontLeftPower = (yR - xR + h) / denominator;
+        double backLeftPower = (yR + xR + h) / denominator;
+        double frontRightPower = (yR + xR - h) / denominator;
+        double backRightPower = (yR - xR - h) / denominator;
+
+        leftFront.setPower(SPEED_CAP_TELEOP * frontLeftPower);
+        leftRear.setPower(SPEED_CAP_TELEOP * backLeftPower);
+        rightFront.setPower(SPEED_CAP_TELEOP * frontRightPower);
+        rightRear.setPower(SPEED_CAP_TELEOP * backRightPower);
+
     }
 
 
@@ -432,5 +478,15 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
+    }
+
+    public void outputOdomReadings(Telemetry telemetry){
+        Pose2d positions = odometry.getPoseEstimate();
+
+        telemetry.addData("X: ", positions.getX());
+        telemetry.addData("Y: ", positions.getY());
+        telemetry.addData("Heading: ", positions.getHeading());
+
+        telemetry.update();
     }
 }

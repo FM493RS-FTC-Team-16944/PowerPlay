@@ -1,5 +1,29 @@
 package org.firstinspires.ftc.teamcode.operations;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FIFTH_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FIRST_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FOURTH_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_SECOND_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_THIRD_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_CLAW_TILT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_NEUTRAL_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_POWER;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NEUTRAL_CLAW_TILT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NORMAL_ROTATOR_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ONE_EIGHTY_ROTATOR_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.OPEN_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.UP_CLAW_TILT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.VERTICAL_LIFT_POWER;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -7,6 +31,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 import org.openftc.apriltag.AprilTagDetection;
@@ -21,37 +46,54 @@ import java.util.List;
 public class AutonomousOP extends LinearOpMode {
     private SampleMecanumDrive drive;
 
+
+    AprilTagDetection detector = new AprilTagDetection();
+
     @Override
     public void runOpMode() {
         drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(-88.4, 36.8, Math.toRadians(2700));
+        Pose2d startPose = new Pose2d(47, -62, Math.toRadians(270));
+
+//        Trajectory forward = drive.trajectoryBuilder(startPose)
+//                .lineToLinearHeading(new Pose2d(-2.5,30.8,Math.toRadians(170)))
+//                .build();
 
         Trajectory forward = drive.trajectoryBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-2.5,30.8,Math.toRadians(170)))
+                .lineToConstantHeading(new Vector2d(33.5, 6))
+                .build();
+        Trajectory back = drive.trajectoryBuilder(forward.end())
+                .lineToConstantHeading(new Vector2d(34.5,-3))
+                .build();
+//        Trajectory turn = drive.trajectoryBuilder(back.end())
+//                .lineToSplineHeading(new Pose2d(34.5,-3, Math.toRadians(170)))
+//                .build();
+        Trajectory byCone = drive.trajectoryBuilder(forward.end().plus(new Pose2d(0,0,Math.toRadians(350))))
+                .lineToConstantHeading(new Vector2d(32.5, -3))
                 .build();
 
-        Trajectory destination1 = drive.trajectoryBuilder(forward.end())
-                .splineTo(new Vector2d(-10,11),Math.toRadians(180))
-                .build();
-        Trajectory destination2 = drive.trajectoryBuilder(forward.end())
-                .splineTo(new Vector2d(-10,35),Math.toRadians(0))
+
+        Trajectory middleDestination = drive.trajectoryBuilder(forward.end())
+                .lineToSplineHeading(new Pose2d(-32.25,-12,Math.toRadians(90)))
                 .build();
 
-        Trajectory destination3 = drive.trajectoryBuilder(forward.end())
-                .splineTo(new Vector2d(-10,69),Math.toRadians(180))
+        Trajectory leftDestination = drive.trajectoryBuilder(middleDestination.end())
+                .strafeLeft(20)
                 .build();
 
-        Trajectory[] parkingSpots = new Trajectory[]{destination1,destination2,destination3};
+        Trajectory rightDestination = drive.trajectoryBuilder(middleDestination.end())
+                .strafeRight(20)
+                .build();
+
+        Trajectory[] parkingSpots = new Trajectory[]{leftDestination,middleDestination,rightDestination};
         int lastDestination = 0;
 
 
         waitForStart();
 
-        while (opModeIsActive()) {
 
             sleep(1000);
-
+//
             AprilTagDetection detections = drive.detector.detectObjects();
 
             switch (detections.id) {
@@ -63,12 +105,89 @@ public class AutonomousOP extends LinearOpMode {
                     lastDestination = 2;
             }
 
-
-            sleep(4000);
-
+            telemetry.addData("Detected Object", detections.id);
+            telemetry.update();
+//
+//
+           sleep(4000);
+            //set hanging intake for better driving
+            drive.hangingIntake();
             drive.followTrajectory(forward);
+            drive.followTrajectory(back);
+            drive.turn(Math.toRadians(350));
+            drive.followTrajectory(byCone);
 
-            drive.followTrajectory(parkingSpots[lastDestination]);
-        }
+            //place preloaded cone
+            drive.verticalLiftEncoder.setTargetPosition(HIGH_SCORE_VERTICAL_LIFT_POSITION);
+            drive.verticalLiftEncoder.setTargetPosition(NEUTRAL_VERTICAL_LIFT_POSITION);
+
+//            //cycle loaded cones
+//
+//            //1st Cone
+//            drive.groundIntake(ARM_CLAW_POSITION_FIRST_CONE);
+//            drive.openClaw();
+//            drive.horizontalSlide.setTargetPosition(HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE);
+//            drive.closeClaw();
+//            drive.hangingIntake();
+//            drive.horizontalSlide.setTargetPosition(HORIZONTAL_SLIDE_NEUTRAL_POSITION);
+//            drive.rotatedHangingIntake();
+//            drive.openClaw();
+//            drive.verticalLiftEncoder.setTargetPosition(HIGH_SCORE_VERTICAL_LIFT_POSITION);
+//            drive.verticalLiftEncoder.setTargetPosition(NEUTRAL_VERTICAL_LIFT_POSITION);
+//            //2nd Cone
+//            drive.groundIntake(ARM_CLAW_POSITION_SECOND_CONE);
+//            drive.openClaw();
+//            drive.horizontalSlide.setTargetPosition(HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE);
+//            drive.closeClaw();
+//            drive.hangingIntake();
+//            drive.horizontalSlide.setTargetPosition(HORIZONTAL_SLIDE_NEUTRAL_POSITION);
+//            drive.rotatedHangingIntake();
+//            drive.openClaw();
+//            drive.verticalLiftEncoder.setTargetPosition(HIGH_SCORE_VERTICAL_LIFT_POSITION);
+//            drive.verticalLiftEncoder.setTargetPosition(NEUTRAL_VERTICAL_LIFT_POSITION);
+//            //3rd Cone
+//            drive.groundIntake(ARM_CLAW_POSITION_THIRD_CONE);
+//            drive.openClaw();
+//            drive.horizontalSlide.setTargetPosition(HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE);
+//            drive.closeClaw();
+//            drive.hangingIntake();
+//            drive.horizontalSlide.setTargetPosition(HORIZONTAL_SLIDE_NEUTRAL_POSITION);
+//            drive.rotatedHangingIntake();
+//            drive.openClaw();
+//            drive.verticalLiftEncoder.setTargetPosition(HIGH_SCORE_VERTICAL_LIFT_POSITION);
+//            drive.verticalLiftEncoder.setTargetPosition(NEUTRAL_VERTICAL_LIFT_POSITION);
+//            //4th Cone
+//            drive.groundIntake(ARM_CLAW_POSITION_FOURTH_CONE);
+//            drive.openClaw();
+//            drive.horizontalSlide.setTargetPosition(HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE);
+//            drive.closeClaw();
+//            drive.hangingIntake();
+//            drive.horizontalSlide.setTargetPosition(HORIZONTAL_SLIDE_NEUTRAL_POSITION);
+//            drive.rotatedHangingIntake();
+//            drive.openClaw();
+//            drive.verticalLiftEncoder.setTargetPosition(HIGH_SCORE_VERTICAL_LIFT_POSITION);
+//            drive.verticalLiftEncoder.setTargetPosition(NEUTRAL_VERTICAL_LIFT_POSITION);
+//            //5th Cone
+//            drive.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
+//            drive.openClaw();
+//            drive.horizontalSlide.setTargetPosition(HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE);
+//            drive.closeClaw();
+//            drive.hangingIntake();
+//            drive.horizontalSlide.setTargetPosition(HORIZONTAL_SLIDE_NEUTRAL_POSITION);
+//            drive.rotatedHangingIntake();
+//            drive.openClaw();
+//            drive.verticalLiftEncoder.setTargetPosition(HIGH_SCORE_VERTICAL_LIFT_POSITION);
+//            drive.verticalLiftEncoder.setTargetPosition(NEUTRAL_VERTICAL_LIFT_POSITION);
+
+            //drive to parking spot
+
+//            drive.followTrajectory(middleDestination);
+//            if(lastDestination != 1) {
+//                drive.followTrajectory(parkingSpots[lastDestination]);
+//            }
+            //drive.followTrajectory(parkingSpots[lastDestination]);
     }
+
+
+
 }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.gamepad;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FIFTH_CONE;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -113,13 +115,13 @@ public class ManualGamePad {
                 this.robot.setVerticalLift(1200);
             }
         }
-        prevY = gamepad.Y;
+        prevY = gamepad.y;
 
         if (gamepad.b && gamepad.b != prevB) {
             position++;
             position %= 4;
             if (position==0) {
-                this.robot.groundIntake();
+                this.robot.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
             } else if (position == 1) {
                 this.robot.hangingIntake();
             } else if (position == 2) {
