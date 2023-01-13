@@ -27,6 +27,7 @@ public class HorizontalLiftPID extends Thread{
         this.height = height;
         this.control = new PIDController(horizontalKP,horizontalKI,horizontalKD);
         control.setSetPoint(this.height);
+        control.setTolerance(threshold);
         this.threshold = threshold;
         this.telemetry = tele;
     }
@@ -41,7 +42,7 @@ public class HorizontalLiftPID extends Thread{
                 // easier.
                 double command = control.calculate(drive.horizontalSlide.getCurrentPosition());
                 drive.horizontalSlide.setPower(0.2 * command);
-                if(Math.abs(drive.getHorizontalSlidePosition() - height) <= threshold){
+                if(control.atSetPoint()){
                 this.complete = true;
                 }
             }

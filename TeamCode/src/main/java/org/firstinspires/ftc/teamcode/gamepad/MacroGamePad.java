@@ -65,13 +65,14 @@ public class MacroGamePad {
     Thread horizThread;
 
     private int horizontalTarget = 2000;
+    private int vertHeight = 170;
     private int verticalTarget = HIGH_SCORE_VERTICAL_LIFT_POSITION;
 
     public MacroGamePad(SampleMecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
         this.gamepad = hardwareGamepad;
         this.robot = robot;
         this.telemetry = telemetry;
-        this.scoringMac = new ScoringMacro(robot,verticalTarget, horizontalTarget,telemetry);
+        this.scoringMac = new ScoringMacro(robot,vertHeight, horizontalTarget,telemetry);
         this.scoringThread = new Thread(scoringMac);
         this.testHor = new HorizontalLiftPID(robot,1000, 100, telemetry);
         horizThread = new Thread(testHor);
@@ -116,13 +117,10 @@ public class MacroGamePad {
             this.robot.verticalLiftEncoder.setPower(0);
         }
         if (gamepad.dpad_right) {
-            robot.horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.robot.horizontalSlide.setPower(0.7);
         }else if (gamepad.dpad_left) {
-            robot.horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.robot.horizontalSlide.setPower(-0.7);
         }else{
-            robot.horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.robot.horizontalSlide.setPower(0);
         }
 

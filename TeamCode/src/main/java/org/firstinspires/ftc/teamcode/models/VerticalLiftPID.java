@@ -24,6 +24,7 @@ public class VerticalLiftPID extends Thread{
         this.height = height;
         this.control = new PIDController(verticalKP,verticalKI,verticalKD);
         control.setSetPoint(this.height);
+        control.setTolerance(threshold);
         this.threshold = threshold;
         this.telemetry = tele;
     }
@@ -38,7 +39,7 @@ public class VerticalLiftPID extends Thread{
                 // easier.
                 double command = control.calculate(drive.verticalLiftEncoder.getCurrentPosition());
                 drive.verticalLiftEncoder.setPower(0.2 * command);
-                if(Math.abs(drive.getVerticalLiftPosition() - height) <= threshold){
+                if(control.atSetPoint()){
                     this.complete = true;
                 }
             }
