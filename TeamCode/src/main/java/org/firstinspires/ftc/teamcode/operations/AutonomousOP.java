@@ -70,7 +70,7 @@ public class AutonomousOP extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(34,10))
                 .build();
         Trajectory back = drive.trajectoryBuilder(forward.end())
-                .lineToLinearHeading(new Pose2d(34,-15,Math.toRadians(-160)))
+                .lineToLinearHeading(new Pose2d(34,-15,Math.toRadians(160)))
                 .build();
 //        Trajectory turn = drive.trajectoryBuilder(back.end())
 //                .lineToSplineHeading(new Pose2d(34.5,-3, Math.toRadians(170)))
