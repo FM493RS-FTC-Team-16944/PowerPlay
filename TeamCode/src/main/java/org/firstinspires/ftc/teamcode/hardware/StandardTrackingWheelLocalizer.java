@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.TRACK_WIDTH;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -7,6 +9,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.hardware.DriveConstants;
 
 import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
@@ -38,13 +41,12 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public static double WHEEL_RADIUS = 1; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 15.71; // in; distance between the left and right wheels
+    public static double LATERAL_DISTANCE = 15.7; // in; distance between the left and right wheels
     public static double FORWARD_OFFSET = 0.75; // in; offset of the lateral wheel
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
 
-    public static double TRACK_WIDTH = 39.40; //make sure to cahnge these two values
     public static double CENTER_WHEEL_OFFSET = 5.60;
     public static double R = 1;
     public static double N = 8192;

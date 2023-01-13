@@ -7,14 +7,14 @@ public class ArmConstants {
 
     public static double verticalKP = 0.02;
     public static double verticalKI = 0.01;
-    public static double verticalKD = 0.00;
+    public static double verticalKD = 0.001;
 
     public static double horizontalKP = 0.014;
-    public static double horizontalKI = 0.01;
-    public static double horizontalKD = 0.00;
+    public static double horizontalKI = 0.005;
+    public static double horizontalKD = 0.001;
 
     public static double HORIZONTAL_SLIDE_POWER = 0.60;
-    public static double VERTICAL_LIFT_POWER = 0.40;
+    public static double VERTICAL_LIFT_POWER = 0.60;
 
     public static double OPEN_CLAW_POSITION = 0.70;
     public static double CLOSE_CLAW_POSITION = 1.00;
@@ -23,8 +23,8 @@ public class ArmConstants {
     public static double ARM_CLAW_POSITION_SECOND_CONE = 0.35;
     public static double ARM_CLAW_POSITION_THIRD_CONE = 0.27;
     public static double ARM_CLAW_POSITION_FOURTH_CONE = 0.20;
-    public static double ARM_CLAW_POSITION_FIFTH_CONE = 0.05;
-    public static double ARM_CLAW_POSITION_NEUTRAL = 0.50;
+    public static double ARM_CLAW_POSITION_FIFTH_CONE = 0.00;
+    public static double ARM_CLAW_POSITION_NEUTRAL = 0.20;
 
     public static double SECOND_PART_UP_ARM_CLAW_POSITION_FIRST_CONE = 0.00;
     public static double SECOND_PART_UP_ARM_CLAW_POSITION_SECOND_CONE = 0.00;
@@ -32,7 +32,7 @@ public class ArmConstants {
     public static double SECOND_PART_UP_ARM_CLAW_POSITION_FOURTH_CONE = 0.20;
     public static double SECOND_PART_UP_ARM_CLAW_POSITION_FIFTH_CONE = 0.00;
 
-    public static double DROP_ARM_CLAW_POSITION = 0.3;
+    public static double DROP_ARM_CLAW_POSITION = 0.25;
 
     public static double NEUTRAL_CLAW_TILT_POSITION = 1.00;
     public static double UP_CLAW_TILT_POSITION = 0.30;
