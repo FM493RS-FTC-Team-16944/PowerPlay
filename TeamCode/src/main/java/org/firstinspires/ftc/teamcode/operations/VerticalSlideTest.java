@@ -22,8 +22,8 @@ import org.firstinspires.ftc.teamcode.gamepad.MovementGamePad;
 import org.firstinspires.ftc.teamcode.gamepad.TestGamePad;
 import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
 
-@TeleOp(name = "SlideTestsTeleOp")
-public class SlideTestsTeleOp extends LinearOpMode {
+@TeleOp(name = "VerticalSlideTest")
+public class VerticalSlideTest extends LinearOpMode {
 
     public Robot robot;
 
@@ -37,21 +37,21 @@ public class SlideTestsTeleOp extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         MovementGamePad gamePad = new MovementGamePad(drive, this.gamepad1, this.telemetry);
         boolean dpadUP = false;
-        PIDController control = new PIDController(horizontalKP,horizontalKI,horizontalKD);
+        PIDController control = new PIDController(verticalKP,verticalKI,verticalKD);
         double position = -2000;
-        drive.horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        drive.horizontalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        drive.verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.verticalLiftEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         control.setSetPoint(position);
         while (opModeIsActive() && !isStopRequested()) {
             drive.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
             gamePad.updateRobot();
-            double command = control.calculate(drive.horizontalSlide.getCurrentPosition());
+            double command = control.calculate(drive.verticalLiftEncoder.getCurrentPosition());
 
-            drive.horizontalSlide.setPower(0.2 * command);
+            drive.verticalLiftEncoder.setPower(0.2 * command);
             //dpadUP = gamepad1.dpad_up;
-            telemetry.addData("Horizontal Position:", drive.horizontalSlide.getCurrentPosition());
+            telemetry.addData("Vertical Position:", drive.verticalLiftEncoder.getCurrentPosition());
             drive.odometry.update();
             drive.outputOdomReadings(telemetry);
             telemetry.update();
