@@ -40,7 +40,7 @@ public class ScoringMacro extends Thread{
         this.drive = drive;
         this.telemetry = telemetry;
         this.horizHeight = horizHeight;
-        poleHeightPID = new VerticalLiftPID(drive, verticalHeight, 200, telemetry);
+        poleHeightPID = new VerticalLiftPID(drive, verticalHeight+500, 200, telemetry);
         poleThread = new Thread(poleHeightPID);
         horizontalPID = new HorizontalLiftPID(drive, horizHeight, 200, telemetry);
         horizThread = new Thread(horizontalPID);
@@ -74,6 +74,11 @@ public class ScoringMacro extends Thread{
                 }
                 horizontalPID.start();
             if(horizontalPID.complete) {
+                try{
+                    Thread.sleep(500);
+                }catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 try{
                     Thread.sleep(1000);
                 }catch (InterruptedException e) {
