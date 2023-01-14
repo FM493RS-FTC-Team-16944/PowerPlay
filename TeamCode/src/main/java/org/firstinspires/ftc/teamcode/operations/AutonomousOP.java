@@ -85,7 +85,7 @@ public class AutonomousOP extends LinearOpMode {
                 .build();
 
         Trajectory dropCone = drive.trajectoryBuilder(toCone.end())
-                .lineToConstantHeading(new Vector2d(39, -5),
+                .lineToConstantHeading(new Vector2d(39, -6),
                         SampleMecanumDrive.getVelocityConstraint(15, MAX_ANG_VEL, TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(MAX_ACCEL))
                 .build();
@@ -104,7 +104,7 @@ public class AutonomousOP extends LinearOpMode {
 
 
         Trajectory midDestination = drive.trajectoryBuilder(middleDestination.end())
-                .strafeLeft(5)
+                .strafeLeft(3)
                 .build();
 
 
