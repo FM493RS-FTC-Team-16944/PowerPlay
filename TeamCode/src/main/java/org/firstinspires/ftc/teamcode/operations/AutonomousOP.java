@@ -66,7 +66,13 @@ public class AutonomousOP extends LinearOpMode {
         Pose2d startPose = new Pose2d(27, -62, Math.toRadians(270));
         drive.setPoseEstimate(startPose);
 
-        Trajectory preTurnA = drive.trajectoryBuilder(startPose, true)
+
+        Trajectory offWall = drive.trajectoryBuilder(startPose, true)
+                .lineToConstantHeading(new Vector2d(32, -60),
+                        SampleMecanumDrive.getVelocityConstraint(20, MAX_ANG_VEL, TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(MAX_ACCEL))
+                .build();
+        Trajectory preTurnA = drive.trajectoryBuilder(offWall.end(), true)
                 .lineToConstantHeading(new Vector2d(31, -1),
                         SampleMecanumDrive.getVelocityConstraint(20, MAX_ANG_VEL, TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(MAX_ACCEL))
@@ -144,7 +150,7 @@ public class AutonomousOP extends LinearOpMode {
             telemetry.addData("LastDestination", lastDestination);
             telemetry.update();
 
-
+            drive.followTrajectory(offWall);
             drive.followTrajectory(preTurnA);
             drive.followTrajectory(preTurnB);
             drive.turn(Math.toRadians(-165));

@@ -19,10 +19,11 @@ public class MovementGamePad {
     private final SampleMecanumDrive robot;
     private final Telemetry telemetry;
 
-    public Boolean prevDpadUp = false;
-    public Boolean prevDpadDown = false;
-    public Boolean prevX = false;
-
+    public boolean prevDpadUp = false;
+    public boolean prevDpadDown = false;
+    public boolean prevX = false;
+    public boolean prevY = false;
+    public boolean switchedDrive = false;
 
     public MovementGamePad(SampleMecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
         this.gamepad = hardwareGamepad;
@@ -32,11 +33,27 @@ public class MovementGamePad {
 
     public void updateRobot() {
 
-        robot.strafeR(
-                -gamepad.left_stick_x,
-                -gamepad.left_stick_y,
-                gamepad.right_stick_x
-        );
+        if(!switchedDrive) {
+            robot.strafeR(
+                    -gamepad.left_stick_x,
+                    -gamepad.left_stick_y,
+                    gamepad.right_stick_x
+            );
+        }else{
+            robot.setWeightedDrivePower(
+                    new Pose2d(
+                            -gamepad.left_stick_y,
+                            -gamepad.left_stick_x,
+                            -gamepad.right_stick_x
+                    )
+            );
+        }
+
+        if(gamepad.y && !prevY){
+            switchedDrive = !switchedDrive;
+        }
+
+        prevY = gamepad.y;
 
         if(gamepad.dpad_up && !prevDpadUp){
             robot.resetVerticalSlidePosition();
