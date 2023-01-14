@@ -118,7 +118,7 @@ public class MacroGamePad {
 
 
         if (gamepad.dpad_up) {
-            this.robot.verticalLiftEncoder.setPower(0.7);
+            this.robot.verticalLiftEncoder.setPower(0.6);
         }else if (gamepad.dpad_down) {
             this.robot.verticalLiftEncoder.setPower(-0.5);
         }else{

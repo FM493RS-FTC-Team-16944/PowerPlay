@@ -40,13 +40,13 @@ public class ScoringMacro extends Thread{
         this.drive = drive;
         this.telemetry = telemetry;
         this.horizHeight = horizHeight;
-        poleHeightPID = new VerticalLiftPID(drive, verticalHeight+500, 200, telemetry);
+        poleHeightPID = new VerticalLiftPID(drive, verticalHeight+190, 200, telemetry);
         poleThread = new Thread(poleHeightPID);
         horizontalPID = new HorizontalLiftPID(drive, horizHeight, 200, telemetry);
         horizThread = new Thread(horizontalPID);
-        zeroHeightPID = new VerticalLiftPID(drive, 0, 200, telemetry);
+        zeroHeightPID = new VerticalLiftPID(drive, -190, 200, telemetry);
         zeroHeightThread = new Thread(zeroHeightPID);
-        zeroHorizPID = new HorizontalLiftPID(drive, 100, 100, telemetry);
+        zeroHorizPID = new HorizontalLiftPID(drive, -80, 100, telemetry);
         zeroHeightThread = new Thread(zeroHorizPID);
     }
 
