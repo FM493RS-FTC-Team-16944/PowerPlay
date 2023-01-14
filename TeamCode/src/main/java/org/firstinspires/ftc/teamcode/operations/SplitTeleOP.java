@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.gamepad.MovementGamePad;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.models.ScoringMacro;
 
 @TeleOp(name = "SplitTeleOp")
 public class SplitTeleOP extends LinearOpMode {
@@ -18,6 +19,7 @@ public class SplitTeleOP extends LinearOpMode {
     public RobotHardware hardware;
     public MovementGamePad gamepad;
     private ButtonGamePad buttonGamepad;
+    public static ScoringMacro currentThread;
 
     @Override
     public void runOpMode() {
@@ -34,6 +36,9 @@ public class SplitTeleOP extends LinearOpMode {
             drive.outputOdomReadings(telemetry);
 
             telemetry.update();
+        }
+        if(isStopRequested()){
+            currentThread.complete = true;
         }
     }
 

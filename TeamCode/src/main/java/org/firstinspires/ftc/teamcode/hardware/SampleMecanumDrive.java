@@ -375,7 +375,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     }
 
     public void transferIntake() {
-        this.armClaw.setPosition(0.4);
+        this.armClaw.setPosition(0.34);
         this.tiltClaw.setPosition(DROP_CLAW_TILT_POSITION);
         this.rotatorClaw.setPosition(ONE_EIGHTY_ROTATOR_POSITION);
     }

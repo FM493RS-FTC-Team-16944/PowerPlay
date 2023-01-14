@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.models.Mode;
 import org.firstinspires.ftc.teamcode.models.OpenClose;
 import org.firstinspires.ftc.teamcode.models.ScoringMacro;
 import org.firstinspires.ftc.teamcode.models.VerticalLiftPID;
+import org.firstinspires.ftc.teamcode.operations.SplitTeleOP;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
@@ -63,6 +64,7 @@ public class MacroGamePad {
 
     HorizontalLiftPID testHor;
     Thread horizThread;
+    ScoringMacro currentThread;
 
     private int horizontalTarget = 2000;
     private int vertHeight = 170;
@@ -74,16 +76,22 @@ public class MacroGamePad {
         this.telemetry = telemetry;
         this.scoringMac = new ScoringMacro(robot,vertHeight, horizontalTarget,telemetry);
         this.scoringThread = new Thread(scoringMac);
+        this.scoringMac.complete = true;
         this.testHor = new HorizontalLiftPID(robot,1000, 100, telemetry);
         horizThread = new Thread(testHor);
     }
 
     public void updateRobot() {
-
+        SplitTeleOP.currentThread = this.currentThread;
         telemetry.addData("Horizontal Slide Position:", robot.getHorizontalSlidePosition()) ;
+        telemetry.addData("Vertical Slide Position:", robot.getVerticalLiftPosition()
+
+
+        ) ;
         if(gamepad.y && !prevY){
             telemetry.addData("Horizontal Target:", robot.getHorizontalSlidePosition());
             horizontalTarget = robot.getHorizontalSlidePosition();
+            vertHeight = robot.getVerticalLiftPosition();
             telemetry.update();
         }
 
@@ -117,9 +125,9 @@ public class MacroGamePad {
             this.robot.verticalLiftEncoder.setPower(0);
         }
         if (gamepad.dpad_right) {
-            this.robot.horizontalSlide.setPower(0.7);
+            this.robot.horizontalSlide.setPower(1);
         }else if (gamepad.dpad_left) {
-            this.robot.horizontalSlide.setPower(-0.7);
+            this.robot.horizontalSlide.setPower(-1);
         }else{
             this.robot.horizontalSlide.setPower(0);
         }
@@ -128,8 +136,9 @@ public class MacroGamePad {
 
         if(gamepad.x && !prevX){
             telemetry.addLine("scoring thread started");
+            scoringMac = new ScoringMacro(robot,vertHeight, horizontalTarget,telemetry);
             scoringMac.start();
-
+            currentThread = scoringMac;
 //            scoringThread.start();
 //            telemetry.update();
         }

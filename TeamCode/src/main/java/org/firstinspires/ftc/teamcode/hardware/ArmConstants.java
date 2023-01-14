@@ -5,12 +5,12 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class ArmConstants {
 
-    public static double verticalKP = 0.02;
-    public static double verticalKI = 0.01;
+    public static double verticalKP = 0.022;
+    public static double verticalKI = 0.00;
     public static double verticalKD = 0.00;
 
-    public static double horizontalKP = 0.014;
-    public static double horizontalKI = 0.001;
+    public static double horizontalKP = 0.010;
+    public static double horizontalKI = 0.00;
     public static double horizontalKD = 0.00;
 
     public static double HORIZONTAL_SLIDE_POWER = 0.60;

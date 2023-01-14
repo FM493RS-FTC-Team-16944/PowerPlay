@@ -11,6 +11,7 @@ import org.ejml.equation.Macro;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.gamepad.MacroGamePad;
 import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.operations.SplitTeleOP;
 
 public class ScoringMacro extends Thread{
     private SampleMecanumDrive drive;
@@ -34,6 +35,7 @@ public class ScoringMacro extends Thread{
     public boolean done3 = false;
     public boolean done4 = false;
 
+
     public ScoringMacro(SampleMecanumDrive drive, int verticalHeight, int horizHeight, Telemetry telemetry) {
         this.drive = drive;
         this.telemetry = telemetry;
@@ -44,12 +46,14 @@ public class ScoringMacro extends Thread{
         horizThread = new Thread(horizontalPID);
         zeroHeightPID = new VerticalLiftPID(drive, 0, 200, telemetry);
         zeroHeightThread = new Thread(zeroHeightPID);
-        zeroHorizPID = new HorizontalLiftPID(drive, 0, 200, telemetry);
+        zeroHorizPID = new HorizontalLiftPID(drive, 100, 100, telemetry);
         zeroHeightThread = new Thread(zeroHorizPID);
     }
 
 
     public void run(){
+
+
         telemetry.addData("Horizontal Completed:", horizontalPID.complete);
 
 
@@ -95,6 +99,11 @@ public class ScoringMacro extends Thread{
                     zeroHorizPID.start();
                     if (zeroHorizPID.complete) {
                         if (!done2) {
+                            try {
+                                Thread.sleep(600);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             MacroGamePad.ClawOpen = OpenClose.OPEN;
                             done2 = true;
                             this.drive.openClaw();
@@ -113,6 +122,11 @@ public class ScoringMacro extends Thread{
                         telemetry.addLine("done going back to 0 horiz");
                         poleHeightPID.start();
                             if (poleHeightPID.complete) {
+                                try {
+                                    Thread.sleep(600);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 zeroHeightPID.start();
                                 if (zeroHeightPID.complete) {
                                     this.complete = true;
