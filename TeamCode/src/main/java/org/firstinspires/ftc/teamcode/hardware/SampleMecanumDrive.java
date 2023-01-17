@@ -80,7 +80,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
-    public static double SPEED_CAP_TELEOP = 0.7;
+    public static double SPEED_CAP_TELEOP = 0.55;
     public static double OMEGA_WEIGHT = 1;
     public RobotMovement movement;
 
@@ -143,12 +143,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
         verticalLiftEncoder = hardwareMap.get(DcMotorEx.class, "verticalLiftEncoder");
 
 
@@ -194,7 +194,6 @@ public class SampleMecanumDrive extends MecanumDrive {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
 
-        leftRear.setDirection(DcMotor.Direction.REVERSE);
 
         setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
         odometry = new StandardTrackingWheelLocalizer(hardwareMap);
@@ -323,12 +322,12 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public void resetHorizontalSlidePosition(){
         horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        horizontalSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void resetVerticalSlidePosition(){
         verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void openClaw() {//2 //8

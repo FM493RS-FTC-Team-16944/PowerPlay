@@ -19,15 +19,15 @@ public class ScoringMacro extends Thread{
     public boolean complete;
     private Telemetry telemetry;
 
-    VerticalLiftPID poleHeightPID;
-    HorizontalLiftPID horizontalPID;
+    public VerticalLiftPID poleHeightPID;
+    public HorizontalLiftPID horizontalPID;
     Thread poleThread;
     Thread horizThread;
     int horizHeight;
 
-    VerticalLiftPID zeroHeightPID;
+    public VerticalLiftPID zeroHeightPID;
     Thread zeroHeightThread;
-    HorizontalLiftPID zeroHorizPID;
+    public HorizontalLiftPID zeroHorizPID;
     Thread zeroHorizThread;
     public boolean done0 = false;
     public boolean done1 = false;
@@ -148,4 +148,7 @@ public class ScoringMacro extends Thread{
 
 
     }
+
 }
+
+

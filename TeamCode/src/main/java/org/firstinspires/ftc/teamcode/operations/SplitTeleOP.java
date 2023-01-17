@@ -39,6 +39,10 @@ public class SplitTeleOP extends LinearOpMode {
         }
         if(isStopRequested()){
             currentThread.complete = true;
+            currentThread.horizontalPID.complete = true;
+            currentThread.zeroHorizPID.complete = true;
+            currentThread.poleHeightPID.complete = true;
+            currentThread.zeroHeightPID.complete = true;
         }
     }
 
