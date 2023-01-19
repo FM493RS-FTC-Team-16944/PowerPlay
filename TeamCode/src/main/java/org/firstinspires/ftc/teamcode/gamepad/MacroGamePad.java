@@ -5,28 +5,19 @@ import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HIGH_SCORE_VE
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.LOW_SCORE_VERTICAL_LIFT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.MEDIUM_SCORE_VERTICAL_LIFT_POSITION;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.hardware.Motor;
-import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.models.HorizontalLiftPID;
-import org.firstinspires.ftc.teamcode.models.Lift;
-import org.firstinspires.ftc.teamcode.models.Mode;
 import org.firstinspires.ftc.teamcode.models.OpenClose;
 import org.firstinspires.ftc.teamcode.models.ScoringMacro;
-import org.firstinspires.ftc.teamcode.models.VerticalLiftPID;
 import org.firstinspires.ftc.teamcode.operations.SplitTeleOP;
-
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 public class MacroGamePad {
     private final Gamepad gamepad;
-    private final SampleMecanumDrive robot;
+    private final MecanumDrive robot;
     private final Telemetry telemetry;
 
     public static int armClawPosition = 1;
@@ -70,7 +61,7 @@ public class MacroGamePad {
     private int vertHeight = 170;
     private int verticalTarget = HIGH_SCORE_VERTICAL_LIFT_POSITION;
 
-    public MacroGamePad(SampleMecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
+    public MacroGamePad(MecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
         this.gamepad = hardwareGamepad;
         this.robot = robot;
         this.telemetry = telemetry;

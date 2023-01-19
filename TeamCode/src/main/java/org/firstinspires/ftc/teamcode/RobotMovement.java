@@ -1,20 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 
 @Config
 public class RobotMovement {
-    SampleMecanumDrive robot;
+    MecanumDrive robot;
 
     public static double SPEED_CAP_AUTON = 0.5;
     public double SPEED_CAP_TELEOP = 0.5;
     
-    public RobotMovement(SampleMecanumDrive robot) {
+    public RobotMovement(MecanumDrive robot) {
         this.robot = robot;
     }
 

@@ -7,23 +7,18 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Autonomous
 @Config
 public class MirroredAutonomousOP extends LinearOpMode {
-    private SampleMecanumDrive drive;
+    private MecanumDrive drive;
 
     @Override
     public void runOpMode() {
-        drive = new SampleMecanumDrive(hardwareMap);
+        drive = new MecanumDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(10, -8, Math.toRadians(180));
 

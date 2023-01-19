@@ -34,9 +34,9 @@ public class ArmConstants {
 
     public static double DROP_ARM_CLAW_POSITION = 0.25;
 
-    public static double NEUTRAL_CLAW_TILT_POSITION = 1.00;
-    public static double UP_CLAW_TILT_POSITION = 0.30;
-    public static double DROP_CLAW_TILT_POSITION = 0.00; // this is the tilt when it's gonna drop it on the red thing
+    public static double NEUTRAL_CLAW_TILT_POSITION = 0.95;
+    public static double UP_CLAW_TILT_POSITION = 0.70;
+    public static double DROP_CLAW_TILT_POSITION = 0.40; // this is the tilt when it's gonna drop it on the red thing
 
     public static double NORMAL_ROTATOR_POSITION = 0.25;
     public static double ONE_EIGHTY_ROTATOR_POSITION = 1.00;

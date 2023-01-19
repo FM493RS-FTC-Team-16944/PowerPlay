@@ -4,25 +4,21 @@ package org.firstinspires.ftc.teamcode.models;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.horizontalKD;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.horizontalKI;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.horizontalKP;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.verticalKD;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.verticalKI;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.verticalKP;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.util.LoggingUtil;
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 
 public class HorizontalLiftPID extends Thread{
     Telemetry telemetry;
-    private SampleMecanumDrive drive;
+    private MecanumDrive drive;
     private int height;
     public boolean complete;
     public int threshold;
     PIDController control;
 
-    public HorizontalLiftPID(SampleMecanumDrive mecanumDrive, int height, int threshold, Telemetry tele){
+    public HorizontalLiftPID(MecanumDrive mecanumDrive, int height, int threshold, Telemetry tele){
         this.drive = mecanumDrive;
         this.height = height;
         this.control = new PIDController(horizontalKP,horizontalKI,horizontalKD);

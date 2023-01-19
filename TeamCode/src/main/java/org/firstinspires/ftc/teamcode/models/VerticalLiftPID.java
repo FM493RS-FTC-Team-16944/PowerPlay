@@ -8,18 +8,17 @@ import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.verticalKP;
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.util.LoggingUtil;
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 
 public class VerticalLiftPID extends Thread{
     Telemetry telemetry;
-    private SampleMecanumDrive drive;
+    private MecanumDrive drive;
     private int height;
     public boolean complete;
     public int threshold;
     PIDController control;
 
-    public VerticalLiftPID(SampleMecanumDrive mecanumDrive, int height, int threshold, Telemetry tele){
+    public VerticalLiftPID(MecanumDrive mecanumDrive, int height, int threshold, Telemetry tele){
         this.drive = mecanumDrive;
         this.height = height;
         this.control = new PIDController(verticalKP,verticalKI,verticalKD);

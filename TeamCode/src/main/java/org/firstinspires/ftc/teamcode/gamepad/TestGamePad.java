@@ -27,12 +27,12 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 
 @Config
 public class TestGamePad {
     private final Gamepad gamepad;
-    private final SampleMecanumDrive robot;
+    private final MecanumDrive robot;
     private final Telemetry telemetry;
 
     public static int armClawPosition = 1;
@@ -41,7 +41,7 @@ public class TestGamePad {
     public static int horizontalSlidePosition = 1;
     public static int verticalLiftPosition = 1;
 
-    public TestGamePad(SampleMecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
+    public TestGamePad(MecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
         this.gamepad = hardwareGamepad;
         this.robot = robot;
         this.telemetry = telemetry;

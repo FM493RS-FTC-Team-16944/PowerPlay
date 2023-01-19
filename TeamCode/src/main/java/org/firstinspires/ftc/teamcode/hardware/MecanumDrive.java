@@ -1,9 +1,18 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FIFTH_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FIRST_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FOURTH_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_SECOND_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_THIRD_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_CLAW_TILT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_POWER;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NEUTRAL_CLAW_TILT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NORMAL_ROTATOR_POSITION;
@@ -25,7 +34,6 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
-import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -37,7 +45,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -51,6 +58,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMovement;
+import org.firstinspires.ftc.teamcode.models.GrabPosition;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceRunner;
@@ -66,7 +74,9 @@ import java.util.List;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class SampleMecanumDrive extends MecanumDrive {
+public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive {
+
+    private final boolean isAuto = false;
 
     private HardwareMap hardwareMap;
 
@@ -91,7 +101,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    public DcMotorEx leftFront, leftRear, rightRear, rightFront, verticalLiftEncoder,horizontalSlide;
+    public DcMotorEx leftFront, leftRear, rightRear, rightFront, verticalLiftEncoder, horizontalSlide;
 
 
     public Servo leftClaw, rightClaw, rotatorClaw, tiltClaw, armClaw;
@@ -100,7 +110,15 @@ public class SampleMecanumDrive extends MecanumDrive {
     private BNO055IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
-    public SampleMecanumDrive(HardwareMap hardwareMap) {
+    public static final GrabPosition[] CYCLE_GRAB_POSITIONS = {
+            new GrabPosition(ARM_CLAW_POSITION_FIRST_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE),
+            new GrabPosition(ARM_CLAW_POSITION_SECOND_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE),
+            new GrabPosition(ARM_CLAW_POSITION_THIRD_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE),
+            new GrabPosition(ARM_CLAW_POSITION_FOURTH_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE),
+            new GrabPosition(ARM_CLAW_POSITION_FIFTH_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE),
+    };
+
+    public MecanumDrive(HardwareMap hardwareMap) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.hardwareMap = hardwareMap;
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, new PIDCoefficients(-TRANSLATIONAL_PID.kP, TRANSLATIONAL_PID.kI, TRANSLATIONAL_PID.kD), HEADING_PID,
@@ -161,6 +179,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         horizontalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        horizontalSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         rotatorClaw = hardwareMap.get(Servo.class, "rotatorClaw");
@@ -290,7 +310,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
     }
 
-    public void resetOdom(){
+    public void resetOdom() {
         this.odometry = new StandardTrackingWheelLocalizer(this.hardwareMap);
     }
 
@@ -301,7 +321,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         this.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    public void setVerticalMode(DcMotor.RunMode mode){
+    public void setVerticalMode(DcMotor.RunMode mode) {
         this.verticalLiftEncoder.setMode(mode);
     }
 
@@ -320,12 +340,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         return this.verticalLiftEncoder.getCurrentPosition();
     }
 
-    public void resetHorizontalSlidePosition(){
+    public void resetHorizontalSlidePosition() {
         horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void resetVerticalSlidePosition(){
+    public void resetVerticalSlidePosition() {
         verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -374,8 +394,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     }
 
     public void transferIntake() {
-        this.armClaw.setPosition(0.38);
-        this.tiltClaw.setPosition(DROP_CLAW_TILT_POSITION);
+        this.armClaw.setPosition(0.36);
+        this.tiltClaw.setPosition(DROP_CLAW_TILT_POSITION - 0.05);
         this.rotatorClaw.setPosition(ONE_EIGHTY_ROTATOR_POSITION);
     }
 
@@ -480,7 +500,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         return new ProfileAccelerationConstraint(maxAccel);
     }
 
-    public void outputOdomReadings(Telemetry telemetry){
+    public void outputOdomReadings(Telemetry telemetry) {
         Pose2d positions = odometry.getPoseEstimate();
 
         telemetry.addData("X: ", positions.getX());

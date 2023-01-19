@@ -5,19 +5,14 @@ import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSI
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.hardware.Motor;
-import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.models.Lift;
-import org.firstinspires.ftc.teamcode.models.Mode;
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.models.OpenClose;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 public class ManualGamePad {
     private final Gamepad gamepad;
-    private final SampleMecanumDrive robot;
+    private final MecanumDrive robot;
     private final Telemetry telemetry;
 
     public static int armClawPosition = 1;
@@ -46,7 +41,7 @@ public class ManualGamePad {
     public boolean prevY = false;
     private boolean prevX = false;
 
-    public ManualGamePad(SampleMecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
+    public ManualGamePad(MecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
         this.gamepad = hardwareGamepad;
         this.robot = robot;
         this.telemetry = telemetry;

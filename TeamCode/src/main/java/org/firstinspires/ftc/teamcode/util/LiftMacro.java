@@ -6,14 +6,14 @@ import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NORMAL_ROTATO
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ONE_EIGHTY_ROTATOR_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.UP_CLAW_TILT_POSITION;
 
-import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 
 public class LiftMacro implements Runnable {
     private final double armClawPosition;
     private final boolean secondTilt;
-    private SampleMecanumDrive robot;
+    private MecanumDrive robot;
 
-    public LiftMacro(SampleMecanumDrive robot, double armClawPosition, boolean secondTilt) {
+    public LiftMacro(MecanumDrive robot, double armClawPosition, boolean secondTilt) {
         this.robot = robot;
         this.armClawPosition = armClawPosition;
         this.secondTilt = secondTilt;

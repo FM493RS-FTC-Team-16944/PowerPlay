@@ -1,20 +1,13 @@
 package org.firstinspires.ftc.teamcode.models;
 
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FIFTH_CONE;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.LOW_SCORE_VERTICAL_LIFT_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.MEDIUM_SCORE_VERTICAL_LIFT_POSITION;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.sun.source.doctree.VersionTree;
-
-import org.ejml.equation.Macro;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.gamepad.MacroGamePad;
-import org.firstinspires.ftc.teamcode.hardware.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.operations.SplitTeleOP;
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 
 public class ScoringMacro extends Thread{
-    private SampleMecanumDrive drive;
+    private MecanumDrive drive;
 
     public boolean complete;
     private Telemetry telemetry;
@@ -36,7 +29,7 @@ public class ScoringMacro extends Thread{
     public boolean done4 = false;
 
 
-    public ScoringMacro(SampleMecanumDrive drive, int verticalHeight, int horizHeight, Telemetry telemetry) {
+    public ScoringMacro(MecanumDrive drive, int verticalHeight, int horizHeight, Telemetry telemetry) {
         this.drive = drive;
         this.telemetry = telemetry;
         this.horizHeight = horizHeight;
