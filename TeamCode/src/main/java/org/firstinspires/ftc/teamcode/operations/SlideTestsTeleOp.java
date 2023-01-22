@@ -28,19 +28,19 @@ public class SlideTestsTeleOp extends LinearOpMode {
         boolean dpadUP = false;
         PIDController control = new PIDController(horizontalKP,horizontalKI,horizontalKD);
         double position = -2000;
-        drive.horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        drive.horizontalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        drive.lift.horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.lift.horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.lift.horizontalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         control.setSetPoint(position);
         while (opModeIsActive() && !isStopRequested()) {
-            drive.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
+            drive.intake.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
             gamePad.updateRobot();
-            double command = control.calculate(drive.horizontalSlide.getCurrentPosition());
+            double command = control.calculate(drive.lift.horizontalSlide.getCurrentPosition());
 
-            drive.horizontalSlide.setPower(0.2 * command);
+            drive.lift.horizontalSlide.setPower(0.2 * command);
             //dpadUP = gamepad1.dpad_up;
-            telemetry.addData("Horizontal Position:", drive.horizontalSlide.getCurrentPosition());
+            telemetry.addData("Horizontal Position:", drive.lift.horizontalSlide.getCurrentPosition());
             drive.odometry.update();
             drive.outputOdomReadings(telemetry);
             telemetry.update();

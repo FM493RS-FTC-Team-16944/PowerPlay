@@ -21,24 +21,24 @@ public class LiftMacro implements Runnable {
 
     @Override
     public void run() {
-        this.robot.openClaw();
-        this.robot.setArmClawPosition(armClawPosition);
+        this.robot.intake.openClaw();
+        this.robot.intake.setArmClawPosition(armClawPosition);
 
-        this.robot.closeClaw();
+        this.robot.intake.closeClaw();
 
         if(secondTilt) {
-            this.robot.setTiltClawPosition(UP_CLAW_TILT_POSITION);
+            this.robot.intake.setTiltClawPosition(UP_CLAW_TILT_POSITION);
         }
 
-        this.robot.setTiltClawPosition(NEUTRAL_CLAW_TILT_POSITION);
-        this.robot.setArmClawPosition(0);
+        this.robot.intake.setTiltClawPosition(NEUTRAL_CLAW_TILT_POSITION);
+        this.robot.intake.setArmClawPosition(0);
 
-        this.robot.setRotatorClawPosition(ONE_EIGHTY_ROTATOR_POSITION);
-        this.robot.setTiltClawPosition(DROP_CLAW_TILT_POSITION);
+        this.robot.intake.setRotatorClawPosition(ONE_EIGHTY_ROTATOR_POSITION);
+        this.robot.intake.setTiltClawPosition(DROP_CLAW_TILT_POSITION);
 
-        this.robot.openClaw();
+        this.robot.intake.openClaw();
 
-        this.robot.setTiltClawPosition(NEUTRAL_CLAW_TILT_POSITION);
-        this.robot.setRotatorClawPosition(NORMAL_ROTATOR_POSITION);
+        this.robot.intake.setTiltClawPosition(NEUTRAL_CLAW_TILT_POSITION);
+        this.robot.intake.setRotatorClawPosition(NORMAL_ROTATOR_POSITION);
     }
 }

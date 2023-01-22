@@ -16,32 +16,32 @@ public class AutoCycleCommand extends SequentialCommandGroup {
                 // in parallel
                 new SequentialCommandGroup(
                         new ParallelCommandGroup(
-                                new InstantCommand(() -> robot.groundIntake(state.armPos)),
-                                new InstantCommand(robot::openClaw),
-                                new InstantCommand(() -> robot.setHorizontalSlide(state.horizontalPos))
+                                new InstantCommand(() -> robot.intake.groundIntake(state.armPos)),
+                                new InstantCommand(robot.intake::openClaw),
+                                new InstantCommand(() -> robot.lift.setHorizontalSlide(state.horizontalPos))
                         ),
                         new WaitUntilCommand(() ->
-                                robot.horizontalSlide.getCurrentPosition() >= state.horizontalPos + 10 ||
-                                        robot.horizontalSlide.getCurrentPosition() <= state.horizontalPos - 10
+                                robot.lift.horizontalSlide.getCurrentPosition() <= state.horizontalPos + 10 ||
+                                        robot.lift.horizontalSlide.getCurrentPosition() >= state.horizontalPos - 10
                         ),
                         new SequentialCommandGroup(
-                                new InstantCommand(robot::closeClaw),
+                                new InstantCommand(robot.intake::closeClaw),
                                 new WaitCommand(75)
                                         .andThen(
                                                 new ParallelCommandGroup(
-                                                        new InstantCommand(robot::transferIntake),
-                                                        new InstantCommand(() -> robot.setHorizontalSlide(ArmConstants.HORIZONTAL_SLIDE_NEUTRAL_POSITION))
+                                                        new InstantCommand(robot.intake::transferIntake),
+                                                        new InstantCommand(() -> robot.lift.setHorizontalSlide(ArmConstants.HORIZONTAL_SLIDE_NEUTRAL_POSITION))
                                                 )
                                         )
                         ),
-                        new WaitUntilCommand(() -> robot.horizontalSlide.getCurrentPosition() >= ArmConstants.HORIZONTAL_SLIDE_NEUTRAL_POSITION),
-                        new InstantCommand(robot::openClaw),
-                        new InstantCommand(() -> robot.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION)),
+                        new WaitUntilCommand(() -> robot.lift.horizontalSlide.getCurrentPosition() >= ArmConstants.HORIZONTAL_SLIDE_NEUTRAL_POSITION),
+                        new InstantCommand(robot.intake::openClaw),
+                        new InstantCommand(() -> robot.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION)),
                         new WaitUntilCommand(() ->
-                                robot.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 10 ||
-                                        robot.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 10
+                                robot.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 10 ||
+                                        robot.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 10
                         ),
-                        new InstantCommand(() -> robot.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION))
+                        new InstantCommand(() -> robot.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION))
                 )
         );
     }

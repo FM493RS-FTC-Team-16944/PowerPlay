@@ -61,42 +61,42 @@ public class ManualGamePad {
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", poseEstimate.getHeading());
-        telemetry.addData("horizontal slide position", robot.getHorizontalSlidePosition());
-        telemetry.addData("vertical slide position", robot.getVerticalLiftPosition());
+        telemetry.addData("horizontal slide position", robot.lift.getHorizontalSlidePosition());
+        telemetry.addData("vertical slide position", robot.lift.getVerticalLiftPosition());
 
 
 
         if (gamepad.x && gamepad.x != prevX) {
             if (ClawOpen == OpenClose.OPEN) {
                 ClawOpen = OpenClose.CLOSE;
-                this.robot.closeClaw();
+                this.robot.intake.closeClaw();
             } else {
                 ClawOpen = OpenClose.OPEN;
-                this.robot.openClaw();
+                this.robot.intake.openClaw();
             }
         }
         prevX = gamepad.x;
 
         if (gamepad.dpad_up) {
-            this.robot.setVerticalLift(this.robot.getVerticalLiftPosition()+30);
+            this.robot.lift.setVerticalLift(this.robot.lift.getVerticalLiftPosition()+30);
         }
         if (gamepad.dpad_down) {
-            this.robot.setVerticalLift(this.robot.getVerticalLiftPosition()-30);
+            this.robot.lift.setVerticalLift(this.robot.lift.getVerticalLiftPosition()-30);
         }
         if (gamepad.dpad_right) {
-            this.robot.setHorizontalSlide(this.robot.getHorizontalSlidePosition()+30);
+            this.robot.lift.setHorizontalSlide(this.robot.lift.getHorizontalSlidePosition()+30);
         }
         if (gamepad.dpad_left) {
-            this.robot.setHorizontalSlide(this.robot.getHorizontalSlidePosition()-30);
+            this.robot.lift.setHorizontalSlide(this.robot.lift.getHorizontalSlidePosition()-30);
         }
 
         if (gamepad.a && gamepad.a != prevA) {
             lift++;
             lift %= 2;
             if (lift==0) {
-                this.robot.setVerticalLift(0);
+                this.robot.lift.setVerticalLift(0);
             } else if (lift == 1) {
-                this.robot.setVerticalLift(1200);
+                this.robot.lift.setVerticalLift(1200);
             }
         }
         prevA = gamepad.a;
@@ -105,9 +105,9 @@ public class ManualGamePad {
             lift++;
             lift %= 2;
             if (lift==0) {
-                this.robot.setVerticalLift(0);
+                this.robot.lift.setVerticalLift(0);
             } else if (lift == 1) {
-                this.robot.setVerticalLift(1200);
+                this.robot.lift.setVerticalLift(1200);
             }
         }
         prevY = gamepad.y;
@@ -116,13 +116,13 @@ public class ManualGamePad {
             position++;
             position %= 4;
             if (position==0) {
-                this.robot.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
+                this.robot.intake.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
             } else if (position == 1) {
-                this.robot.hangingIntake();
+                this.robot.intake.hangingIntake();
             } else if (position == 2) {
-                this.robot.rotatedHangingIntake();
+                this.robot.intake.rotatedHangingIntake();
             } else if (position == 3) {
-                this.robot.transferIntake();
+                this.robot.intake.transferIntake();
             }
         }
         prevB = gamepad.b;

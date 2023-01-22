@@ -27,19 +27,19 @@ public class VerticalSlideTest extends LinearOpMode {
         boolean dpadUP = false;
         PIDController control = new PIDController(verticalKP,verticalKI,verticalKD);
         double position = -2000;
-        drive.verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        drive.verticalLiftEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        drive.lift.verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.lift.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.lift.verticalLiftEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         control.setSetPoint(position);
         while (opModeIsActive() && !isStopRequested()) {
-            drive.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
+            drive.intake.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
             gamePad.updateRobot();
-            double command = control.calculate(drive.verticalLiftEncoder.getCurrentPosition());
+            double command = control.calculate(drive.lift.verticalLiftEncoder.getCurrentPosition());
 
-            drive.verticalLiftEncoder.setPower(0.2 * command);
+            drive.lift.verticalLiftEncoder.setPower(0.2 * command);
             //dpadUP = gamepad1.dpad_up;
-            telemetry.addData("Vertical Position:", drive.verticalLiftEncoder.getCurrentPosition());
+            telemetry.addData("Vertical Position:", drive.lift.verticalLiftEncoder.getCurrentPosition());
             drive.odometry.update();
             drive.outputOdomReadings(telemetry);
             telemetry.update();

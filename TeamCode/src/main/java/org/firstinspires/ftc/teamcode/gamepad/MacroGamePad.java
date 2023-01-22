@@ -74,15 +74,15 @@ public class MacroGamePad {
 
     public void updateRobot() {
         SplitTeleOP.currentThread = this.currentThread;
-        telemetry.addData("Horizontal Slide Position:", robot.getHorizontalSlidePosition()) ;
-        telemetry.addData("Vertical Slide Position:", robot.getVerticalLiftPosition()
+        telemetry.addData("Horizontal Slide Position:", robot.lift.getHorizontalSlidePosition()) ;
+        telemetry.addData("Vertical Slide Position:", robot.lift.getVerticalLiftPosition()
 
 
         ) ;
         if(gamepad.y && !prevY){
-            telemetry.addData("Horizontal Target:", robot.getHorizontalSlidePosition());
-            horizontalTarget = robot.getHorizontalSlidePosition();
-            vertHeight = robot.getVerticalLiftPosition();
+            telemetry.addData("Horizontal Target:", robot.lift.getHorizontalSlidePosition());
+            horizontalTarget = robot.lift.getHorizontalSlidePosition();
+            vertHeight = robot.lift.getVerticalLiftPosition();
             telemetry.update();
         }
 
@@ -109,18 +109,18 @@ public class MacroGamePad {
 
 
         if (gamepad.dpad_up) {
-            this.robot.verticalLiftEncoder.setPower(0.6);
+            this.robot.lift.verticalLiftEncoder.setPower(0.6);
         }else if (gamepad.dpad_down) {
-            this.robot.verticalLiftEncoder.setPower(-0.5);
+            this.robot.lift.verticalLiftEncoder.setPower(-0.5);
         }else{
-            this.robot.verticalLiftEncoder.setPower(0);
+            this.robot.lift.verticalLiftEncoder.setPower(0);
         }
         if (gamepad.dpad_right) {
-            this.robot.horizontalSlide.setPower(0.8);
+            this.robot.lift.horizontalSlide.setPower(0.8);
         }else if (gamepad.dpad_left) {
-            this.robot.horizontalSlide.setPower(-0.8);
+            this.robot.lift.horizontalSlide.setPower(-0.8);
         }else{
-            this.robot.horizontalSlide.setPower(0);
+            this.robot.lift.horizontalSlide.setPower(0);
         }
 
 
@@ -139,13 +139,13 @@ public class MacroGamePad {
             position++;
             position %= 4;
             if (position==0) {
-                this.robot.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
+                this.robot.intake.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
             } else if (position == 1) {
-                this.robot.hangingIntake();
+                this.robot.intake.hangingIntake();
             } else if (position == 2) {
-                this.robot.rotatedHangingIntake();
+                this.robot.intake.rotatedHangingIntake();
             } else if (position == 3) {
-                this.robot.transferIntake();
+                this.robot.intake.transferIntake();
             }
         }
         prevB = gamepad.b;
@@ -153,10 +153,10 @@ public class MacroGamePad {
         if (gamepad.a && gamepad.a != prevA) {
             if (ClawOpen == OpenClose.OPEN) {
                 ClawOpen = OpenClose.CLOSE;
-                this.robot.closeClaw();
+                this.robot.intake.closeClaw();
             } else {
                 ClawOpen = OpenClose.OPEN;
-                this.robot.openClaw();
+                this.robot.intake.openClaw();
             }
         }
         prevA = gamepad.a;

@@ -101,8 +101,8 @@ public class AutonomousOP extends LinearOpMode {
         waitForStart();
 
 
-        drive.hangingIntake();
-            drive.closeClaw();
+        drive.intake.hangingIntake();
+            drive.intake.closeClaw();
 
            sleep(1000);
 
@@ -131,11 +131,11 @@ public class AutonomousOP extends LinearOpMode {
 
 
             this.telemetry.addLine("Launching Cone 1");
-            drive.verticalLiftEncoder.setPower(0.4);
-            drive.setVerticalLift(HIGH_SCORE_VERTICAL_LIFT_POSITION);
+            drive.lift.verticalLiftEncoder.setPower(0.4);
+            drive.lift.setVerticalLift(HIGH_SCORE_VERTICAL_LIFT_POSITION);
             sleep(3000);
-            drive.verticalLiftEncoder.setPower(0.6);
-            drive.setVerticalLift(NEUTRAL_VERTICAL_LIFT_POSITION);
+            drive.lift.verticalLiftEncoder.setPower(0.6);
+            drive.lift.setVerticalLift(NEUTRAL_VERTICAL_LIFT_POSITION);
             sleep(3000);
 
             drive.followTrajectory(backFromCone);

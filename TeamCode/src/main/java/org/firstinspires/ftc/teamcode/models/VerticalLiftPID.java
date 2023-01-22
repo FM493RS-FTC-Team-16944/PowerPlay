@@ -36,8 +36,8 @@ public class VerticalLiftPID extends Thread{
             {
                 // we record the Y values in the main class to make showing them in telemetry
                 // easier.
-                double command = control.calculate(drive.verticalLiftEncoder.getCurrentPosition());
-                drive.verticalLiftEncoder.setPower(0.2 * command);
+                double command = control.calculate(drive.lift.verticalLiftEncoder.getCurrentPosition());
+                drive.lift.verticalLiftEncoder.setPower(0.2 * command);
                 if(control.atSetPoint()){
                     this.complete = true;
                 }

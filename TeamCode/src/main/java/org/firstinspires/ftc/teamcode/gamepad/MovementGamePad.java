@@ -49,13 +49,13 @@ public class MovementGamePad {
         prevY = gamepad.y;
 
         if(gamepad.dpad_up && !prevDpadUp){
-            robot.resetVerticalSlidePosition();
+            robot.lift.resetVerticalSlidePosition();
         }
 
         prevDpadUp = gamepad.dpad_up;
 
         if(gamepad.dpad_down && !prevDpadDown){
-            robot.resetHorizontalSlidePosition();
+            robot.lift.resetHorizontalSlidePosition();
         }
 
         prevDpadDown = gamepad.dpad_down;

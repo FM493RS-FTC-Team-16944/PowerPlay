@@ -57,8 +57,8 @@ public class ScoringMacro extends Thread{
                 if(!done0) {
                     done0 = true;
                     MacroGamePad.ClawOpen = OpenClose.OPEN;
-                    this.drive.openClaw();
-                    this.drive.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
+                    this.drive.intake.openClaw();
+                    this.drive.intake.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -80,14 +80,14 @@ public class ScoringMacro extends Thread{
                 if(!done1) {
                     MacroGamePad.ClawOpen = OpenClose.CLOSE;
                     done1 = true;
-                    this.drive.closeClaw();
+                    this.drive.intake.closeClaw();
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    this.drive.hangingIntake();
-                    this.drive.transferIntake();
+                    this.drive.intake.hangingIntake();
+                    this.drive.intake.transferIntake();
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
@@ -104,13 +104,13 @@ public class ScoringMacro extends Thread{
                             }
                             MacroGamePad.ClawOpen = OpenClose.OPEN;
                             done2 = true;
-                            this.drive.openClaw();
+                            this.drive.intake.openClaw();
                             try {
                                 Thread.sleep(750);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            this.drive.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
+                            this.drive.intake.groundIntake(ARM_CLAW_POSITION_FIFTH_CONE);
                             try {
                                 Thread.sleep(600);
                             } catch (InterruptedException e) {
