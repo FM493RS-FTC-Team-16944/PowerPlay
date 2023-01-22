@@ -23,6 +23,7 @@ public class SplitTeleOP extends LinearOpMode {
         MovementGamePad moveGamePad = new MovementGamePad(drive,this.gamepad1, this.telemetry);
         MacroGamePad macroGamePad = new MacroGamePad(drive, this.gamepad2, this.telemetry);
 
+
         while (opModeIsActive() && !isStopRequested()) {
             drive.odometry.update();
             moveGamePad.updateRobot();
@@ -32,11 +33,11 @@ public class SplitTeleOP extends LinearOpMode {
             telemetry.update();
         }
         if(isStopRequested()){
-            currentThread.complete = true;
-            currentThread.horizontalPID.complete = true;
-            currentThread.zeroHorizPID.complete = true;
-            currentThread.poleHeightPID.complete = true;
-            currentThread.zeroHeightPID.complete = true;
+//            currentThread.complete = true;
+//            currentThread.horizontalPID.complete = true;
+//            currentThread.zeroHorizPID.complete = true;
+//            currentThread.poleHeightPID.complete = true;
+//            currentThread.zeroHeightPID.complete = true;
         }
     }
 

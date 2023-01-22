@@ -37,7 +37,7 @@ public class HorizontalLiftPID extends Thread{
                 // we record the Y values in the main class to make showing them in telemetry
                 // easier.
                 double command = control.calculate(drive.lift.horizontalSlide.getCurrentPosition());
-                drive.lift.horizontalSlide.setPower(0.2 * command);
+                drive.lift.horizontalSlide.setPower(0.4 * command);
                 if(control.atSetPoint()){
                 this.complete = true;
                 }

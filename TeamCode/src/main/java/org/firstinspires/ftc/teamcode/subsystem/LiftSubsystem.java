@@ -19,6 +19,7 @@ public class LiftSubsystem implements Subsystem {
         verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         verticalLiftEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalLiftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
         horizontalSlide = hardwareMap.get(DcMotorEx.class, "horizontalSlide");
 
@@ -31,12 +32,12 @@ public class LiftSubsystem implements Subsystem {
 
     public void resetHorizontalSlidePosition() {
         horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        horizontalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void resetVerticalSlidePosition() {
         verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void setVerticalLift(int position) {

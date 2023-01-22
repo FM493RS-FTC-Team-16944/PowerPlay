@@ -14,6 +14,8 @@ public class MovementGamePad {
 
     public boolean prevDpadUp = false;
     public boolean prevDpadDown = false;
+    public boolean prevLeftBump = false;
+    public boolean prevRightBump = false;
     public boolean prevX = false;
     public boolean prevY = false;
     public boolean switchedDrive = false;
@@ -63,6 +65,17 @@ public class MovementGamePad {
         if(gamepad.x && !prevX){
             robot.resetOdom();
         }
+
+        if(gamepad.left_bumper){
+            this.robot.lift.setHorizontalSlide(0);
+        }
+
+        prevLeftBump = gamepad.left_bumper;
+
+        if(gamepad.right_bumper){
+            this.robot.lift.setHorizontalSlide(MacroGamePad.horizontalTarget);
+        }
+        prevRightBump = gamepad.right_bumper;
 
 
 

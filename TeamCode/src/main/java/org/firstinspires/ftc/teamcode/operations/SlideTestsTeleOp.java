@@ -38,7 +38,7 @@ public class SlideTestsTeleOp extends LinearOpMode {
             gamePad.updateRobot();
             double command = control.calculate(drive.lift.horizontalSlide.getCurrentPosition());
 
-            drive.lift.horizontalSlide.setPower(0.2 * command);
+            drive.lift.horizontalSlide.setPower(0.4 * command);
             //dpadUP = gamepad1.dpad_up;
             telemetry.addData("Horizontal Position:", drive.lift.horizontalSlide.getCurrentPosition());
             drive.odometry.update();

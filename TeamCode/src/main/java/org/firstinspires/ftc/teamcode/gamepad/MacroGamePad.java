@@ -5,15 +5,22 @@ import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HIGH_SCORE_VE
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.LOW_SCORE_VERTICAL_LIFT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.MEDIUM_SCORE_VERTICAL_LIFT_POSITION;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.hardware.Motor;
+import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.Motor;
 import org.firstinspires.ftc.teamcode.models.HorizontalLiftPID;
+import org.firstinspires.ftc.teamcode.models.Lift;
+import org.firstinspires.ftc.teamcode.models.Mode;
 import org.firstinspires.ftc.teamcode.models.OpenClose;
 import org.firstinspires.ftc.teamcode.models.ScoringMacro;
+import org.firstinspires.ftc.teamcode.models.VerticalLiftPID;
 import org.firstinspires.ftc.teamcode.operations.SplitTeleOP;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 public class MacroGamePad {
     private final Gamepad gamepad;
@@ -50,6 +57,7 @@ public class MacroGamePad {
     private boolean prevRightBump = false;
     private boolean prevLeftTrig = false;
     private boolean prevRightTrig = false;
+    private boolean justWentDown = false;
     ScoringMacro scoringMac;
     Thread scoringThread;
 
@@ -57,9 +65,9 @@ public class MacroGamePad {
     Thread horizThread;
     ScoringMacro currentThread;
 
-    private int horizontalTarget = 2000;
-    private int vertHeight = 170;
-    private int verticalTarget = HIGH_SCORE_VERTICAL_LIFT_POSITION;
+    public static int horizontalTarget = 2000;
+    private int vertHeight = 1600;
+
 
     public MacroGamePad(MecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
         this.gamepad = hardwareGamepad;
@@ -74,11 +82,17 @@ public class MacroGamePad {
 
     public void updateRobot() {
         SplitTeleOP.currentThread = this.currentThread;
-        telemetry.addData("Horizontal Slide Position:", robot.lift.getHorizontalSlidePosition()) ;
-        telemetry.addData("Vertical Slide Position:", robot.lift.getVerticalLiftPosition()
+        telemetry.addData("Vertical Lift Position:", this.robot.lift.getVerticalLiftPosition());
+        telemetry.addData("Horizontal Lift Position:", this.robot.lift.getHorizontalSlidePosition());
 
+        telemetry.addData("Vertical Target:", vertHeight);
+        telemetry.addData("Horizontal Target:", horizontalTarget);
 
-        ) ;
+        if(this.robot.lift.getVerticalLiftPosition() <= 100 && justWentDown){
+            justWentDown = false;
+            this.robot.lift.resetVerticalSlidePosition();
+        }
+
         if(gamepad.y && !prevY){
             telemetry.addData("Horizontal Target:", robot.lift.getHorizontalSlidePosition());
             horizontalTarget = robot.lift.getHorizontalSlidePosition();
@@ -87,47 +101,52 @@ public class MacroGamePad {
         }
 
         if(gamepad.left_trigger > 0.3 && !prevLeftTrig){
-            verticalTarget = HIGH_SCORE_VERTICAL_LIFT_POSITION;
+            vertHeight = HIGH_SCORE_VERTICAL_LIFT_POSITION;
         }
 
         prevLeftTrig = (gamepad.left_trigger > 0.3);
 
 
         if(gamepad.left_bumper && !prevLeftBump){
-            verticalTarget = MEDIUM_SCORE_VERTICAL_LIFT_POSITION;
-            telemetry.addLine("Medium score set");
+            robot.lift.setVerticalLift(0);
+            telemetry.addLine("zero height reached");
+            justWentDown = true;
             telemetry.update();
         }
 
         prevLeftBump = gamepad.left_bumper;
 
         if(gamepad.right_bumper && !prevRightBump){
-            verticalTarget = LOW_SCORE_VERTICAL_LIFT_POSITION;
+            robot.lift.setVerticalLift(vertHeight);
+            telemetry.addLine("target height reached");
+            telemetry.update();
         }
+        prevRightBump = gamepad.right_bumper;
 
         prevY = gamepad.y;
 
 
         if (gamepad.dpad_up) {
-            this.robot.lift.verticalLiftEncoder.setPower(0.6);
-        }else if (gamepad.dpad_down) {
-            this.robot.lift.verticalLiftEncoder.setPower(-0.5);
-        }else{
-            this.robot.lift.verticalLiftEncoder.setPower(0);
+            vertHeight+=5;
         }
+
+        if (gamepad.dpad_down) {
+            vertHeight-=5;
+        }
+
         if (gamepad.dpad_right) {
-            this.robot.lift.horizontalSlide.setPower(0.8);
-        }else if (gamepad.dpad_left) {
-            this.robot.lift.horizontalSlide.setPower(-0.8);
-        }else{
-            this.robot.lift.horizontalSlide.setPower(0);
+            horizontalTarget+=5;
+        }
+
+        if (gamepad.dpad_left) {
+            horizontalTarget-=5;
         }
 
 
 
         if(gamepad.x && !prevX){
             telemetry.addLine("scoring thread started");
-            scoringMac = new ScoringMacro(robot,vertHeight, horizontalTarget,telemetry);
+            scoringMac = new ScoringMacro(robot, vertHeight, horizontalTarget,telemetry);
             scoringMac.start();
             currentThread = scoringMac;
 //            scoringThread.start();

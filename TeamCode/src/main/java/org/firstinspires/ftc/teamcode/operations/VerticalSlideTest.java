@@ -26,7 +26,7 @@ public class VerticalSlideTest extends LinearOpMode {
         MovementGamePad gamePad = new MovementGamePad(drive, this.gamepad1, this.telemetry);
         boolean dpadUP = false;
         PIDController control = new PIDController(verticalKP,verticalKI,verticalKD);
-        double position = -2000;
+        double position = 1500;
         drive.lift.verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.lift.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         drive.lift.verticalLiftEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

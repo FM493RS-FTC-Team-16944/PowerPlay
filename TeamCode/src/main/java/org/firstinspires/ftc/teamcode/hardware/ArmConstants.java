@@ -13,7 +13,7 @@ public class ArmConstants {
     public static double horizontalKI = 0.00;
     public static double horizontalKD = 0.00;
 
-    public static double HORIZONTAL_SLIDE_POWER = 0.60;
+    public static double HORIZONTAL_SLIDE_POWER = 0.90;
     public static double VERTICAL_LIFT_POWER = 0.40;
 
     public static double OPEN_CLAW_POSITION = 0.70;
@@ -32,17 +32,17 @@ public class ArmConstants {
     public static double SECOND_PART_UP_ARM_CLAW_POSITION_FOURTH_CONE = 0.20;
     public static double SECOND_PART_UP_ARM_CLAW_POSITION_FIFTH_CONE = 0.00;
 
-    public static double DROP_ARM_CLAW_POSITION = 0.25;
+    public static double DROP_ARM_CLAW_POSITION = 0.250;
 
     public static double NEUTRAL_CLAW_TILT_POSITION = 0.95;
     public static double UP_CLAW_TILT_POSITION = 0.70;
-    public static double DROP_CLAW_TILT_POSITION = 0.40; // this is the tilt when it's gonna drop it on the red thing
+    public static double DROP_CLAW_TILT_POSITION = 0.37; // this is the tilt when it's gonna drop it on the red thing
 
     public static double NORMAL_ROTATOR_POSITION = 0.25;
-    public static double ONE_EIGHTY_ROTATOR_POSITION = 1.00;
+    public static double ONE_EIGHTY_ROTATOR_POSITION = 0.95;
 
     public static int NEUTRAL_VERTICAL_LIFT_POSITION = 0;
-    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2340;
+    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 1700;
     public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1190;
     public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 520;
 
