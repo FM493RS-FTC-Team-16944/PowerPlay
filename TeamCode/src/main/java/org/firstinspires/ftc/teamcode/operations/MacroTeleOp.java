@@ -15,7 +15,7 @@ public class MacroTeleOp extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
 
-        MecanumDrive drive = new MecanumDrive(hardwareMap);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, this.telemetry);
         MacroGamePad gamePad = new MacroGamePad(drive, this.gamepad1, this.telemetry);
 
         while (opModeIsActive() && !isStopRequested()) {

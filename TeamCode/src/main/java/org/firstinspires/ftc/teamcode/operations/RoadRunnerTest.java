@@ -19,7 +19,7 @@ public class RoadRunnerTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        drive = new MecanumDrive(hardwareMap);
+        drive = new MecanumDrive(hardwareMap, this.telemetry);
 
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(90));
 

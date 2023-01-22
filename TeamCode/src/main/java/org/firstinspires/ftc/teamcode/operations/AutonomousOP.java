@@ -29,7 +29,7 @@ public class AutonomousOP extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        drive = new MecanumDrive(hardwareMap);
+        drive = new MecanumDrive(hardwareMap, this.telemetry);
 
         VerticalLiftPID zeroHeightPID;
 

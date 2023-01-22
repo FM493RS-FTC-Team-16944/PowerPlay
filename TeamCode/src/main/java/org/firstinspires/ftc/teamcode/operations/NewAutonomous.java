@@ -15,7 +15,7 @@ public class NewAutonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        this.robot = new MecanumDrive(this.hardwareMap);
+        this.robot = new MecanumDrive(this.hardwareMap, this.telemetry);
 
         Trajectory forwardTrajectory = this.robot.trajectoryBuilder(new Pose2d())
                 .lineToLinearHeading(new Pose2d(0, 50, -93))

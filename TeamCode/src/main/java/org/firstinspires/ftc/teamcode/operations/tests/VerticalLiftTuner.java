@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 public class VerticalLiftTuner extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumDrive drive = new MecanumDrive(hardwareMap);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, this.telemetry);
         TestGamePad gamePad = new TestGamePad(drive, this.gamepad1, this.telemetry);
 
         waitForStart();

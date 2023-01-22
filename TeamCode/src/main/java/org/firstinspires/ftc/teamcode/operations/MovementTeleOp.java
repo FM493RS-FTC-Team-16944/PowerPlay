@@ -16,7 +16,7 @@ public class MovementTeleOp extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
 
-        MecanumDrive drive = new MecanumDrive(hardwareMap);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, this.telemetry);
         MovementGamePad gamePad = new MovementGamePad(drive, this.gamepad1, this.telemetry);
 
         while (opModeIsActive() && !isStopRequested()) {

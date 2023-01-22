@@ -119,7 +119,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
             new GrabPosition(ARM_CLAW_POSITION_FIFTH_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE),
     };
 
-    public MecanumDrive(HardwareMap hardwareMap) {
+    public MecanumDrive(HardwareMap hardwareMap, Telemetry telemetry) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.hardwareMap = hardwareMap;
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, new PIDCoefficients(-TRANSLATIONAL_PID.kP, TRANSLATIONAL_PID.kI, TRANSLATIONAL_PID.kD), HEADING_PID,
@@ -172,7 +172,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         this.movement = new RobotMovement(this);
 
         intake = new IntakeSubsystem(hardwareMap);
-        lift = new LiftSubsystem(hardwareMap);
+        lift = new LiftSubsystem(hardwareMap, telemetry);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 

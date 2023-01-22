@@ -31,34 +31,14 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-        Pose2d startPose = new Pose2d(27, -62, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(270));
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(MAX_VEL, MAX_ACCEL, MAX_ANG_VEL, MAX_ANG_ACCEL, TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
-                                .lineToConstantHeading(new Vector2d(32, -60),
-                                        VEL_CONSTRAINT,
-                                        ACCEL_CONSTRAINT)
-                                .lineToConstantHeading(new Vector2d(31, -1),
-                                        VEL_CONSTRAINT,
-                                        ACCEL_CONSTRAINT)
-                                .lineToConstantHeading(new Vector2d(31, -18),
-                                        VEL_CONSTRAINT,
-                                        ACCEL_CONSTRAINT)
-                                .turn(Math.toRadians(-165))
-                                .lineToConstantHeading(new Vector2d(38, -10),
-                                        VEL_CONSTRAINT,
-                                        ACCEL_CONSTRAINT)
-                                .lineToConstantHeading(new Vector2d(39, -6),
-                                        VEL_CONSTRAINT,
-                                        ACCEL_CONSTRAINT)
-                                .lineToConstantHeading(new Vector2d(38, -10),
-                                        VEL_CONSTRAINT,
-                                        ACCEL_CONSTRAINT)
-                                .turn(Math.toRadians(-15))
-                                .lineToConstantHeading(new Vector2d(31, -10),
+                                .lineToLinearHeading(new Pose2d(-1.4, 5.4, Math.toRadians(180)),
                                         VEL_CONSTRAINT,
                                         ACCEL_CONSTRAINT)
                                 .build()

@@ -9,11 +9,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class LiftSubsystem implements Subsystem {
+    public final Telemetry telemetry;
     public DcMotorEx verticalLiftEncoder;
     public DcMotorEx horizontalSlide;
 
-    public LiftSubsystem(HardwareMap hardwareMap) {
+    public LiftSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         verticalLiftEncoder = hardwareMap.get(DcMotorEx.class, "verticalLiftEncoder");
 
         verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -23,11 +26,19 @@ public class LiftSubsystem implements Subsystem {
 
         horizontalSlide = hardwareMap.get(DcMotorEx.class, "horizontalSlide");
 
+        this.telemetry = telemetry;
         horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         horizontalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         horizontalSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    @Override
+    public void periodic() {
+        System.out.println("hello");
+        this.telemetry.addData("horizontal position", this.getHorizontalSlidePosition());
+        this.telemetry.update();
     }
 
     public void resetHorizontalSlidePosition() {

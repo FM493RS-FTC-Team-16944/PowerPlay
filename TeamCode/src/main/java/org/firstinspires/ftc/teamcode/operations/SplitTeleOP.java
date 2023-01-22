@@ -19,7 +19,7 @@ public class SplitTeleOP extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
 
-        MecanumDrive drive = new MecanumDrive(hardwareMap);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, this.telemetry);
         MovementGamePad moveGamePad = new MovementGamePad(drive,this.gamepad1, this.telemetry);
         MacroGamePad macroGamePad = new MacroGamePad(drive, this.gamepad2, this.telemetry);
 

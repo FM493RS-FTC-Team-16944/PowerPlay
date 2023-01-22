@@ -13,6 +13,9 @@ import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.TelemLog;
+
 public class IntakeSubsystem implements Subsystem {
     public final Servo rotatorClaw;
     public final Servo leftClaw;

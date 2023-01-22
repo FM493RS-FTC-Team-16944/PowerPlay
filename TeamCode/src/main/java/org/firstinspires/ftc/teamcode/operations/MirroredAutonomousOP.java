@@ -18,7 +18,7 @@ public class MirroredAutonomousOP extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        drive = new MecanumDrive(hardwareMap);
+        drive = new MecanumDrive(hardwareMap, this.telemetry);
 
         Pose2d startPose = new Pose2d(10, -8, Math.toRadians(180));
 
