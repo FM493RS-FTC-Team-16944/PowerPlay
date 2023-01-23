@@ -55,10 +55,8 @@ public class AutoCycleTest extends LinearOpMode {
                         new WaitUntilCommand(() -> drive.lift.horizontalSlide.getCurrentPosition() <= state.horizontalPos + 10 &&
                                 drive.lift.horizontalSlide.getCurrentPosition() >= state.horizontalPos - 10),
                         new InstantCommand(drive.intake::closeClaw, drive.intake),
-                        new ParallelCommandGroup(
-                                new InstantCommand(drive.intake::transferIntake),
-                                new InstantCommand(() -> drive.lift.setHorizontalSlide(ArmConstants.HORIZONTAL_SLIDE_NEUTRAL_POSITION))
-                        )
+                        new InstantCommand(drive.intake::transferIntake),
+                        new InstantCommand(() -> drive.lift.setHorizontalSlide(ArmConstants.HORIZONTAL_SLIDE_NEUTRAL_POSITION))
                 )
         );
 
