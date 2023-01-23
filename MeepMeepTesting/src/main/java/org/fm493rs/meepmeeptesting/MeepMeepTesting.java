@@ -23,7 +23,7 @@ public class MeepMeepTesting {
     public static double MAX_ACCEL = 30;
     public static double MAX_ANG_VEL = Math.toRadians(60);
     public static double MAX_ANG_ACCEL = Math.toRadians(60);
-    public static double TRACK_WIDTH = 17.2;
+    public static double TRACK_WIDTH = 17.1;
 
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
@@ -31,18 +31,20 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(40, -65, Math.toRadians(270));
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(MAX_VEL, MAX_ACCEL, MAX_ANG_VEL, MAX_ANG_ACCEL, TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
-                                .lineToLinearHeading(new Pose2d(-1.4, 5.4, Math.toRadians(180)),
+                                .lineToLinearHeading(new Pose2d(34, -60, Math.toRadians(180)),
                                         VEL_CONSTRAINT,
                                         ACCEL_CONSTRAINT)
+                                .strafeRight(55)
+                                .turn(Math.toRadians(-20))
                                 .build()
-                );
+                        );
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
                 .setDarkMode(true)

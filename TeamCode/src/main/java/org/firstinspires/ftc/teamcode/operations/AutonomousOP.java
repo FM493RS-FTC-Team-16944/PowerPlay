@@ -33,16 +33,19 @@ public class AutonomousOP extends LinearOpMode {
 
         VerticalLiftPID zeroHeightPID;
 
-        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(40, -65, Math.toRadians(270));
         drive.setPoseEstimate(startPose);
 
         drive.outputOdomReadings(telemetry);
 
 
         Trajectory offWall = drive.trajectoryBuilder(startPose, true)
-                .lineToLinearHeading((new Pose2d(-1.4, 5.4,Math.toRadians(180))),
+                .lineToLinearHeading((new Pose2d(34, -60, Math.toRadians(180))),
                         MecanumDrive.getVelocityConstraint(20, MAX_ANG_VEL, TRACK_WIDTH),
                         MecanumDrive.getAccelerationConstraint(MAX_ACCEL))
+                .build();
+        Trajectory strafeToPole = drive.trajectoryBuilder(offWall.end().plus(new Pose2d(0,0,Math.toRadians(-90))))
+                .strafeLeft(55)
                 .build();
 
 
@@ -51,6 +54,9 @@ public class AutonomousOP extends LinearOpMode {
 
 
         drive.followTrajectory(offWall);
+        drive.turn(Math.toRadians(-90));
+        drive.followTrajectory(strafeToPole);
+        drive.turn(Math.toRadians(-20));
 
 
 
