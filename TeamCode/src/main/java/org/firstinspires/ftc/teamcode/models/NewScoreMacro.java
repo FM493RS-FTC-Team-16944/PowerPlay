@@ -37,6 +37,7 @@ public class NewScoreMacro implements Runnable {
             }
         }
 
+        // rather than sleeping it might be better to check the position of the claw, actually idek why this is here
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -45,6 +46,7 @@ public class NewScoreMacro implements Runnable {
 
         this.robot.intake.closeClaw();
 
+        // same with this sleep
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -53,14 +55,15 @@ public class NewScoreMacro implements Runnable {
 
         this.transferRunnable.start();
 
-
-
+        // NOTE: it could be edging the platform because the error margin is 10 ticks, but idk 10 ticks isnt a lot
         while (true) {
             if (robot.lift.horizontalSlide.getCurrentPosition() <= 10 &&
                     robot.lift.horizontalSlide.getCurrentPosition() >= -10)
                 break;
         }
 
+        // NOTE: this can be optimized, transfer intake can happen while the horizontal slide is moving
+        // this would remove the overhead of sleeping half a second and rather can open the claw instantly once the horizontal slide is at "0"
         this.robot.intake.transferIntake();
 
         try {
@@ -72,6 +75,7 @@ public class NewScoreMacro implements Runnable {
         this.robot.intake.openClaw();
         this.robot.intake.groundIntake(0);
 
+        // if the arm is positioned to perfectly place the cone on the platform, this sleep can be removed
         try {
             Thread.sleep(700);
         } catch (InterruptedException e) {
@@ -88,6 +92,7 @@ public class NewScoreMacro implements Runnable {
 
         this.robot.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
+        // this isn't really necessary until the very last cone, because it should be lowering while queueing up the next cone
         while (true) {
             if (robot.lift.getVerticalLiftPosition() <= 1 &&
                     robot.lift.getVerticalLiftPosition() >= -1)
