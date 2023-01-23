@@ -31,17 +31,28 @@ public class NewAutoCycle extends LinearOpMode {
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, this.telemetry);
 
-        GrabPosition state = CYCLE_GRAB_POSITIONS[0];
+        GrabPosition firstCone = CYCLE_GRAB_POSITIONS[0];
+        GrabPosition secondCone = CYCLE_GRAB_POSITIONS[1];
 
-        NewScoreMacro macro = new NewScoreMacro(drive, state, telemetry);
-        Thread thread = new Thread(macro);
-        thread.start();
+        NewScoreMacro firstConeMacro = new NewScoreMacro(drive, firstCone, telemetry);
+        NewScoreMacro secondConeMacro = new NewScoreMacro(drive, secondCone, telemetry);
 
+        Thread firstThread = new Thread(firstConeMacro);
+        Thread secondThread = new Thread(secondConeMacro);
+
+        firstThread.start();
         while(opModeIsActive()) {
-            if(macro.finished) {
-                stop();
+            if(firstConeMacro.finished) {
+                secondThread.start();
+                while(opModeIsActive()) {
+                    if(secondConeMacro.finished) {
+                        stop();
+                    }
+                }
             }
         }
+
+
     }
 }
 

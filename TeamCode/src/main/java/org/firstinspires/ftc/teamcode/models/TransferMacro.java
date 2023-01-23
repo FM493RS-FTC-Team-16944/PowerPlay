@@ -13,7 +13,15 @@ public class TransferMacro implements Runnable {
     }
 
     public void run() {
-        this.robot.intake.transferIntake();
+        this.robot.intake.hangingIntake();
         this.robot.lift.setHorizontalSlide(ArmConstants.HORIZONTAL_SLIDE_NEUTRAL_POSITION);
+
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        this.robot.intake.rotatedHangingIntake();
     }
 }
