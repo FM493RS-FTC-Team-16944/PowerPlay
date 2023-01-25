@@ -80,7 +80,7 @@ public class IntakeSubsystem implements Subsystem {
     }
 
     public void transferIntake() {
-        this.armClaw.setPosition(0.37);
+        this.armClaw.setPosition(0.46);
         this.tiltClaw.setPosition(DROP_CLAW_TILT_POSITION);
         this.rotatorClaw.setPosition(ONE_EIGHTY_ROTATOR_POSITION);
     }

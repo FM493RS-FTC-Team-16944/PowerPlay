@@ -20,9 +20,9 @@ public class ArmConstants {
     public static double CLOSE_CLAW_POSITION = 1.00;
 
     public static double ARM_CLAW_POSITION_FIRST_CONE = 0.27;
-    public static double ARM_CLAW_POSITION_SECOND_CONE = 0.22;
-    public static double ARM_CLAW_POSITION_THIRD_CONE = 0.27;
-    public static double ARM_CLAW_POSITION_FOURTH_CONE = 0.20;
+    public static double ARM_CLAW_POSITION_SECOND_CONE = 0.21;
+    public static double ARM_CLAW_POSITION_THIRD_CONE = 0.15;
+    public static double ARM_CLAW_POSITION_FOURTH_CONE = 0.10;
     public static double ARM_CLAW_POSITION_FIFTH_CONE = 0.00;
     public static double ARM_CLAW_POSITION_NEUTRAL = 0.20;
 
@@ -48,8 +48,8 @@ public class ArmConstants {
 
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 2500;
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE = 2330;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE = 2500;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE = 2600;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE = 2700;
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE = 2200;
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE = 2150;
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE = 2050;
     public static int HORIZONTAL_SLIDE_NEUTRAL_POSITION = 0;
 }
