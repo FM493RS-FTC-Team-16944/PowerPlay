@@ -75,7 +75,7 @@ public class IntakeSubsystem implements Subsystem {
 
     public void rotatedHangingIntake() {//7
         this.armClaw.setPosition(0.41);
-        this.tiltClaw.setPosition(DROP_CLAW_TILT_POSITION+0.1);
+        this.tiltClaw.setPosition(DROP_CLAW_TILT_POSITION + 0.1);
         this.rotatorClaw.setPosition(ONE_EIGHTY_ROTATOR_POSITION);
     }
 

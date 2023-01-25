@@ -12,9 +12,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Motor;
+import org.firstinspires.ftc.teamcode.models.GrabPosition;
 import org.firstinspires.ftc.teamcode.models.HorizontalLiftPID;
 import org.firstinspires.ftc.teamcode.models.Lift;
 import org.firstinspires.ftc.teamcode.models.Mode;
+import org.firstinspires.ftc.teamcode.models.NewScoreMacro;
 import org.firstinspires.ftc.teamcode.models.OpenClose;
 import org.firstinspires.ftc.teamcode.models.ScoringMacro;
 import org.firstinspires.ftc.teamcode.models.VerticalLiftPID;
@@ -58,11 +60,8 @@ public class MacroGamePad {
     private boolean prevLeftTrig = false;
     private boolean prevRightTrig = false;
     private boolean justWentDown = false;
-    ScoringMacro scoringMac;
-    Thread scoringThread;
+    NewScoreMacro scoringMac;
 
-    HorizontalLiftPID testHor;
-    Thread horizThread;
     ScoringMacro currentThread;
 
     public static int horizontalTarget = 2000;
@@ -73,11 +72,10 @@ public class MacroGamePad {
         this.gamepad = hardwareGamepad;
         this.robot = robot;
         this.telemetry = telemetry;
-        this.scoringMac = new ScoringMacro(robot,vertHeight, horizontalTarget,telemetry);
-        this.scoringThread = new Thread(scoringMac);
-        this.scoringMac.complete = true;
-        this.testHor = new HorizontalLiftPID(robot,1000, 100, telemetry);
-        horizThread = new Thread(testHor);
+
+        this.scoringMac = new NewScoreMacro(
+                robot, new GrabPosition(ARM_CLAW_POSITION_FIFTH_CONE, horizontalTarget, vertHeight)
+        );
     }
 
     public void updateRobot() {
@@ -146,11 +144,9 @@ public class MacroGamePad {
 
         if(gamepad.x && !prevX){
             telemetry.addLine("scoring thread started");
-            scoringMac = new ScoringMacro(robot, vertHeight, horizontalTarget,telemetry);
-            scoringMac.start();
-            currentThread = scoringMac;
-//            scoringThread.start();
-//            telemetry.update();
+
+            Thread thread = new Thread(scoringMac);
+            thread.start();
         }
         prevX = gamepad.x;
 

@@ -59,6 +59,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.models.GrabPosition;
+import org.firstinspires.ftc.teamcode.models.MacroManager;
 import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystem.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequence;
@@ -81,6 +82,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     private final boolean isAuto = false;
     public final IntakeSubsystem intake;
     public final LiftSubsystem lift;
+    public final MacroManager macroManager;
 
     private HardwareMap hardwareMap;
 
@@ -192,9 +194,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
 
-
         setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
         odometry = new StandardTrackingWheelLocalizer(hardwareMap);
+
+        macroManager = new MacroManager(this);
 
         detector = new AprilTagDetector(hardwareMap);
         this.detector.initDetector();

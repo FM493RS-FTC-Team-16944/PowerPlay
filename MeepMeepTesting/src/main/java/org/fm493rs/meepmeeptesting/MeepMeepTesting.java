@@ -17,6 +17,7 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 import java.util.Arrays;
+import java.util.Vector;
 
 public class MeepMeepTesting {
     public static double MAX_VEL = 30;
@@ -36,6 +37,7 @@ public class MeepMeepTesting {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(MAX_VEL, MAX_ACCEL, MAX_ANG_VEL, MAX_ANG_ACCEL, TRACK_WIDTH)
+                .setDimensions(15, 15)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
                                 .lineToLinearHeading(new Pose2d(34, -60, Math.toRadians(180)),
@@ -43,6 +45,8 @@ public class MeepMeepTesting {
                                         ACCEL_CONSTRAINT)
                                 .strafeRight(55)
                                 .turn(Math.toRadians(-20))
+                                .lineToConstantHeading(new Vector2d(34,-12))
+                                .lineToConstantHeading(new Vector2d(10,-10))
                                 .build()
                         );
 

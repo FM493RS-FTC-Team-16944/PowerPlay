@@ -6,11 +6,13 @@ import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.TRACK_WIDTH
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 
 
@@ -18,8 +20,6 @@ import org.openftc.apriltag.AprilTagDetection;
 @Config
 public class AutonomousOP extends LinearOpMode {
     private MecanumDrive drive;
-
-    AprilTagDetection detector = new AprilTagDetection();
 
     @Override
     public void runOpMode() {
@@ -30,25 +30,55 @@ public class AutonomousOP extends LinearOpMode {
         drive.setPoseEstimate(startPose);
         drive.outputOdomReadings(telemetry);
 
-        Trajectory offWall = drive.trajectoryBuilder(startPose, true)
+        TrajectorySequence cyclePosition = drive.trajectorySequenceBuilder(startPose)
                 .lineToLinearHeading((new Pose2d(34, -60, Math.toRadians(180))),
                         MecanumDrive.getVelocityConstraint(20, MAX_ANG_VEL, TRACK_WIDTH),
                         MecanumDrive.getAccelerationConstraint(MAX_ACCEL))
+                .strafeRight(55)
+                .turn(Math.toRadians(-20))
                 .build();
 
-        Trajectory strafeToPole = drive.trajectoryBuilder(offWall.end().plus(new Pose2d(0, 0, Math.toRadians(-90))))
-                .strafeLeft(55)
+        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
+                .lineToConstantHeading(new Vector2d(34,-12))
                 .build();
 
+        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(parkingSpot2.end())
+                .lineToConstantHeading(new Vector2d(10,-12))
+                .build();
+
+        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(parkingSpot2.end())
+                .lineToConstantHeading(new Vector2d(57,-12))
+                .build();
+
+        TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
         waitForStart();
 
-        drive.followTrajectory(offWall);
-        drive.turn(Math.toRadians(-90));
-        drive.followTrajectory(strafeToPole);
-        drive.turn(Math.toRadians(-20));
+        AprilTagDetection detection = drive.detector.detectObjects();
+        int destinationIndex;
 
-        //drive.followTrajectory(parkingSpots[lastDestination]);
+        switch (detection.id) {
+            case 0:
+                destinationIndex = 0;
+            case 3:
+                destinationIndex = 1;
+            case 6:
+                destinationIndex = 2;
+            default:
+                destinationIndex = 0;
+        }
+
+        drive.followTrajectorySequence(cyclePosition);
+
+        while (opModeIsActive()) {
+            if (!drive.macroManager.isFinished()) {
+                drive.macroManager.startScoring();
+            }
+        }
+
+        drive.followTrajectorySequence(parkingSpot2);
+
+        if (destinationIndex != 1) {
+            drive.followTrajectorySequence(parkingSpots[destinationIndex]);
+        }
     }
-
-
 }
