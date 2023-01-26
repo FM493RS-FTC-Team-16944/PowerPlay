@@ -67,14 +67,14 @@ public class NewScoreMacro implements Runnable {
         this.robot.intake.transferIntake();
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(750);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
         this.robot.intake.openClaw();
         this.robot.intake.groundIntake(0);
-        this.robot.lift.setHorizontalSlide(1300);
+        this.robot.lift.setHorizontalSlide(1000);
 
         // if the arm is positioned to perfectly place the cone on the platform, this sleep can be removed
         try {
