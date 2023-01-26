@@ -31,10 +31,11 @@ public class AutonomousOP extends LinearOpMode {
         drive.outputOdomReadings(telemetry);
 
         TrajectorySequence cyclePosition = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading((new Pose2d(34, -60, Math.toRadians(180))),
+                .lineToConstantHeading((new Vector2d(34, -60)),
                         MecanumDrive.getVelocityConstraint(20, MAX_ANG_VEL, TRACK_WIDTH),
                         MecanumDrive.getAccelerationConstraint(MAX_ACCEL))
-                .strafeRight(55)
+                .turn(Math.toRadians(-90))
+                .strafeLeft(55)
                 .turn(Math.toRadians(-20))
                 .build();
 
@@ -53,19 +54,23 @@ public class AutonomousOP extends LinearOpMode {
         TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
         waitForStart();
 
-        AprilTagDetection detection = drive.detector.detectObjects();
-        int destinationIndex;
-
-        switch (detection.id) {
-            case 0:
-                destinationIndex = 0;
-            case 3:
-                destinationIndex = 1;
-            case 6:
-                destinationIndex = 2;
-            default:
-                destinationIndex = 0;
-        }
+//        AprilTagDetection detection = drive.detector.detectObjects();
+            int destinationIndex = 0;
+//
+//        if(detection != null) {
+//            switch (detection.id) {
+//                case 0:
+//                    destinationIndex = 0;
+//                case 3:
+//                    destinationIndex = 1;
+//                case 6:
+//                    destinationIndex = 2;
+//                default:
+//                    destinationIndex = 0;
+//            }
+//        }else{
+//            destinationIndex = 0;
+//        }
 
         drive.followTrajectorySequence(cyclePosition);
 

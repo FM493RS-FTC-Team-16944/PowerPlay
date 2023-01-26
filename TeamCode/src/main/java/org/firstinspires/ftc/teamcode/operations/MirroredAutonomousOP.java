@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.operations;
 
+import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ANG_VEL;
+import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.TRACK_WIDTH;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -8,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 
 
@@ -20,50 +25,65 @@ public class MirroredAutonomousOP extends LinearOpMode {
     public void runOpMode() {
         drive = new MecanumDrive(hardwareMap, this.telemetry);
 
-        Pose2d startPose = new Pose2d(10, -8, Math.toRadians(180));
+        Pose2d startPose = new Pose2d(40, -65, Math.toRadians(270));
 
-        Trajectory forward = drive.trajectoryBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(0,0,Math.toRadians(0))) //fix
+        drive.setPoseEstimate(startPose);
+        drive.outputOdomReadings(telemetry);
+
+        Trajectory cyclePosition = drive.trajectoryBuilder(startPose,true)
+                .lineToConstantHeading((new Vector2d(34, -60)),
+                        MecanumDrive.getVelocityConstraint(20, MAX_ANG_VEL, TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(MAX_ACCEL))
+//                .turn(Math.toRadians(-90))
+//                .strafeRight(55)
+//                .turn(Math.toRadians(-20))
                 .build();
 
-        Trajectory destination1 = drive.trajectoryBuilder(forward.end())
-                .splineTo(new Vector2d(0,0),Math.toRadians(0))  //fix
-                .build();
-        Trajectory destination2 = drive.trajectoryBuilder(forward.end())
-                .splineTo(new Vector2d(0,0),Math.toRadians(0))
+        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
+                .lineToConstantHeading(new Vector2d(34,-12))
                 .build();
 
-        Trajectory destination3 = drive.trajectoryBuilder(forward.end())
-                .splineTo(new Vector2d(0,0),Math.toRadians(0))
+        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(parkingSpot2.end())
+                .lineToConstantHeading(new Vector2d(10,-12))
                 .build();
 
-        Trajectory[] parkingSpots = new Trajectory[]{destination1,destination2,destination3};
-        int lastDestination = 0;
+        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(parkingSpot2.end())
+                .lineToConstantHeading(new Vector2d(57,-12))
+                .build();
 
-
+        TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
         waitForStart();
 
-        while (opModeIsActive()) {
+//        AprilTagDetection detection = drive.detector.detectObjects();
+        int destinationIndex = 0;
+//
+//        if(detection != null) {
+//            switch (detection.id) {
+//                case 0:
+//                    destinationIndex = 0;
+//                case 3:
+//                    destinationIndex = 1;
+//                case 6:
+//                    destinationIndex = 2;
+//                default:
+//                    destinationIndex = 0;
+//            }
+//        }else{
+//            destinationIndex = 0;
+//        }
 
-            sleep(1000);
+        drive.followTrajectory(cyclePosition);
 
-            AprilTagDetection detections = drive.detector.detectObjects();
-
-            switch (detections.id) {
-                case 0:
-                    lastDestination = 0;
-                case 3:
-                    lastDestination = 1;
-                case 6:
-                    lastDestination = 2;
-            }
-
-
-            sleep(4000);
-
-            drive.followTrajectory(forward);
-
-            drive.followTrajectory(parkingSpots[lastDestination]);
-        }
+//        while (opModeIsActive()) {
+//            if (!drive.macroManager.isFinished()) {
+//                drive.macroManager.startScoring();
+//            }
+//        }
+//
+//        drive.followTrajectorySequence(parkingSpot2);
+//
+//        if (destinationIndex != 1) {
+//            drive.followTrajectorySequence(parkingSpots[destinationIndex]);
+//        }
     }
 }

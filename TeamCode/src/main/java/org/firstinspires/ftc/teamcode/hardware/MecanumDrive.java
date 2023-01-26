@@ -87,7 +87,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     private HardwareMap hardwareMap;
 
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0);
 
     public final AprilTagDetector detector;
 
@@ -396,11 +396,11 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     }
 
     public void outputOdomReadings(Telemetry telemetry) {
-        Pose2d positions = odometry.getPoseEstimate();
+        Pose2d positions = this.getPoseEstimate();
 
         telemetry.addData("X: ", positions.getX());
         telemetry.addData("Y: ", positions.getY());
-        telemetry.addData("Heading: ", positions.getHeading());
+        telemetry.addData("Heading: ", Math.toRadians(positions.getHeading()));
 
         telemetry.update();
     }
