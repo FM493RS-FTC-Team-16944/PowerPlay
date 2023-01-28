@@ -87,11 +87,6 @@ public class MacroGamePad {
         telemetry.addData("Vertical Target:", vertHeight);
         telemetry.addData("Horizontal Target:", horizontalTarget);
 
-        if(this.robot.lift.getVerticalLiftPosition() <= 100 && justWentDown){
-            justWentDown = false;
-            this.robot.lift.resetVerticalSlidePosition();
-        }
-
         if(gamepad.y && !prevY){
             telemetry.addData("Horizontal Target:", robot.lift.getHorizontalSlidePosition());
             horizontalTarget = robot.lift.getHorizontalSlidePosition();

@@ -9,7 +9,7 @@ public class RobotMovement {
     MecanumDrive robot;
 
     public static double SPEED_CAP_AUTON = 0.5;
-    public double SPEED_CAP_TELEOP = 0.5;
+    public double SPEED_CAP_TELEOP = 0.6;
     
     public RobotMovement(MecanumDrive robot) {
         this.robot = robot;

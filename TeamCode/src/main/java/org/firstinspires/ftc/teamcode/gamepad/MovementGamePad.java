@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.gamepad;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FIFTH_CONE;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,6 +21,7 @@ public class MovementGamePad {
     public boolean prevX = false;
     public boolean prevY = false;
     public boolean switchedDrive = false;
+    public boolean prevB;
 
     public MovementGamePad(MecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {
         this.gamepad = hardwareGamepad;
@@ -77,8 +80,12 @@ public class MovementGamePad {
         }
         prevRightBump = gamepad.right_bumper;
 
-
-
-
+        if (gamepad.b && gamepad.b != prevB) {
+            if(this.robot.movement.SPEED_CAP_TELEOP == 0.6) {
+                this.robot.movement.SPEED_CAP_TELEOP = 0.3;
+            } else {
+                this.robot.movement.SPEED_CAP_TELEOP = 0.6;
+            }
+        }
     }
 }

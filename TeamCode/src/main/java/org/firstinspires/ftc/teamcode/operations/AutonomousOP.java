@@ -38,7 +38,7 @@ public class AutonomousOP extends LinearOpMode {
                         MecanumDrive.getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH),
                         MecanumDrive.getAccelerationConstraint(MAX_ACCEL))
                 .turn(Math.toRadians(-90))
-                .strafeLeft(53)
+                .strafeLeft(54.5)
                 .turn(Math.toRadians(-13.25))
                 .forward(1)
                 .build();
