@@ -59,10 +59,11 @@ public class NewScoreMacro implements Runnable {
         }
 
         while (true) {
-            if (robot.lift.getVerticalLiftPosition() <= 1 &&
-                    robot.lift.getVerticalLiftPosition() >= -1)
+            if (robot.lift.getVerticalLiftPosition() <= 10 &&
+                    robot.lift.getVerticalLiftPosition() >= -10)
                 break;
         }
+
         this.robot.intake.transferIntake();
         try {
             Thread.sleep(250);

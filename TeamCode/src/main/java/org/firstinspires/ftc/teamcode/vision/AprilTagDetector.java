@@ -65,7 +65,7 @@ public class AprilTagDetector {
                 if (detections.size() == 0) {
                     numFramesWithoutDetection++;
 
-                    if(failed > 75) {
+                    if(failed > 40) {
                         break;
                     }
 

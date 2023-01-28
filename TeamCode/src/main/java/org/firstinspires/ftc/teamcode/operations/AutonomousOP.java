@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.operations;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ANG_VEL;
+import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_VEL;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.TRACK_WIDTH;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -34,10 +35,10 @@ public class AutonomousOP extends LinearOpMode {
 
         TrajectorySequence cyclePosition = drive.trajectorySequenceBuilder(startPose)
                 .lineToConstantHeading((new Vector2d(47.5, -56)),
-                        MecanumDrive.getVelocityConstraint(15, MAX_ANG_VEL, TRACK_WIDTH),
+                        MecanumDrive.getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH),
                         MecanumDrive.getAccelerationConstraint(MAX_ACCEL))
                 .turn(Math.toRadians(-90))
-                .strafeLeft(52)
+                .strafeLeft(53.3)
                 .turn(Math.toRadians(-14))
                 .forward(3)
                 .build();
@@ -57,9 +58,9 @@ public class AutonomousOP extends LinearOpMode {
 
         TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
 
-        drive.intake.setArmClawPosition(DROP_ARM_CLAW_POSITION + 0.1);
-
         waitForStart();
+
+        drive.intake.setArmClawPosition(DROP_ARM_CLAW_POSITION + 0.1);
 
         AprilTagDetection detection = drive.detector.detectObjects();
         int destinationIndex = 0;
@@ -87,19 +88,20 @@ public class AutonomousOP extends LinearOpMode {
 
         drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
+        /*
         while (opModeIsActive()) {
-            if (!drive.macroManager.isFinished()) {
-                drive.macroManager.startScoring();
+            if(drive.macroManager.isFinished()) {
+                break;
             }
-        }
 
+            drive.macroManager.startScoring();
+        }
+         */
+        drive.intake.rotatedHangingIntake();
         drive.followTrajectorySequence(parkingSpot2);
 
         if (destinationIndex != 1) {
             drive.followTrajectorySequence(parkingSpots[destinationIndex]);
         }
-
-        drive.intake.rotatedHangingIntake();
-        sleep(1000);
     }
 }
