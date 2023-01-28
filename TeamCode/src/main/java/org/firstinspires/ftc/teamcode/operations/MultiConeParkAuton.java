@@ -9,7 +9,6 @@ import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.TRACK_WIDTH
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -21,7 +20,7 @@ import org.openftc.apriltag.AprilTagDetection;
 
 @Autonomous
 @Config
-public class AutonomousOP extends LinearOpMode {
+public class MultiConeParkAuton extends LinearOpMode {
     private MecanumDrive drive;
 
     @Override
@@ -39,7 +38,7 @@ public class AutonomousOP extends LinearOpMode {
                         MecanumDrive.getAccelerationConstraint(MAX_ACCEL))
                 .turn(Math.toRadians(-90))
                 .strafeLeft(53)
-                .turn(Math.toRadians(-13.25))
+                .turn(Math.toRadians(-14))
                 .forward(1)
                 .build();
 
@@ -88,7 +87,7 @@ public class AutonomousOP extends LinearOpMode {
 
         drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
-        /*
+
         while (opModeIsActive()) {
             if(drive.macroManager.isFinished()) {
                 break;
@@ -96,7 +95,7 @@ public class AutonomousOP extends LinearOpMode {
 
             drive.macroManager.startScoring();
         }
-         */
+
         drive.intake.rotatedHangingIntake();
         drive.followTrajectorySequence(parkingSpot2);
 
