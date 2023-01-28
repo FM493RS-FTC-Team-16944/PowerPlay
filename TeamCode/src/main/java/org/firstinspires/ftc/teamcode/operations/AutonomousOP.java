@@ -39,8 +39,8 @@ public class AutonomousOP extends LinearOpMode {
                         MecanumDrive.getAccelerationConstraint(MAX_ACCEL))
                 .turn(Math.toRadians(-90))
                 .strafeLeft(54.5)
-                .turn(Math.toRadians(-13.25))
-                .forward(1)
+                .turn(Math.toRadians(-14))
+                .forward(0.75)
                 .build();
 
         TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
@@ -76,7 +76,7 @@ public class AutonomousOP extends LinearOpMode {
         this.telemetry.update();
 
         drive.followTrajectorySequence(cyclePosition);
-
+/*
         drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
         drive.intake.groundIntake(0);
 
@@ -87,7 +87,7 @@ public class AutonomousOP extends LinearOpMode {
         }
 
         drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
-
+*/
         /*
         while (opModeIsActive()) {
             if(drive.macroManager.isFinished()) {

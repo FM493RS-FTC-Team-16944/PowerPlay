@@ -78,16 +78,19 @@ public class ManualGamePad {
         prevX = gamepad.x;
 
         if (gamepad.dpad_up) {
-            this.robot.lift.setVerticalLift(this.robot.lift.getVerticalLiftPosition()+30);
+            this.robot.lift.verticalLiftEncoder.setPower(0.7);
+        }else if(gamepad.dpad_down) {
+            this.robot.lift.verticalLiftEncoder.setPower(-0.5);
+        }else{
+            this.robot.lift.verticalLiftEncoder.setPower(0);
         }
-        if (gamepad.dpad_down) {
-            this.robot.lift.setVerticalLift(this.robot.lift.getVerticalLiftPosition()-30);
-        }
+
         if (gamepad.dpad_right) {
-            this.robot.lift.setHorizontalSlide(this.robot.lift.getHorizontalSlidePosition()+30);
-        }
-        if (gamepad.dpad_left) {
-            this.robot.lift.setHorizontalSlide(this.robot.lift.getHorizontalSlidePosition()-30);
+            this.robot.lift.horizontalSlide.setPower(1);
+        }else if(gamepad.dpad_left) {
+            this.robot.lift.horizontalSlide.setPower(-0.8);
+        }else{
+            this.robot.lift.horizontalSlide.setPower(0);
         }
 
         if (gamepad.a && gamepad.a != prevA) {
@@ -125,6 +128,8 @@ public class ManualGamePad {
                 this.robot.intake.transferIntake();
             }
         }
+
+
         prevB = gamepad.b;
 
         telemetry.addData("Position:", position);

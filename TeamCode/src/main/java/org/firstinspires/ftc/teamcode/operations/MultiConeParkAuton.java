@@ -38,8 +38,8 @@ public class MultiConeParkAuton extends LinearOpMode {
                         MecanumDrive.getAccelerationConstraint(MAX_ACCEL))
                 .turn(Math.toRadians(-90))
                 .strafeLeft(54.5)
-                .turn(Math.toRadians(-14))
-                .forward(1)
+                .turn(Math.toRadians(-13.25))
+                .forward(0.75)
                 .build();
 
         TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())

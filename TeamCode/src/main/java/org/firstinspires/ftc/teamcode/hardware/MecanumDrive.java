@@ -292,7 +292,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     }
 
     public void resetOdom() {
-        this.odometry = new StandardTrackingWheelLocalizer(this.hardwareMap);
+        this.setLocalizer(new StandardTrackingWheelLocalizer(this.hardwareMap));
     }
 
     public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {

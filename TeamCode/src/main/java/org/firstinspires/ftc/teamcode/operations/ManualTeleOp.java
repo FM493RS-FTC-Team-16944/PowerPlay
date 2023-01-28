@@ -18,6 +18,7 @@ public class ManualTeleOp extends LinearOpMode {
         ManualGamePad gamePad = new ManualGamePad(drive, this.gamepad1, this.telemetry);
 
         while (opModeIsActive() && !isStopRequested()) {
+            drive.update();
             gamePad.updateRobot();
             telemetry.update();
         }
