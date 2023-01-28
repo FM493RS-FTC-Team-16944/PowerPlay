@@ -194,8 +194,8 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
 
-        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
         odometry = new StandardTrackingWheelLocalizer(hardwareMap);
+        setLocalizer(odometry);
 
         macroManager = new MacroManager(this);
 
@@ -400,7 +400,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
         telemetry.addData("X: ", positions.getX());
         telemetry.addData("Y: ", positions.getY());
-        telemetry.addData("Heading: ", Math.toRadians(positions.getHeading()));
+        telemetry.addData("Heading: ", positions.getHeading());
 
         telemetry.update();
     }

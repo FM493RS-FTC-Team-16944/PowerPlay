@@ -26,11 +26,11 @@ public class SplitTeleOP extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             drive.odometry.update();
+
             moveGamePad.updateRobot();
             macroGamePad.updateRobot();
-            drive.outputOdomReadings(telemetry);
 
-            telemetry.update();
+            drive.outputOdomReadings(telemetry);
         }
         if(isStopRequested()){
 //            currentThread.complete = true;

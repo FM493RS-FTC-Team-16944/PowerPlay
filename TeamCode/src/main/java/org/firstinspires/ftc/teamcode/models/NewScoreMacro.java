@@ -53,8 +53,8 @@ public class NewScoreMacro implements Runnable {
         this.transferRunnable.start();
 
         while (true) {
-            if (robot.lift.horizontalSlide.getCurrentPosition() <= 3 &&
-                    robot.lift.horizontalSlide.getCurrentPosition() >= -3)
+            if (robot.lift.horizontalSlide.getCurrentPosition() <= 6 &&
+                    robot.lift.horizontalSlide.getCurrentPosition() >= -6)
                 break;
         }
 
@@ -71,6 +71,7 @@ public class NewScoreMacro implements Runnable {
         }
 
         this.robot.intake.openClaw();
+
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {
