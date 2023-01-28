@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMovement;
+import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Motor;
 import org.firstinspires.ftc.teamcode.models.GrabPosition;
@@ -64,8 +65,8 @@ public class MacroGamePad {
 
     ScoringMacro currentThread;
 
-    public static int horizontalTarget = 2000;
-    private int vertHeight = 1600;
+    public static int horizontalTarget = 1000;
+    private int vertHeight = HIGH_SCORE_VERTICAL_LIFT_POSITION;
 
 
     public MacroGamePad(MecanumDrive robot, Gamepad hardwareGamepad, Telemetry telemetry) {

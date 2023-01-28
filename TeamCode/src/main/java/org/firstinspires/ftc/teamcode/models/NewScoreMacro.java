@@ -37,6 +37,12 @@ public class NewScoreMacro implements Runnable {
 
         this.robot.intake.closeClaw();
 
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         while (true) {
             if (this.robot.intake.leftClaw.getPosition() == CLOSE_CLAW_POSITION &&
                     this.robot.intake.rightClaw.getPosition() == CLOSE_CLAW_POSITION) {
@@ -57,12 +63,24 @@ public class NewScoreMacro implements Runnable {
                     robot.lift.getVerticalLiftPosition() >= -1)
                 break;
         }
+        this.robot.intake.transferIntake();
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         this.robot.intake.openClaw();
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         this.robot.intake.groundIntake(0);
-        this.robot.lift.setHorizontalSlide(
-                robot.macroManager.macroList[robot.macroManager.index].state.horizontalPos
-        );
+//        this.robot.lift.setHorizontalSlide(
+//                robot.macroManager.macroList[robot.macroManager.index].state.horizontalPos
+//        );
+        this.robot.lift.setHorizontalSlide(400);
 
         this.finished = true;
 
@@ -74,6 +92,15 @@ public class NewScoreMacro implements Runnable {
                 break;
         }
 
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         this.robot.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
+
+
+
     }
 }

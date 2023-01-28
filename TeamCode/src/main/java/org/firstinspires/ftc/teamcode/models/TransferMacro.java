@@ -17,6 +17,6 @@ public class TransferMacro implements Runnable {
         this.robot.lift.setHorizontalSlide(ArmConstants.HORIZONTAL_SLIDE_NEUTRAL_POSITION);
 
         this.robot.intake.rotatedHangingIntake();
-        this.robot.intake.transferIntake();
+
     }
 }
