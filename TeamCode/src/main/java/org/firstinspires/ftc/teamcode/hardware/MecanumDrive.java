@@ -5,21 +5,11 @@ import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSI
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FOURTH_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_SECOND_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_THIRD_CONE;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_CLAW_TILT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_POWER;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NEUTRAL_CLAW_TILT_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NORMAL_ROTATOR_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ONE_EIGHTY_ROTATOR_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.OPEN_CLAW_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.UP_CLAW_TILT_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.VERTICAL_LIFT_POWER;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ANG_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ANG_VEL;
@@ -52,12 +42,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotMovement;
 import org.firstinspires.ftc.teamcode.models.GrabPosition;
 import org.firstinspires.ftc.teamcode.models.MacroManager;
 import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem;
@@ -65,8 +53,9 @@ import org.firstinspires.ftc.teamcode.subsystem.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceRunner;
+import org.firstinspires.ftc.teamcode.util.AxisDirection;
+import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
-import org.firstinspires.ftc.teamcode.util.geometry.XyhVector;
 import org.firstinspires.ftc.teamcode.vision.AprilTagDetector;
 
 import java.util.ArrayList;
@@ -78,28 +67,25 @@ import java.util.List;
  */
 @Config
 public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive {
-
-    private final boolean isAuto = false;
     public final IntakeSubsystem intake;
     public final LiftSubsystem lift;
     public final MacroManager macroManager;
 
     private HardwareMap hardwareMap;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0);
+    // TODO: might need to change kd back to 0 check roadrunner thing
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7, 0, 1);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
     public final AprilTagDetector detector;
 
-    public StandardTrackingWheelLocalizer odometry;
+    public TwoWheelTrackingLocalizer odometry;
     public static double LATERAL_MULTIPLIER = 1;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double SPEED_CAP_TELEOP = 0.55;
     public static double OMEGA_WEIGHT = 1;
-    public RobotMovement movement;
-
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
@@ -124,7 +110,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public MecanumDrive(HardwareMap hardwareMap, Telemetry telemetry) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.hardwareMap = hardwareMap;
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, new PIDCoefficients(-TRANSLATIONAL_PID.kP, TRANSLATIONAL_PID.kI, TRANSLATIONAL_PID.kD), HEADING_PID,
+        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, new PIDCoefficients(TRANSLATIONAL_PID.kP, TRANSLATIONAL_PID.kI, TRANSLATIONAL_PID.kD), HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
@@ -161,17 +147,16 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-        // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
+        BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_X);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
-        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
 
-        this.movement = new RobotMovement(this);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
 
         intake = new IntakeSubsystem(hardwareMap);
         lift = new LiftSubsystem(hardwareMap, telemetry);
@@ -194,7 +179,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
 
-        odometry = new StandardTrackingWheelLocalizer(hardwareMap);
+        odometry = new TwoWheelTrackingLocalizer(hardwareMap, this);
         setLocalizer(odometry);
 
         macroManager = new MacroManager(this);
@@ -292,7 +277,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     }
 
     public void resetOdom() {
-        this.odometry = new StandardTrackingWheelLocalizer(this.hardwareMap);
+        this.odometry = new TwoWheelTrackingLocalizer(this.hardwareMap, this);
     }
 
     public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {
@@ -328,9 +313,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     public void strafeR(double x, double y, double h) {
         Pose2d currentPosition = odometry.getPoseEstimate();
-        XyhVector position = new XyhVector(currentPosition.getX(), currentPosition.getY(), currentPosition.getHeading());
-        double xR = x * Math.cos(position.h) - y * Math.sin(position.h);
-        double yR = x * Math.sin(position.h) + y * Math.cos(position.h);
+        double heading = currentPosition.getHeading();
+
+        double xR = x * Math.cos(heading) - y * Math.sin(heading);
+        double yR = x * Math.sin(heading) + y * Math.cos(heading);
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(h), 1);
 
@@ -343,7 +329,6 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         leftRear.setPower(SPEED_CAP_TELEOP * backLeftPower);
         rightFront.setPower(SPEED_CAP_TELEOP * frontRightPower);
         rightRear.setPower(SPEED_CAP_TELEOP * backRightPower);
-
     }
 
 
