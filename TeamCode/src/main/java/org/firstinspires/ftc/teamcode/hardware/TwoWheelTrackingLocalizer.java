@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import androidx.annotation.NonNull;
 
-import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.KalmanFilter;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
@@ -19,13 +18,6 @@ import java.util.List;
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double X_MULTIPLIER = 0.978340365;
     public static double Y_MULTIPLIER = 0.980506457;
-    public static double positionQ = 0.3;
-    public static double positionR = 3;
-    public static int positionN = 3;
-
-    public static double velocityQ = 0.3;
-    public static double velocityR = 3;
-    public static int velocityN = 3;
 
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 1; // in
@@ -43,8 +35,6 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public Encoder parallelEncoder, perpendicularEncoder;
 
     private MecanumDrive drive;
-    public KalmanFilter positionFilter;
-    private KalmanFilter velocityFilter;
 
     public TwoWheelTrackingLocalizer(HardwareMap hardwareMap, MecanumDrive drive) {
         super(Arrays.asList(
@@ -53,11 +43,11 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         ));
 
         this.drive = drive;
-        this.positionFilter = new KalmanFilter(positionQ, positionR, positionN);
-        this.velocityFilter = new KalmanFilter(velocityQ, velocityR, velocityN);
 
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backRight"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
+
+        perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }

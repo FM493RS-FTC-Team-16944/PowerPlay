@@ -13,6 +13,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class LiftSubsystem implements Subsystem {
     public final Telemetry telemetry;
+    private final LiftPIDController verticalPID;
+    private final LiftPIDController horizontalPID;
     public DcMotorEx verticalLiftEncoder;
     public DcMotorEx horizontalSlide;
 
@@ -32,13 +34,27 @@ public class LiftSubsystem implements Subsystem {
         horizontalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         horizontalSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        horizontalPID = new LiftPIDController(
+                hardwareMap,
+                horizontalSlide,
+                1,
+                1,
+                1
+        );
+
+        verticalPID = new LiftPIDController(
+                hardwareMap,
+                verticalLiftEncoder,
+                1,
+                1,
+                1
+        );
     }
 
-    @Override
-    public void periodic() {
-        System.out.println("hello");
-        this.telemetry.addData("horizontal position", this.getHorizontalSlidePosition());
-        this.telemetry.update();
+    public void loop() {
+        verticalPID.loop();
+        horizontalPID.loop();
     }
 
     public void resetHorizontalSlidePosition() {

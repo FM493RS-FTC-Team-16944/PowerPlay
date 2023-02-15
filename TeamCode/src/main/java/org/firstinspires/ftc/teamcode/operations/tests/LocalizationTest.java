@@ -40,9 +40,6 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
 
-            telemetry.addData("real parallel ticks ", drive.odometry.parallelEncoder.getCurrentPosition());
-            telemetry.addData("filter parallel ticks ", drive.odometry.positionFilter.estimate(drive.odometry.parallelEncoder.getCurrentPosition()));
-
             telemetry.update();
         }
     }

@@ -80,7 +80,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public final AprilTagDetector detector;
 
     public TwoWheelTrackingLocalizer odometry;
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double LATERAL_MULTIPLIER = 1.0212766;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -147,7 +147,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-        BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_X);
+        // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_X);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
@@ -247,6 +247,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     public Pose2d getLastError() {
         return trajectorySequenceRunner.getLastPoseError();
+    }
+
+    public void updateLifts() {
+        this.lift.loop();
     }
 
     public void update() {

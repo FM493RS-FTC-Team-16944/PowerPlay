@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSI
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.OPEN_CLAW_POSITION;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -26,10 +27,17 @@ public class NewGamePad {
     }
 
     public void updateRobot() {
+        Pose2d poseEstimate = this.robot.getPoseEstimate();
+
+        Vector2d input = new Vector2d(
+                -gamepad.left_stick_y,
+                -gamepad.left_stick_x
+        ).rotated(-poseEstimate.getHeading());
+
         robot.setWeightedDrivePower(
                 new Pose2d(
-                        -gamepad.left_stick_y,
-                        -gamepad.left_stick_x,
+                        input.getX(),
+                        input.getY(),
                         -gamepad.right_stick_x
                 )
         );
@@ -54,7 +62,8 @@ public class NewGamePad {
         robot.lift.verticalLiftEncoder.setPower(0);
 
         if (gamepad.a) {
-            if (this.robot.intake.leftClaw.getPosition() == OPEN_CLAW_POSITION && this.robot.intake.rightClaw.getPosition() == OPEN_CLAW_POSITION) {
+            if (this.robot.intake.leftClaw.getPosition() == OPEN_CLAW_POSITION &&
+                    this.robot.intake.rightClaw.getPosition() == OPEN_CLAW_POSITION) {
                 this.robot.intake.openClaw();
             } else {
                 this.robot.intake.closeClaw();
@@ -75,6 +84,7 @@ public class NewGamePad {
         }
 
         if (macroMode) {
+            // TODO: make it toggle, so if u press once it goes multiple times, if u press again it stops
             if (gamepad.x) {
                 int horizontalTarget = 1000;
                 int verticalTarget = ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION;

@@ -9,13 +9,13 @@ import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.TRACK_WIDTH
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.util.PoseStorage;
 import org.openftc.apriltag.AprilTagDetection;
 
 
@@ -103,5 +103,7 @@ public class AutonomousOP extends LinearOpMode {
         if (destinationIndex != 1) {
             drive.followTrajectorySequence(parkingSpots[destinationIndex]);
         }
+
+        PoseStorage.currentPos = drive.getPoseEstimate();
     }
 }
