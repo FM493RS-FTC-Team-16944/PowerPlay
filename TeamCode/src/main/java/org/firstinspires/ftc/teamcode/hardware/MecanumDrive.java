@@ -281,6 +281,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     }
 
     public void resetOdom() {
+        this.imu.initialize(new BNO055IMU.Parameters());
         this.odometry = new TwoWheelTrackingLocalizer(this.hardwareMap, this);
     }
 
@@ -316,11 +317,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     }
 
     public void strafeR(double x, double y, double h) {
-        Pose2d currentPosition = odometry.getPoseEstimate();
-        double heading = currentPosition.getHeading();
+        double heading = -this.odometry.getHeading();
 
-        double xR = x * Math.cos(heading) - y * Math.sin(heading);
-        double yR = x * Math.sin(heading) + y * Math.cos(heading);
+        double xR = x * Math.cos(-heading) - y * Math.sin(-heading);
+        double yR = x * Math.sin(-heading) + y * Math.cos(-heading);
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(h), 1);
 

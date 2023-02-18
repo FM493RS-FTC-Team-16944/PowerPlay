@@ -17,6 +17,8 @@ public class LiftSubsystem implements Subsystem {
     private final LiftPIDController horizontalPID;
     public DcMotorEx verticalLiftEncoder;
     public DcMotorEx horizontalSlide;
+    boolean verticalLiftZero = true;
+    boolean horizontalLiftZero = true;
 
     public LiftSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         verticalLiftEncoder = hardwareMap.get(DcMotorEx.class, "verticalLiftEncoder");
@@ -24,7 +26,7 @@ public class LiftSubsystem implements Subsystem {
         verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         verticalLiftEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        verticalLiftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+        //verticalLiftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
         horizontalSlide = hardwareMap.get(DcMotorEx.class, "horizontalSlide");
 
@@ -33,7 +35,7 @@ public class LiftSubsystem implements Subsystem {
         horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         horizontalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        horizontalSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        //horizontalSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         horizontalPID = new LiftPIDController(
                 hardwareMap,
@@ -91,6 +93,21 @@ public class LiftSubsystem implements Subsystem {
 
     public int getVerticalLiftPosition() {
         return this.verticalLiftEncoder.getCurrentPosition();
+    }
+
+    public void resetLifts(){
+        while (true) {
+            verticalLiftEncoder.setPower(-0.5);
+            if (verticalLiftZero)
+                break;
+        }
+        while (true) {
+            horizontalSlide.setPower(-0.5);
+            if (horizontalLiftZero)
+                break;
+        }
+        this.resetVerticalSlidePosition();
+        this.resetHorizontalSlidePosition();
     }
 
 }
