@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class ArmConstants {
     public static double HORIZONTAL_SLIDE_POWER = 1.00;
-    public static double VERTICAL_LIFT_POWER = 0.87;
+    public static double VERTICAL_LIFT_POWER = 1.00;
 
     public static double OPEN_CLAW_POSITION = 0.70;
     public static double CLOSE_CLAW_POSITION = 1.00;
@@ -45,8 +45,8 @@ public class ArmConstants {
     public static double ONE_EIGHTY_ROTATOR_POSITION = 0.95;
 
     public static int NEUTRAL_VERTICAL_LIFT_POSITION = 0;
-    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 1391;
-    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1190;
+    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2200;
+    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1380;
     public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 520;
 
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 1500;

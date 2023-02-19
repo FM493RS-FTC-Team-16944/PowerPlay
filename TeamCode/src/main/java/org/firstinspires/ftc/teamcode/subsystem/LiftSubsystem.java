@@ -61,18 +61,17 @@ public class LiftSubsystem implements Subsystem {
 
     public void resetHorizontalSlidePosition() {
         horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        horizontalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void resetVerticalSlidePosition() {
         verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void setVerticalLift(int position) {
         this.verticalLiftEncoder.setTargetPosition(position);
         this.verticalLiftEncoder.setPower(VERTICAL_LIFT_POWER);
-
         this.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
@@ -83,8 +82,8 @@ public class LiftSubsystem implements Subsystem {
     public void setHorizontalSlide(int position) {
         this.horizontalSlide.setTargetPosition(position);
         this.horizontalSlide.setPower(HORIZONTAL_SLIDE_POWER);
-
         this.horizontalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
 
     public int getHorizontalSlidePosition() {
@@ -97,12 +96,12 @@ public class LiftSubsystem implements Subsystem {
 
     public void resetLifts(){
         while (true) {
-            verticalLiftEncoder.setPower(-0.5);
+            verticalLiftEncoder.setPower(0.5);
             if (verticalLiftZero)
                 break;
         }
         while (true) {
-            horizontalSlide.setPower(-0.5);
+            horizontalSlide.setPower(0.5);
             if (horizontalLiftZero)
                 break;
         }

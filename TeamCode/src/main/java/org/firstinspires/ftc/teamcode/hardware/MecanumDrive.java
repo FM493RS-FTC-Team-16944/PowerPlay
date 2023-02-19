@@ -188,6 +188,9 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         this.detector.initDetector();
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
+
+        this.lift.resetHorizontalSlidePosition();
+        this.lift.resetVerticalSlidePosition();
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {

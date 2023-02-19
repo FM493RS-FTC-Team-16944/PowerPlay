@@ -30,9 +30,11 @@ public class driverGamePad {
     private boolean previousPadDown = false;
     private boolean previousPadRight = false;
     private boolean previousPadLeft = false;
+    private boolean highPole = false;
+    private boolean mediumPole = false;
 
 
-    private int intakePosition = 20;
+    private int intakePosition = 19;
     private int retrievalIndex = 1;
     private boolean invertedRetrieval = false;
     private boolean retrievingCone = false;
@@ -63,8 +65,8 @@ public class driverGamePad {
             selectedLift = robot.lift.verticalLiftEncoder;
         }
 
-        robot.lift.horizontalSlide.setPower(0);
-        robot.lift.verticalLiftEncoder.setPower(0);
+        //robot.lift.horizontalSlide.setPower(0);
+        //robot.lift.verticalLiftEncoder.setPower(0);
 
         if (gamepad.a && gamepad.a != previousA) {
             if (this.robot.intake.leftClaw.getPosition() == OPEN_CLAW_POSITION &&
@@ -79,12 +81,14 @@ public class driverGamePad {
         if (gamepad.dpad_up & gamepad.dpad_up != previousPadUp) {
             retrievingCone = false;
             intakePosition++;
+            retrievalIndex = 0;
         }
         previousPadUp = gamepad.dpad_up;
 
         if (gamepad.dpad_down & gamepad.dpad_down != previousPadDown) {
             retrievingCone = false;
             intakePosition--;
+            retrievalIndex = 0;
         }
         previousPadDown = gamepad.dpad_down;
 
@@ -127,19 +131,37 @@ public class driverGamePad {
         previousX = gamepad.x;
 
         if (gamepad.y && gamepad.y != previousY) {
-            if (this.robot.lift.getVerticalLiftPosition() != HIGH_SCORE_VERTICAL_LIFT_POSITION) {
+            if (intakePosition % 5 == 2 || intakePosition % 5 == 3) {
+                intakePosition = 19;
+                this.robot.intake.groundIntake(0.4);
+                this.robot.intake.openClaw();
+            }
+            if (!highPole) {
                 this.robot.lift.setVerticalLift(HIGH_SCORE_VERTICAL_LIFT_POSITION);
+                highPole = true;
+                mediumPole = false;
             } else {
                 this.robot.lift.setVerticalLift(0);
+                highPole = false;
+                mediumPole = false;
             }
         }
         previousY = gamepad.y;
 
         if (gamepad.b && gamepad.b != previousB) {
-            if (this.robot.lift.getVerticalLiftPosition() != MEDIUM_SCORE_VERTICAL_LIFT_POSITION) {
+            if (intakePosition % 5 == 2 || intakePosition % 5 == 3) {
+                intakePosition = 19;
+                this.robot.intake.groundIntake(0.4);
+                this.robot.intake.openClaw();
+            }
+            if (!mediumPole) {
                 this.robot.lift.setVerticalLift(MEDIUM_SCORE_VERTICAL_LIFT_POSITION);
+                mediumPole = true;
+                highPole = false;
             } else {
                 this.robot.lift.setVerticalLift(0);
+                highPole = false;
+                mediumPole = false;
             }
         }
         previousB = gamepad.b;

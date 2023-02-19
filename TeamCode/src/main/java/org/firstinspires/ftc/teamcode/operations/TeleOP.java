@@ -23,7 +23,9 @@ public class TeleOP extends LinearOpMode {
             gamePad.updateRobot();
 
             this.telemetry.addData("angle", drive.odometry.getHeading());
+            this.telemetry.addData("vertical lift position", drive.lift.getVerticalLiftPosition());
             telemetry.update();
+
 
             drive.updateLifts();
         }
