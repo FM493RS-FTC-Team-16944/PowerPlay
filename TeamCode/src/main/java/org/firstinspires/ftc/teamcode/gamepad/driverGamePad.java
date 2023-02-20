@@ -26,8 +26,8 @@ public class driverGamePad {
     private boolean previousY = false;
     private boolean previousB = false;
     private boolean previousX = false;
-    private boolean previousPadUp = false;
-    private boolean previousPadDown = false;
+    private boolean previousBumpRight = false;
+    private boolean previousBumpLeft = false;
     private boolean previousPadRight = false;
     private boolean previousPadLeft = false;
     private boolean highPole = false;
@@ -78,19 +78,19 @@ public class driverGamePad {
         }
         previousA = gamepad.a;
 
-        if (gamepad.dpad_up & gamepad.dpad_up != previousPadUp) {
+        if (gamepad.right_bumper & gamepad.right_bumper != previousBumpRight) {
             retrievingCone = false;
             intakePosition++;
             retrievalIndex = 0;
         }
-        previousPadUp = gamepad.dpad_up;
+        previousBumpRight = gamepad.right_bumper;
 
-        if (gamepad.dpad_down & gamepad.dpad_down != previousPadDown) {
+        if (gamepad.left_bumper & gamepad.left_bumper != previousBumpLeft) {
             retrievingCone = false;
             intakePosition--;
             retrievalIndex = 0;
         }
-        previousPadDown = gamepad.dpad_down;
+        previousBumpLeft = gamepad.left_bumper;
 
         if (gamepad.dpad_right & gamepad.dpad_right != previousPadRight) {
             invertedRetrieval = false;
@@ -130,10 +130,11 @@ public class driverGamePad {
         }
         previousX = gamepad.x;
 
+        this.robot.lift.verticalLiftEncoder.setPower(1);
+
         if (gamepad.y && gamepad.y != previousY) {
             if (intakePosition % 5 == 2 || intakePosition % 5 == 3) {
-                intakePosition = 19;
-                this.robot.intake.groundIntake(0.4);
+                intakePosition = 21;
                 this.robot.intake.openClaw();
             }
             if (!highPole) {
@@ -150,8 +151,7 @@ public class driverGamePad {
 
         if (gamepad.b && gamepad.b != previousB) {
             if (intakePosition % 5 == 2 || intakePosition % 5 == 3) {
-                intakePosition = 19;
-                this.robot.intake.groundIntake(0.4);
+                intakePosition = 21;
                 this.robot.intake.openClaw();
             }
             if (!mediumPole) {
@@ -165,6 +165,8 @@ public class driverGamePad {
             }
         }
         previousB = gamepad.b;
+
+        this.robot.lift.setHorizontalSlide(0);
 
 
     }

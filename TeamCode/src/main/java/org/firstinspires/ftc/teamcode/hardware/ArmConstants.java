@@ -25,7 +25,7 @@ public class ArmConstants {
 
     public static double DROP_ARM_CLAW_POSITION = 0.39;
     public static double DROP_ARM_CLAW_POSITION_B = 0.41;
-    public static double DROP_ARM_CLAW_POSITION_C = 0.47;
+    public static double DROP_ARM_CLAW_POSITION_C = 0.45;
 
     public static double ARM_CLAW_CONE_RETRIEVAL = 0.05;                //TODO: TUNE AF
     public static double ARM_CLAW_CONE_RETRIEVAL_UP = 0.20;             //TODO: TUNE AF
@@ -45,8 +45,8 @@ public class ArmConstants {
     public static double ONE_EIGHTY_ROTATOR_POSITION = 0.95;
 
     public static int NEUTRAL_VERTICAL_LIFT_POSITION = 0;
-    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2200;
-    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1380;
+    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2220;
+    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1340;
     public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 520;
 
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 1500;
