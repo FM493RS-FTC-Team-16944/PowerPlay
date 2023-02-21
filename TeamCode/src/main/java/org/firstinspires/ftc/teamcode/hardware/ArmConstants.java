@@ -49,15 +49,18 @@ public class ArmConstants {
     public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1340;
     public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 520;
 
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 1500;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE = 1370;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE = 1320;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE = 1290;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE = 1230;
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 2394;
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE = 2186;
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE = 2107;
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE = 2059;
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE = 1963;
     public static int HORIZONTAL_SLIDE_NEUTRAL_POSITION = 0;
 
     public static double LEFT_ODOM_RETRACTED = 1;
     public static double AUX_ODOM_RETRACTED = 1;
     public static double LEFT_ODOM_LOWERED = 0;
     public static double AUX_ODOM_LOWERED = 0;
+
+    public static double ACTIVE_SLIDE_POSITION = 0;
+    public static double DEACTIVE_SLIDE_POSITION = 0.1;
 }

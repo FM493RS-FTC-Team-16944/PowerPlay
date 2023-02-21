@@ -33,6 +33,7 @@ public class LiftSubsystem implements Subsystem {
         this.telemetry = telemetry;
         horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        horizontalSlide.setDirection(DcMotor.Direction.REVERSE);
         horizontalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //horizontalSlide.setDirection(DcMotorSimple.Direction.REVERSE);

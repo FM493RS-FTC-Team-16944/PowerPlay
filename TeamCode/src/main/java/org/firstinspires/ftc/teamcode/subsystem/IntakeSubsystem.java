@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.subsystem;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ACTIVE_SLIDE_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_CONE_RETRIEVAL;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_CONE_RETRIEVAL_INVERTED;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_CONE_RETRIEVAL_UP;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.AUX_ODOM_LOWERED;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.AUX_ODOM_RETRACTED;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DEACTIVE_SLIDE_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION_B;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION_C;
@@ -33,6 +35,7 @@ public class IntakeSubsystem implements Subsystem {
 
     public final Servo leftRetraction;
     public final Servo auxRetraction;
+    private final Servo slideSupport;
 
     public IntakeSubsystem(HardwareMap hardwareMap) {
         rotatorClaw = hardwareMap.get(Servo.class, "rotatorClaw");
@@ -44,10 +47,20 @@ public class IntakeSubsystem implements Subsystem {
         leftRetraction = hardwareMap.get(Servo.class, "leftRetraction");
         auxRetraction = hardwareMap.get(Servo.class, "auxRetraction");
 
+        slideSupport = hardwareMap.get(Servo.class, "slideSupport");
+
         this.armClaw.setDirection(Servo.Direction.REVERSE);
         this.tiltClaw.setDirection(Servo.Direction.REVERSE);
 
         this.leftClaw.setDirection(Servo.Direction.REVERSE);
+    }
+
+    public void activateSlideSupport() {
+        this.slideSupport.setPosition(ACTIVE_SLIDE_POSITION);
+    }
+
+    public void deactivateSlideSupport() {
+        this.slideSupport.setPosition(DEACTIVE_SLIDE_POSITION);
     }
 
     public void openClaw() {//2 //8

@@ -6,7 +6,10 @@ import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ANG_VEL
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_VEL;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.TRACK_WIDTH;
 
+import com.acmerobotics.dashboard.DashboardCore;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -28,19 +31,25 @@ public class AutonomousOP extends LinearOpMode {
     public void runOpMode() {
         drive = new MecanumDrive(hardwareMap, this.telemetry);
 
-        Pose2d startPose = new Pose2d(40, -65, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(32.5, -65, Math.toRadians(270));
 
         drive.setPoseEstimate(startPose);
         drive.outputOdomReadings(telemetry);
 
+//        TrajectorySequence cyclePosition = drive.trajectorySequenceBuilder(startPose)
+//                .setReversed(true)
+//                .splineTo(new Vector2d(35, -45), Math.toRadians(90))
+//                .splineTo(new Vector2d(35, -23), Math.toRadians(90))
+//                .splineToSplineHeading(new Pose2d(39, -10, Math.toRadians(165.95)), Math.toRadians(90))
+//                .splineToConstantHeading(new Vector2d(31.96, -5.29), Math.toRadians(90))
+//                .build();
+
         TrajectorySequence cyclePosition = drive.trajectorySequenceBuilder(startPose)
-                .lineToConstantHeading((new Vector2d(47.5, -56)),
-                        MecanumDrive.getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH),
-                        MecanumDrive.getAccelerationConstraint(MAX_ACCEL))
-                .turn(Math.toRadians(-90))
-                .strafeLeft(54.5)
-                .turn(Math.toRadians(-13.25))
-                .forward(1)
+                .setReversed(true)
+                .splineTo(new Vector2d(35, -45), Math.toRadians(90))
+                .lineToSplineHeading(new Pose2d(35, -23, Math.toRadians(164)))
+                // .splineToSplineHeading(new Pose2d(39, -10, Math.toRadians(165.95)), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(30.96, -4.79), Math.toRadians(100))
                 .build();
 
         TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
@@ -58,24 +67,34 @@ public class AutonomousOP extends LinearOpMode {
 
         TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
 
+        drive.intake.activateSlideSupport();
+
         waitForStart();
 
-        drive.intake.setArmClawPosition(DROP_ARM_CLAW_POSITION + 0.1);
+        drive.intake.rotatedHangingIntake();
+        drive.intake.openClaw();
 
-        AprilTagDetection detection = drive.detector.detectObjects();
-        int destinationIndex = 0;
+        TelemetryPacket packet = new TelemetryPacket();
+        FtcDashboard dashboard = FtcDashboard.getInstance();
 
-        if(detection != null) {
-            if(detection.id == 3) {
-                destinationIndex = 1;
-            } else if (detection.id == 6) {
-                destinationIndex = 2;
-            }
-        }
-        this.telemetry.addData("Path", destinationIndex);
-        this.telemetry.update();
+        packet.put("external heading velo", this.drive.getExternalHeadingVelocity());
+
+        dashboard.sendTelemetryPacket(packet);
+
+
+//        AprilTagDetection detection = drive.detector.detectObjects();
+//        int destinationIndex = 0;
+//
+//        if (detection != null) {
+//            if (detection.id == 3) {
+//                destinationIndex = 1;
+//            } else if (detection.id == 6) {
+//                destinationIndex = 2;
+//            }
+//        }
 
         drive.followTrajectorySequence(cyclePosition);
+
 
         drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
         drive.intake.groundIntake(0);
@@ -88,21 +107,26 @@ public class AutonomousOP extends LinearOpMode {
 
         drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
-        /*
+
         while (opModeIsActive()) {
             if(drive.macroManager.isFinished()) {
                 break;
             }
+            Pose2d poseEstimate = drive.getPoseEstimate();
+            telemetry.addData("finalX", poseEstimate.getX());
+            telemetry.addData("finalY", poseEstimate.getY());
+            telemetry.addData("finalHeading", poseEstimate.getHeading());
+            telemetry.update();
 
             drive.macroManager.startScoring();
         }
-         */
-        drive.intake.rotatedHangingIntake();
-        drive.followTrajectorySequence(parkingSpot2);
 
-        if (destinationIndex != 1) {
-            drive.followTrajectorySequence(parkingSpots[destinationIndex]);
-        }
+//        drive.intake.rotatedHangingIntake();
+//        drive.followTrajectorySequence(parkingSpot2);
+//
+//        if (destinationIndex != 1) {
+//            drive.followTrajectorySequence(parkingSpots[destinationIndex]);
+//        }
 
         PoseStorage.currentPos = drive.getPoseEstimate();
     }

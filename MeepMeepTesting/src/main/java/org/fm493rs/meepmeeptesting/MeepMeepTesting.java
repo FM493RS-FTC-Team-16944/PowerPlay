@@ -2,6 +2,7 @@ package org.fm493rs.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.MecanumVelocityConstraint;
@@ -15,6 +16,7 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 import java.util.Arrays;
+import java.util.Vector;
 
 public class MeepMeepTesting {
     public static double MAX_VEL = 50;
@@ -29,21 +31,23 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-        Pose2d startPose = new Pose2d(40, -65, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(32.5, -65, Math.toRadians(270));
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(MAX_VEL, MAX_ACCEL, MAX_ANG_VEL, MAX_ANG_ACCEL, TRACK_WIDTH)
-                .setDimensions(15, 15)
+                .setDimensions(16, 15)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
-                                .lineToConstantHeading(new Vector2d(33.42, -55), VEL_CONSTRAINT, ACCEL_CONSTRAINT)
-                                .turn(Math.toRadians(74.4845))
-                                .lineToConstantHeading((new Vector2d(33.42, -16.433)))
+                                .setReversed(true)
+                                .splineTo(new Vector2d(35, -45), Math.toRadians(90))
+                                .lineToSplineHeading(new Pose2d(35, -23, Math.toRadians(169.95)))
+                                // .splineToSplineHeading(new Pose2d(39, -10, Math.toRadians(165.95)), Math.toRadians(180))
+                                .splineToConstantHeading(new Vector2d(31.96, -5.29), Math.toRadians(100))
                                 .build()
                         );
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
+        meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_KAI_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)

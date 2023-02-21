@@ -34,5 +34,11 @@ public class SplineTest extends LinearOpMode {
                         .splineTo(new Vector2d(0, 0), Math.toRadians(180))
                         .build()
         );
+
+        this.telemetry.addData("z rotation rate", drive.imu.getAngularVelocity().zRotationRate);
+        this.telemetry.addData("x rotation rate", drive.imu.getAngularVelocity().xRotationRate);
+        this.telemetry.addData("y rotation rate", drive.imu.getAngularVelocity().yRotationRate);
+        this.telemetry.addData("unit", drive.imu.getAngularVelocity().unit);
+        this.telemetry.addData("acquisition time", drive.imu.getAngularVelocity().acquisitionTime);
     }
 }

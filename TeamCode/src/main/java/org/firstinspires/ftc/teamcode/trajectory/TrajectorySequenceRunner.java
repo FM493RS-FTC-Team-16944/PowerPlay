@@ -16,6 +16,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
 import com.acmerobotics.roadrunner.util.NanoClock;
 
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectory.sequence.SequenceSegment;
 import org.firstinspires.ftc.teamcode.trajectory.sequence.TrajectorySegment;
 import org.firstinspires.ftc.teamcode.trajectory.sequence.TurnSegment;
@@ -44,6 +45,7 @@ public class TrajectorySequenceRunner {
     private final PIDFController turnController;
 
     private final NanoClock clock;
+    private final MecanumDrive drive;
 
     private TrajectorySequence currentTrajectorySequence;
     private double currentSegmentStartTime;
@@ -57,7 +59,8 @@ public class TrajectorySequenceRunner {
     private final FtcDashboard dashboard;
     private final LinkedList<Pose2d> poseHistory = new LinkedList<>();
 
-    public TrajectorySequenceRunner(TrajectoryFollower follower, PIDCoefficients headingPIDCoefficients) {
+    public TrajectorySequenceRunner(TrajectoryFollower follower, PIDCoefficients headingPIDCoefficients, MecanumDrive drive) {
+        this.drive = drive;
         this.follower = follower;
 
         turnController = new PIDFController(headingPIDCoefficients);
@@ -191,6 +194,8 @@ public class TrajectorySequenceRunner {
         packet.put("xError", getLastPoseError().getX());
         packet.put("yError", getLastPoseError().getY());
         packet.put("headingError (deg)", Math.toDegrees(getLastPoseError().getHeading()));
+
+        packet.put("external heading velo", this.drive.getExternalHeadingVelocity());
 
         draw(fieldOverlay, currentTrajectorySequence, currentSegment, targetPose, poseEstimate);
 

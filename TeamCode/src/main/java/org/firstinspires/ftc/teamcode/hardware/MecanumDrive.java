@@ -19,6 +19,8 @@ import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.RUN_USING_E
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.TRACK_WIDTH;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.encoderTicksToInches;
 
+import android.os.DropBoxManager;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -74,7 +76,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     private HardwareMap hardwareMap;
 
     // TODO: might need to change kd back to 0 check roadrunner thing
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7, 0, 1);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7, 0, 0.01);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
     public final AprilTagDetector detector;
@@ -96,7 +98,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
-    private BNO055IMU imu;
+    public BNO055IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
     public static final GrabPosition[] CYCLE_GRAB_POSITIONS = {
@@ -106,6 +108,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
             new GrabPosition(ARM_CLAW_POSITION_FOURTH_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE),
             new GrabPosition(ARM_CLAW_POSITION_FIFTH_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE),
     };
+    private Telemetry telemetry;
 
     public MecanumDrive(HardwareMap hardwareMap, Telemetry telemetry) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
@@ -115,6 +118,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
+        this.telemetry = telemetry;
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -187,7 +191,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         detector = new AprilTagDetector(hardwareMap);
         this.detector.initDetector();
 
-        trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
+        trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID, this);
 
         this.lift.resetHorizontalSlidePosition();
         this.lift.resetVerticalSlidePosition();
