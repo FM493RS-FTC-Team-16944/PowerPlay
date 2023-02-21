@@ -81,7 +81,7 @@ public class LiftSubsystem implements Subsystem {
 
     public void resetHorizontalSlide() {
         while (!this.horizontalLimitSwitch.isPressed()) {
-            this.horizontalSlide.setPower(-0.3);
+            this.horizontalSlide.setPower(-HORIZONTAL_SLIDE_POWER);
         }
 
         this.resetHorizontalSlidePosition();
@@ -89,7 +89,7 @@ public class LiftSubsystem implements Subsystem {
 
     public void resetVerticalLift() {
         while (!this.verticalLimitSwitch.isPressed()) {
-            this.verticalLiftEncoder.setPower(-0.3);
+            this.verticalLiftEncoder.setPower(-VERTICAL_LIFT_POWER);
         }
 
         this.resetVerticalSlidePosition();
