@@ -43,21 +43,23 @@ public class DriveGamePad {
     public void updateRobot() {
         this.robot.strafeR(-gamepad.left_stick_x, -gamepad.left_stick_y, gamepad.right_stick_x);
 
-        if (this.gamepad.right_trigger > 0) {
-            selectedLift.setPower(this.gamepad.right_trigger);
-        }
+        this.robot.odometry.liftOdometry();
 
-        if (this.gamepad.left_trigger > 0) {
-            selectedLift.setPower(-this.gamepad.left_trigger);
-        }
-
-        if (this.gamepad.dpad_left) {
-            selectedLift = robot.lift.horizontalSlide;
-        }
-
-        if (this.gamepad.dpad_right) {
-            selectedLift = robot.lift.verticalLiftEncoder;
-        }
+//        if (this.gamepad.right_trigger > 0) {
+//            selectedLift.setPower(this.gamepad.right_trigger);
+//        }
+//
+//        if (this.gamepad.left_trigger > 0) {
+//            selectedLift.setPower(-this.gamepad.left_trigger);
+//        }
+//
+//        if (this.gamepad.dpad_left) {
+//            selectedLift = robot.lift.horizontalSlide;
+//        }
+//
+//        if (this.gamepad.dpad_right) {
+//            selectedLift = robot.lift.verticalLiftEncoder;
+//        }
 
         //robot.lift.horizontalSlide.setPower(0);
         //robot.lift.verticalLiftEncoder.setPower(0);

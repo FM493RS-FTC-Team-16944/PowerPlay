@@ -45,53 +45,54 @@ public class AutonomousOP extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(31.46, -4.54), Math.toRadians(100))
                 .build();
 
-        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end())
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(11, -10, Math.toRadians(90)), Math.toRadians(90))
-                .build();
-
-        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(33, -10, Math.toRadians(90)), Math.toRadians(90))
-                .build();
-
-        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(parkingSpot2.end())
-                .setReversed(true)
-                .lineToSplineHeading(new Pose2d(33, -10, Math.toRadians(90)))
-                .splineToConstantHeading(new Vector2d(57, -11.5), Math.toRadians(0))
-                .build();
-
-        TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
+//        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end())
+//                .setReversed(true)
+//                .splineToLinearHeading(new Pose2d(11, -10, Math.toRadians(90)), Math.toRadians(90))
+//                .build();
+//
+//        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
+//                .setReversed(true)
+//                .splineToLinearHeading(new Pose2d(33, -10, Math.toRadians(90)), Math.toRadians(90))
+//                .build();
+//
+//        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(parkingSpot2.end())
+//                .setReversed(true)
+//                .lineToSplineHeading(new Pose2d(33, -10, Math.toRadians(90)))
+//                .splineToConstantHeading(new Vector2d(57, -11.5), Math.toRadians(0))
+//                .build();
+//
+//        TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
 
         drive.lift.activateSlideSupport();
+        drive.odometry.lowerOdometry();
 
         waitForStart();
 
-        drive.odometry.lowerOdometry();
-
-        drive.intake.rotatedHangingIntake();
-        drive.intake.openClaw();
-
-        TelemetryPacket packet = new TelemetryPacket();
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-
-        packet.put("external heading velo", this.drive.getExternalHeadingVelocity());
-
-        dashboard.sendTelemetryPacket(packet);
 
 
-        AprilTagDetection detection = drive.detector.detectObjects();
-        int destinationIndex = 0;
-
-        if (detection != null) {
-            if (detection.id == 3) {
-                destinationIndex = 1;
-            } else if (detection.id == 6) {
-                destinationIndex = 2;
-            }
-        }
-
-        drive.followTrajectorySequence(cyclePosition);
+//        drive.intake.rotatedHangingIntake();
+//        drive.intake.openClaw();
+//
+//        TelemetryPacket packet = new TelemetryPacket();
+//        FtcDashboard dashboard = FtcDashboard.getInstance();
+//
+//        packet.put("external heading velo", this.drive.getExternalHeadingVelocity());
+//
+//        dashboard.sendTelemetryPacket(packet);
+//
+//
+//        AprilTagDetection detection = drive.detector.detectObjects();
+//        int destinationIndex = 0;
+//
+//        if (detection != null) {
+//            if (detection.id == 3) {
+//                destinationIndex = 1;
+//            } else if (detection.id == 6) {
+//                destinationIndex = 2;
+//            }
+//        }
+//
+//        drive.followTrajectorySequence(cyclePosition);
 
         drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
         drive.intake.groundIntake(0);
@@ -119,7 +120,7 @@ public class AutonomousOP extends LinearOpMode {
         }
 
         drive.intake.rotatedHangingIntake();
-        drive.followTrajectorySequence(parkingSpots[destinationIndex]);
+//        drive.followTrajectorySequence(parkingSpots[destinationIndex]);
 
         PoseStorage.currentPos = drive.getPoseEstimate();
     }

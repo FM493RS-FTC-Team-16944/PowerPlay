@@ -85,7 +85,7 @@ public class NewScoreMacro implements Runnable {
         }
         this.robot.intake.openClaw();
         try {
-            Thread.sleep(200);
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -108,8 +108,8 @@ public class NewScoreMacro implements Runnable {
 
 
         while (true) {
-            if (robot.lift.getVerticalLiftPosition() <= state.verticalPos + 10 &&
-                    robot.lift.getVerticalLiftPosition() >= state.verticalPos - 10)
+            if (robot.lift.getVerticalLiftPosition() <= state.verticalPos + 6 &&
+                    robot.lift.getVerticalLiftPosition() >= state.verticalPos - 6)
                 break;
         }
 

@@ -46,8 +46,8 @@ public class LiftSubsystem implements Subsystem {
 
         slideSupport = hardwareMap.get(Servo.class, "slideSupport");
 
-        horizontalLimitSwitch = hardwareMap.get(TouchSensor.class, "Limit");
-        verticalLimitSwitch = hardwareMap.get(TouchSensor.class, "Limit");
+        horizontalLimitSwitch = hardwareMap.get(TouchSensor.class, "verticalLimit");
+        verticalLimitSwitch = hardwareMap.get(TouchSensor.class, "horizontalLimit");
 
         horizontalPID = new LiftPIDController(
                 hardwareMap,
