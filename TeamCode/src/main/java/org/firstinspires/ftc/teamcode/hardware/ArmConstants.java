@@ -42,18 +42,18 @@ public class ArmConstants {
 
 
     public static double NORMAL_ROTATOR_POSITION = 0.25;
-    public static double ONE_EIGHTY_ROTATOR_POSITION = 0.95;
+    public static double ONE_EIGHTY_ROTATOR_POSITION = 0.365; //changed to 0.39 for a 5 turn servo (old rev one was 0.95)
 
     public static int NEUTRAL_VERTICAL_LIFT_POSITION = 0;
     public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2220;
     public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1340;
     public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 520;
 
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 2394;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE = 2186;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE = 2107;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE = 2059;
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE = 1963;
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 2075; //2394
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE = 1884; //2186
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE = 1810; //2107
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE = 1785; //2059
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE = 1721; //1963
     public static int HORIZONTAL_SLIDE_NEUTRAL_POSITION = 0;
 
     public static double LEFT_ODOM_RETRACTED = 1;

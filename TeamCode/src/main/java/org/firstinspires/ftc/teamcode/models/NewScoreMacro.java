@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.models;
 
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION_B;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ONE_EIGHTY_ROTATOR_POSITION;
 
 import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
@@ -38,7 +40,7 @@ public class NewScoreMacro implements Runnable {
         this.robot.intake.closeClaw();
 
         try {
-            Thread.sleep(200);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -64,29 +66,48 @@ public class NewScoreMacro implements Runnable {
                 break;
         }
 
+//        try {
+//            Thread.sleep(200);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        while (true) {
+//            if (this.robot.intake.rotatorClaw.getPosition() == ONE_EIGHTY_ROTATOR_POSITION &&
+//                    this.robot.intake.armClaw.getPosition() == DROP_ARM_CLAW_POSITION_B) {
+//                break;
+//            }
+//        }
+
         this.robot.intake.transferIntake();
         try {
-            Thread.sleep(250);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         this.robot.intake.openClaw();
-
         try {
-            Thread.sleep(250);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        this.robot.intake.groundIntake(0);
+        this.robot.intake.groundIntake(state.armPos);
+
+
+//        try {
+//            Thread.sleep(250);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
 //        this.robot.lift.setHorizontalSlide(
 //                robot.macroManager.macroList[robot.macroManager.index].state.horizontalPos
 //        );
-        this.robot.lift.setHorizontalSlide(400);
-
-        this.finished = true;
-
         this.robot.lift.setVerticalLift(state.verticalPos);
+
+        if (state.horizontalPos>700)
+            this.robot.lift.setHorizontalSlide(state.horizontalPos-700);
+
 
         while (true) {
             if (robot.lift.getVerticalLiftPosition() <= state.verticalPos + 10 &&
@@ -95,12 +116,14 @@ public class NewScoreMacro implements Runnable {
         }
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         this.robot.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
+
+        this.finished = true;
 
 
 

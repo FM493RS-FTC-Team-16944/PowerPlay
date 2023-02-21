@@ -13,17 +13,17 @@ public class MacroManager {
         macroList = new NewScoreMacro[]{
                 new NewScoreMacro(drive, CYCLE_GRAB_POSITIONS[0]),
                 new NewScoreMacro(drive, CYCLE_GRAB_POSITIONS[1]),
-//                new NewScoreMacro(drive, CYCLE_GRAB_POSITIONS[2]),
-//                new NewScoreMacro(drive, CYCLE_GRAB_POSITIONS[3]),
-//                new NewScoreMacro(drive, CYCLE_GRAB_POSITIONS[4])
+                new NewScoreMacro(drive, CYCLE_GRAB_POSITIONS[2]),
+                new NewScoreMacro(drive, CYCLE_GRAB_POSITIONS[3]),
+                new NewScoreMacro(drive, CYCLE_GRAB_POSITIONS[4])
         };
 
         threadList = new Thread[]{
                 new Thread(macroList[0]),
                 new Thread(macroList[1]),
-//                new Thread(macroList[2]),
-//                new Thread(macroList[3]),
-//                new Thread(macroList[4])
+                new Thread(macroList[2]),
+                new Thread(macroList[3]),
+                new Thread(macroList[4])
         };
     }
 
