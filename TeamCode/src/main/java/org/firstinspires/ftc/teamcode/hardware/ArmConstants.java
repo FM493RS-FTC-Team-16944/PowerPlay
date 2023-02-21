@@ -35,7 +35,6 @@ public class ArmConstants {
     public static double TILT_CLAW_CONE_RETRIEVAL_UP = 0.8;             //TODO: TUNE AF
 
 
-
     public static double NEUTRAL_CLAW_TILT_POSITION = 0.61;       //former 0.095
     public static double UP_CLAW_TILT_POSITION = 0.40;            // former: 0.70
     public static double DROP_CLAW_TILT_POSITION = 0.00;          // former: 0.34

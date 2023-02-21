@@ -45,7 +45,7 @@ public class AprilTagDetector {
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                webcam.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -58,14 +58,14 @@ public class AprilTagDetector {
         int failed = 0;
         int numFramesWithoutDetection = 0;
 
-        while(true) {
+        while (true) {
             ArrayList<AprilTagDetection> detections = this.pipeline.getDetectionsUpdate();
 
             if (detections != null) {
                 if (detections.size() == 0) {
                     numFramesWithoutDetection++;
 
-                    if(failed > 40) {
+                    if (failed > 40) {
                         break;
                     }
 

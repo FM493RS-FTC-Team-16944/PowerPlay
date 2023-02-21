@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 class AprilTagPipeline extends OpenCvPipeline {
     private long nativeApriltagPtr;
-    private Mat grey = new Mat();
+    private final Mat grey = new Mat();
     private ArrayList<AprilTagDetection> detections = new ArrayList<>();
 
     private ArrayList<AprilTagDetection> detectionsUpdate = new ArrayList<>();

@@ -1,25 +1,19 @@
 package org.firstinspires.ftc.teamcode.gamepad;
 
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FIFTH_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.MEDIUM_SCORE_VERTICAL_LIFT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.OPEN_CLAW_POSITION;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.models.GrabPosition;
-import org.firstinspires.ftc.teamcode.models.NewScoreMacro;
 
-public class driverGamePad {
+public class DriveGamePad {
     private final MecanumDrive robot;
     private final Gamepad gamepad;
 
-    private boolean macroMode = false;
+    private final boolean macroMode = false;
 
 
     private boolean previousA = false;
@@ -41,7 +35,7 @@ public class driverGamePad {
     private DcMotorEx selectedLift;
 
 
-    public driverGamePad(MecanumDrive robot, Gamepad gamepad) {
+    public DriveGamePad(MecanumDrive robot, Gamepad gamepad) {
         this.robot = robot;
         this.gamepad = gamepad;
     }

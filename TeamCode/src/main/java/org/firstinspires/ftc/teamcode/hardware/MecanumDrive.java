@@ -19,8 +19,6 @@ import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.RUN_USING_E
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.TRACK_WIDTH;
 import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.encoderTicksToInches;
 
-import android.os.DropBoxManager;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -55,8 +53,6 @@ import org.firstinspires.ftc.teamcode.subsystem.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectory.TrajectorySequenceRunner;
-import org.firstinspires.ftc.teamcode.util.AxisDirection;
-import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 import org.firstinspires.ftc.teamcode.vision.AprilTagDetector;
 
@@ -73,7 +69,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public final LiftSubsystem lift;
     public final MacroManager macroManager;
 
-    private HardwareMap hardwareMap;
+    private final HardwareMap hardwareMap;
 
     // TODO: might need to change kd back to 0 check roadrunner thing
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7, 0, 0.01);
@@ -88,18 +84,18 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public static double VY_WEIGHT = 1;
     public static double SPEED_CAP_TELEOP = 0.55;
     public static double OMEGA_WEIGHT = 1;
-    private TrajectorySequenceRunner trajectorySequenceRunner;
+    private final TrajectorySequenceRunner trajectorySequenceRunner;
 
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
-    private TrajectoryFollower follower;
+    private final TrajectoryFollower follower;
 
     public DcMotorEx leftFront, leftRear, rightRear, rightFront;
-    private List<DcMotorEx> motors;
+    private final List<DcMotorEx> motors;
 
     public BNO055IMU imu;
-    private VoltageSensor batteryVoltageSensor;
+    private final VoltageSensor batteryVoltageSensor;
 
     public static final GrabPosition[] CYCLE_GRAB_POSITIONS = {
             new GrabPosition(ARM_CLAW_POSITION_FIRST_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE),
@@ -108,7 +104,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
             new GrabPosition(ARM_CLAW_POSITION_FOURTH_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE),
             new GrabPosition(ARM_CLAW_POSITION_FIFTH_CONE, HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE),
     };
-    private Telemetry telemetry;
+    private final Telemetry telemetry;
 
     public MecanumDrive(HardwareMap hardwareMap, Telemetry telemetry) {
         super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);

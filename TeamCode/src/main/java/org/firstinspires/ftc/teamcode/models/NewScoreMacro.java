@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.models;
 
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION_B;
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ONE_EIGHTY_ROTATOR_POSITION;
 
 import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
@@ -105,8 +103,8 @@ public class NewScoreMacro implements Runnable {
 //        );
         this.robot.lift.setVerticalLift(state.verticalPos);
 
-        if (state.horizontalPos>700)
-            this.robot.lift.setHorizontalSlide(state.horizontalPos-700);
+        if (state.horizontalPos > 700)
+            this.robot.lift.setHorizontalSlide(state.horizontalPos - 700);
 
 
         while (true) {
@@ -124,7 +122,6 @@ public class NewScoreMacro implements Runnable {
         this.robot.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
         this.finished = true;
-
 
 
     }

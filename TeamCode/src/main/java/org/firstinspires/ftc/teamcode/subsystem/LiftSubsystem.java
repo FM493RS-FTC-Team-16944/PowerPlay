@@ -1,13 +1,16 @@
 package org.firstinspires.ftc.teamcode.subsystem;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ACTIVE_SLIDE_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DEACTIVE_SLIDE_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_POWER;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.VERTICAL_LIFT_POWER;
 
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -15,6 +18,9 @@ public class LiftSubsystem implements Subsystem {
     public final Telemetry telemetry;
     private final LiftPIDController verticalPID;
     private final LiftPIDController horizontalPID;
+    private final Servo slideSupport;
+    private final TouchSensor horizontalLimitSwitch;
+    private final TouchSensor verticalLimitSwitch;
     public DcMotorEx verticalLiftEncoder;
     public DcMotorEx horizontalSlide;
     boolean verticalLiftZero = true;
@@ -38,6 +44,11 @@ public class LiftSubsystem implements Subsystem {
 
         //horizontalSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        slideSupport = hardwareMap.get(Servo.class, "slideSupport");
+
+        horizontalLimitSwitch = hardwareMap.get(TouchSensor.class, "Limit");
+        verticalLimitSwitch = hardwareMap.get(TouchSensor.class, "Limit");
+
         horizontalPID = new LiftPIDController(
                 hardwareMap,
                 horizontalSlide,
@@ -58,6 +69,30 @@ public class LiftSubsystem implements Subsystem {
     public void loop() {
         verticalPID.loop();
         horizontalPID.loop();
+    }
+
+    public void activateSlideSupport() {
+        this.slideSupport.setPosition(ACTIVE_SLIDE_POSITION);
+    }
+
+    public void deactivateSlideSupport() {
+        this.slideSupport.setPosition(DEACTIVE_SLIDE_POSITION);
+    }
+
+    public void resetHorizontalSlide() {
+        while (!this.horizontalLimitSwitch.isPressed()) {
+            this.horizontalSlide.setPower(-0.3);
+        }
+
+        this.resetHorizontalSlidePosition();
+    }
+
+    public void resetVerticalLift() {
+        while (!this.verticalLimitSwitch.isPressed()) {
+            this.verticalLiftEncoder.setPower(-0.3);
+        }
+
+        this.resetVerticalSlidePosition();
     }
 
     public void resetHorizontalSlidePosition() {
@@ -95,19 +130,8 @@ public class LiftSubsystem implements Subsystem {
         return this.verticalLiftEncoder.getCurrentPosition();
     }
 
-    public void resetLifts(){
-        while (true) {
-            verticalLiftEncoder.setPower(0.5);
-            if (verticalLiftZero)
-                break;
-        }
-        while (true) {
-            horizontalSlide.setPower(0.5);
-            if (horizontalLiftZero)
-                break;
-        }
-        this.resetVerticalSlidePosition();
-        this.resetHorizontalSlidePosition();
+    public void resetLifts() {
+        this.resetHorizontalSlide();
+        this.resetVerticalLift();
     }
-
 }

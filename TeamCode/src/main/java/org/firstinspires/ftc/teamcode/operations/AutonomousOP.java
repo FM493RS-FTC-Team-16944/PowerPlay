@@ -1,12 +1,5 @@
 package org.firstinspires.ftc.teamcode.operations;
 
-import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.DROP_ARM_CLAW_POSITION;
-import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.hardware.DriveConstants.TRACK_WIDTH;
-
-import com.acmerobotics.dashboard.DashboardCore;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -52,24 +45,29 @@ public class AutonomousOP extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(31.46, -4.54), Math.toRadians(100))
                 .build();
 
-        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
-                .turn(Math.toRadians(14))
-                .strafeRight(10)
+        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end())
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(11, -10, Math.toRadians(90)), Math.toRadians(90))
                 .build();
 
-        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(parkingSpot2.end())
-                .forward(23)
+        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(33, -10, Math.toRadians(90)), Math.toRadians(90))
                 .build();
 
         TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(parkingSpot2.end())
-                .back(24)
+                .setReversed(true)
+                .lineToSplineHeading(new Pose2d(33, -10, Math.toRadians(90)))
+                .splineToConstantHeading(new Vector2d(57, -11.5), Math.toRadians(0))
                 .build();
 
         TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
 
-        drive.intake.activateSlideSupport();
+        drive.lift.activateSlideSupport();
 
         waitForStart();
+
+        drive.odometry.lowerOdometry();
 
         drive.intake.rotatedHangingIntake();
         drive.intake.openClaw();
@@ -95,7 +93,6 @@ public class AutonomousOP extends LinearOpMode {
 
         drive.followTrajectorySequence(cyclePosition);
 
-
         drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
         drive.intake.groundIntake(0);
 
@@ -107,11 +104,11 @@ public class AutonomousOP extends LinearOpMode {
 
         drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
-
         while (opModeIsActive()) {
-            if(drive.macroManager.isFinished()) {
+            if (drive.macroManager.isFinished()) {
                 break;
             }
+
             Pose2d poseEstimate = drive.getPoseEstimate();
             telemetry.addData("finalX", poseEstimate.getX());
             telemetry.addData("finalY", poseEstimate.getY());
@@ -121,12 +118,8 @@ public class AutonomousOP extends LinearOpMode {
             drive.macroManager.startScoring();
         }
 
-//        drive.intake.rotatedHangingIntake();
-//        drive.followTrajectorySequence(parkingSpot2);
-//
-//        if (destinationIndex != 1) {
-//            drive.followTrajectorySequence(parkingSpots[destinationIndex]);
-//        }
+        drive.intake.rotatedHangingIntake();
+        drive.followTrajectorySequence(parkingSpots[destinationIndex]);
 
         PoseStorage.currentPos = drive.getPoseEstimate();
     }

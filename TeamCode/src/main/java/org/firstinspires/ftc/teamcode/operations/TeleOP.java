@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode.operations;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.gamepad.NewGamePad;
-import org.firstinspires.ftc.teamcode.gamepad.driverGamePad;
+import org.firstinspires.ftc.teamcode.gamepad.DriveGamePad;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.util.PoseStorage;
 
@@ -15,9 +14,11 @@ public class TeleOP extends LinearOpMode {
         waitForStart();
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, this.telemetry);
-        driverGamePad gamePad = new driverGamePad(drive, this.gamepad1);
+        DriveGamePad gamePad = new DriveGamePad(drive, this.gamepad1);
 
         drive.setPoseEstimate(PoseStorage.currentPos);
+
+        drive.odometry.liftOdometry();
 
         while (opModeIsActive() && !isStopRequested()) {
             gamePad.updateRobot();

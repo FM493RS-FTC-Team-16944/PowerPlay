@@ -89,13 +89,13 @@ public class NewGamePad {
                 int horizontalTarget = 1000;
                 int verticalTarget = ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION;
 
-                if(robot.lift.getHorizontalSlidePosition() > 0) {
+                if (robot.lift.getHorizontalSlidePosition() > 0) {
                     horizontalTarget = robot.lift.getHorizontalSlidePosition();
 
                     robot.lift.setHorizontalSlide(0);
                 }
 
-                if(robot.lift.getVerticalLiftPosition() > 0) {
+                if (robot.lift.getVerticalLiftPosition() > 0) {
                     verticalTarget = robot.lift.getVerticalLiftPosition();
 
                     robot.lift.setVerticalLift(0);

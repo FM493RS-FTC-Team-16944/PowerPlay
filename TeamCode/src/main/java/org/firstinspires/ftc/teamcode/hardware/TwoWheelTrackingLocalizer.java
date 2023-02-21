@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.AUX_ODOM_LOWERED;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.AUX_ODOM_RETRACTED;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.LEFT_ODOM_LOWERED;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.LEFT_ODOM_RETRACTED;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -7,6 +12,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
@@ -28,13 +34,15 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
     public static double PERPENDICULAR_X = -9.7 / 2.54;
     public static double PERPENDICULAR_Y = 5.6 / 2.54;
+    private final Servo leftRetraction;
+    private final Servo auxRetraction;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
     // Perpendicular is perpendicular to the forward axis
     public Encoder parallelEncoder, perpendicularEncoder;
 
-    private MecanumDrive drive;
+    private final MecanumDrive drive;
 
     public TwoWheelTrackingLocalizer(HardwareMap hardwareMap, MecanumDrive drive) {
         super(Arrays.asList(
@@ -47,9 +55,22 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backRight"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
 
+        leftRetraction = hardwareMap.get(Servo.class, "leftRetraction");
+        auxRetraction = hardwareMap.get(Servo.class, "auxRetraction");
+
         perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
+    }
+
+    public void liftOdometry() {
+        this.auxRetraction.setPosition(AUX_ODOM_RETRACTED);
+        this.leftRetraction.setPosition(LEFT_ODOM_RETRACTED);
+    }
+
+    public void lowerOdometry() {
+        this.auxRetraction.setPosition(AUX_ODOM_LOWERED);
+        this.leftRetraction.setPosition(LEFT_ODOM_LOWERED);
     }
 
     public static double encoderTicksToInches(double ticks) {
