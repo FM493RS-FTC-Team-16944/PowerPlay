@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.models;
 
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION;
 
 import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
@@ -53,8 +54,8 @@ public class NewScoreMacro implements Runnable {
         this.transferRunnable.start();
 
         while (true) {
-            if (robot.lift.horizontalSlide.getCurrentPosition() <= 6 &&
-                    robot.lift.horizontalSlide.getCurrentPosition() >= -6)
+            if (robot.lift.horizontalSlide.getCurrentPosition() <= 10 &&
+                    robot.lift.horizontalSlide.getCurrentPosition() >= -10)
                 break;
         }
 
@@ -79,16 +80,16 @@ public class NewScoreMacro implements Runnable {
 
         this.robot.intake.transferIntake();
         try {
-            Thread.sleep(100);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         this.robot.intake.openClaw();
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(100);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         this.robot.intake.groundIntake(state.armPos);
 
 
@@ -120,6 +121,12 @@ public class NewScoreMacro implements Runnable {
         }
 
         this.robot.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
+
+//        while (true) {
+//            if (robot.lift.getVerticalLiftPosition() <= NEUTRAL_VERTICAL_LIFT_POSITION + 6 &&
+//                    robot.lift.getVerticalLiftPosition() >= NEUTRAL_VERTICAL_LIFT_POSITION - 6)
+//                break;
+//        }
 
         this.finished = true;
 

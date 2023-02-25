@@ -38,12 +38,14 @@ public class DriveGamePad {
     public DriveGamePad(MecanumDrive robot, Gamepad gamepad) {
         this.robot = robot;
         this.gamepad = gamepad;
+        this.robot.lift.verticalLiftEncoder.setTargetPosition(0);
     }
 
     public void updateRobot() {
         this.robot.strafeR(-gamepad.left_stick_x, -gamepad.left_stick_y, gamepad.right_stick_x);
 
         this.robot.odometry.liftOdometry();
+        this.robot.lift.deactivateSlideSupport();
 
 //        if (this.gamepad.right_trigger > 0) {
 //            selectedLift.setPower(this.gamepad.right_trigger);
@@ -113,7 +115,7 @@ public class DriveGamePad {
         } else if (intakePosition % 5 == 3 && !retrievingCone) {
             this.robot.intake.transferIntake();
         } else if (intakePosition % 5 == 4 && !retrievingCone) {
-            this.robot.intake.groundIntake(0.4);
+            this.robot.intake.groundIntake(0.07);          //formerly 0.4
         } else if (retrievalIndex % 2 == 0 && retrievingCone) {
             this.robot.intake.retrievalIntake(invertedRetrieval);
         } else if (retrievalIndex % 2 == 1 && retrievingCone) {

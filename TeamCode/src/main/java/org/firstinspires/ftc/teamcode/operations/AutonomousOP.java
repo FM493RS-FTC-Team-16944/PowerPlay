@@ -42,26 +42,27 @@ public class AutonomousOP extends LinearOpMode {
                 .splineTo(new Vector2d(35, -45), Math.toRadians(90))
                 .lineToSplineHeading(new Pose2d(35, -23, Math.toRadians(164)))
                 // .splineToSplineHeading(new Pose2d(39, -10, Math.toRadians(165.95)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(31.46, -4.54), Math.toRadians(100))
+                .splineToConstantHeading(new Vector2d(31.46, -3.54), Math.toRadians(100))
                 .build();
 
-//        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end())
-//                .setReversed(true)
-//                .splineToLinearHeading(new Pose2d(11, -10, Math.toRadians(90)), Math.toRadians(90))
-//                .build();
-//
-//        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
-//                .setReversed(true)
-//                .splineToLinearHeading(new Pose2d(33, -10, Math.toRadians(90)), Math.toRadians(90))
-//                .build();
-//
-//        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(parkingSpot2.end())
-//                .setReversed(true)
-//                .lineToSplineHeading(new Pose2d(33, -10, Math.toRadians(90)))
-//                .splineToConstantHeading(new Vector2d(57, -11.5), Math.toRadians(0))
-//                .build();
-//
-//        TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
+        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end())
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
+                .forward(22)
+                .build();
+
+        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
+                .build();
+
+        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(cyclePosition.end())
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
+                .forward(-22)
+                .build();
+
+        TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
 
         drive.lift.activateSlideSupport();
         drive.odometry.lowerOdometry();
@@ -70,36 +71,36 @@ public class AutonomousOP extends LinearOpMode {
 
 
 
-//        drive.intake.rotatedHangingIntake();
-//        drive.intake.openClaw();
-//
-//        TelemetryPacket packet = new TelemetryPacket();
-//        FtcDashboard dashboard = FtcDashboard.getInstance();
-//
-//        packet.put("external heading velo", this.drive.getExternalHeadingVelocity());
-//
-//        dashboard.sendTelemetryPacket(packet);
-//
-//
-//        AprilTagDetection detection = drive.detector.detectObjects();
-//        int destinationIndex = 0;
-//
-//        if (detection != null) {
-//            if (detection.id == 3) {
-//                destinationIndex = 1;
-//            } else if (detection.id == 6) {
-//                destinationIndex = 2;
-//            }
-//        }
-//
-//        drive.followTrajectorySequence(cyclePosition);
+        drive.intake.rotatedHangingIntake();
+        drive.intake.openClaw();
+
+        TelemetryPacket packet = new TelemetryPacket();
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+
+        packet.put("external heading velo", this.drive.getExternalHeadingVelocity());
+
+        dashboard.sendTelemetryPacket(packet);
+
+
+        AprilTagDetection detection = drive.detector.detectObjects();
+        int destinationIndex = 0;
+
+        if (detection != null) {
+            if (detection.id == 3) {
+                destinationIndex = 1;
+            } else if (detection.id == 6) {
+                destinationIndex = 2;
+            }
+        }
+
+        drive.followTrajectorySequence(cyclePosition);
 
         drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
         drive.intake.groundIntake(0);
 
         while (true) {
-            if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 10 &&
-                    drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 10)
+            if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 6 &&
+                    drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 6)
                 break;
         }
 
@@ -120,7 +121,9 @@ public class AutonomousOP extends LinearOpMode {
         }
 
         drive.intake.rotatedHangingIntake();
-//        drive.followTrajectorySequence(parkingSpots[destinationIndex]);
+        drive.lift.verticalLiftEncoder.setTargetPosition(0);
+        drive.lift.horizontalSlide.setTargetPosition(0);
+        drive.followTrajectorySequence(parkingSpots[destinationIndex]);
 
         PoseStorage.currentPos = drive.getPoseEstimate();
     }
