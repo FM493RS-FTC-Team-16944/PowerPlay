@@ -50,7 +50,7 @@ public class ArmConstants {
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE = 1880; //2186
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE = 1810; //2107
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE = 1785; //2059
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE = 1736; //1963
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE = 1746; //1963
     public static int HORIZONTAL_SLIDE_NEUTRAL_POSITION = 0;
 
     public static double LEFT_ODOM_RETRACTED = 0;
@@ -58,6 +58,6 @@ public class ArmConstants {
     public static double LEFT_ODOM_LOWERED = 0.4;
     public static double AUX_ODOM_LOWERED = 0.6;
 
-    public static double ACTIVE_SLIDE_POSITION = 0;
-    public static double DEACTIVE_SLIDE_POSITION = 0.4;
+    public static double ACTIVE_SLIDE_POSITION = 0.2;
+    public static double DEACTIVE_SLIDE_POSITION = 0;
 }

@@ -68,7 +68,6 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public final IntakeSubsystem intake;
     public final LiftSubsystem lift;
     public final MacroManager macroManager;
-
     private final HardwareMap hardwareMap;
 
     // TODO: might need to change kd back to 0 check roadrunner thing

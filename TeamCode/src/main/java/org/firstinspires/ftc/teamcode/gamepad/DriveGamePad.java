@@ -67,8 +67,7 @@ public class DriveGamePad {
         //robot.lift.verticalLiftEncoder.setPower(0);
 
         if (gamepad.a && gamepad.a != previousA) {
-            if (this.robot.intake.leftClaw.getPosition() == OPEN_CLAW_POSITION &&
-                    this.robot.intake.rightClaw.getPosition() == OPEN_CLAW_POSITION) {
+            if (this.robot.intake.clawOpen) {
                 this.robot.intake.closeClaw();
             } else {
                 this.robot.intake.openClaw();
@@ -115,7 +114,7 @@ public class DriveGamePad {
         } else if (intakePosition % 5 == 3 && !retrievingCone) {
             this.robot.intake.transferIntake();
         } else if (intakePosition % 5 == 4 && !retrievingCone) {
-            this.robot.intake.groundIntake(0.07);          //formerly 0.4
+            this.robot.intake.groundIntake(0.06);          //formerly 0.4
         } else if (retrievalIndex % 2 == 0 && retrievingCone) {
             this.robot.intake.retrievalIntake(invertedRetrieval);
         } else if (retrievalIndex % 2 == 1 && retrievingCone) {
@@ -128,7 +127,6 @@ public class DriveGamePad {
         }
         previousX = gamepad.x;
 
-        this.robot.lift.verticalLiftEncoder.setPower(1);
 
         if (gamepad.y && gamepad.y != previousY) {
             if (intakePosition % 5 == 2 || intakePosition % 5 == 3) {

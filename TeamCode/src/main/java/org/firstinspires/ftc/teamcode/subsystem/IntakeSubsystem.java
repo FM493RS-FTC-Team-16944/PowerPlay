@@ -26,6 +26,7 @@ public class IntakeSubsystem implements Subsystem {
     public final Servo rightClaw;
     public final Servo tiltClaw;
     public final Servo armClaw;
+    public boolean clawOpen;
 
     public IntakeSubsystem(HardwareMap hardwareMap) {
         rotatorClaw = hardwareMap.get(Servo.class, "rotatorClaw");
@@ -43,12 +44,15 @@ public class IntakeSubsystem implements Subsystem {
     public void openClaw() {//2 //8
         this.leftClaw.setPosition(OPEN_CLAW_POSITION);
         this.rightClaw.setPosition(OPEN_CLAW_POSITION);
+        clawOpen = true;
+
     }
     //3 move horizontal
 
     public void closeClaw() {//4
         this.leftClaw.setPosition(CLOSE_CLAW_POSITION);
         this.rightClaw.setPosition(CLOSE_CLAW_POSITION);
+        clawOpen = false;
     }
 
     public void setArmClawPosition(double position) {

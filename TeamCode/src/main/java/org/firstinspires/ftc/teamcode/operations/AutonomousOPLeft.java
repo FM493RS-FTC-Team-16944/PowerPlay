@@ -17,14 +17,14 @@ import org.openftc.apriltag.AprilTagDetection;
 
 @Autonomous
 @Config
-public class AutonomousOP extends LinearOpMode {
+public class AutonomousOPLeft extends LinearOpMode {
     private MecanumDrive drive;
 
     @Override
     public void runOpMode() {
         drive = new MecanumDrive(hardwareMap, this.telemetry);
 
-        Pose2d startPose = new Pose2d(32.5, -65, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(32.5, 65, Math.toRadians(90));
 
         drive.setPoseEstimate(startPose);
         drive.outputOdomReadings(telemetry);
@@ -39,30 +39,28 @@ public class AutonomousOP extends LinearOpMode {
 
         TrajectorySequence cyclePosition = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
-                .splineTo(new Vector2d(35, -45), Math.toRadians(90))
-                .lineToSplineHeading(new Pose2d(35, -23, Math.toRadians(164)))
-                // .splineToSplineHeading(new Pose2d(39, -10, Math.toRadians(165.95)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(31.46, -3.54), Math.toRadians(100))
+                .splineTo(new Vector2d(35, 45), Math.toRadians(270))
+                .lineToSplineHeading(new Pose2d(35, 23, Math.toRadians(196)))
+                .splineToConstantHeading(new Vector2d(34.5, 3), Math.toRadians(100))
                 .build();
 
-        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end())
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
-                .forward(22)
-                .build();
-
-        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
-                .build();
-
-        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(cyclePosition.end())
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
-                .forward(-22)
-                .build();
-
-        TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
+//        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end(
+//                .setReversed(true)
+//                .splineToLinearHeading(new Pose2d(11, -10, Math.toRadians(90)), Math.toRadians(90))
+//                .build();
+//
+//        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
+//                .setReversed(true)
+//                .splineToLinearHeading(new Pose2d(33, -10, Math.toRadians(90)), Math.toRadians(90))
+//                .build();
+//
+//        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(parkingSpot2.end())
+//                .setReversed(true)
+//                .lineToSplineHeading(new Pose2d(33, -10, Math.toRadians(90)))
+//                .splineToConstantHeading(new Vector2d(57, -11.5), Math.toRadians(0))
+//                .build();
+//
+//        TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
 
         drive.lift.activateSlideSupport();
         drive.odometry.lowerOdometry();
@@ -92,49 +90,37 @@ public class AutonomousOP extends LinearOpMode {
                 destinationIndex = 2;
             }
         }
-
+//
         drive.followTrajectorySequence(cyclePosition);
 
         drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
         drive.intake.groundIntake(0);
 
         while (true) {
-            if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 6 &&
-                    drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 6)
+            if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 10 &&
+                    drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 10)
                 break;
         }
 
         drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
-//        drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
-//        drive.intake.groundIntake(0);
-//
-//        while (true) {
-//            if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 10 &&
-//                    drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 10)
-//                break;
-//        }
-
-//        drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
-//
-//        while (opModeIsActive()) {
+        while (opModeIsActive()) {
 //            if (drive.macroManager.isFinished()) {
 //                break;
 //            }
-//
-//            Pose2d poseEstimate = drive.getPoseEstimate();
-//            telemetry.addData("finalX", poseEstimate.getX());
-//            telemetry.addData("finalY", poseEstimate.getY());
-//            telemetry.addData("finalHeading", poseEstimate.getHeading());
-//            telemetry.update();
-//
+
+
+            Pose2d poseEstimate = drive.getPoseEstimate();
+            telemetry.addData("finalX", poseEstimate.getX());
+            telemetry.addData("finalY", poseEstimate.getY());
+            telemetry.addData("finalHeading", poseEstimate.getHeading());
+            telemetry.update();
+
             drive.macroManager.startScoring();
-//        }
+        }
 
         drive.intake.rotatedHangingIntake();
-        drive.lift.verticalLiftEncoder.setTargetPosition(0);
-        drive.lift.horizontalSlide.setTargetPosition(0);
-        drive.followTrajectorySequence(parkingSpots[destinationIndex]);
+//        drive.followTrajectorySequence(parkingSpots[destinationIndex]);
 
         PoseStorage.currentPos = drive.getPoseEstimate();
     }

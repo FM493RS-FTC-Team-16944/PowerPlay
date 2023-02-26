@@ -80,16 +80,20 @@ public class LiftSubsystem implements Subsystem {
     }
 
     public void resetHorizontalSlide() {
-        while (!this.horizontalLimitSwitch.isPressed()) {
-            this.horizontalSlide.setPower(-HORIZONTAL_SLIDE_POWER);
+        if (!this.horizontalLimitSwitch.isPressed()) {
+            this.setHorizontalSlide(this.horizontalSlide.getTargetPosition() - 100);
+        }else {
+            this.horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.horizontalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-
-        this.resetHorizontalSlidePosition();
     }
 
     public void resetVerticalLift() {
-        while (!this.verticalLimitSwitch.isPressed()) {
-            this.verticalLiftEncoder.setPower(-VERTICAL_LIFT_POWER);
+        if (!this.verticalLimitSwitch.isPressed()) {
+            this.setHorizontalSlide(this.horizontalSlide.getTargetPosition() - 100);
+        }else{
+            this.verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         this.resetVerticalSlidePosition();

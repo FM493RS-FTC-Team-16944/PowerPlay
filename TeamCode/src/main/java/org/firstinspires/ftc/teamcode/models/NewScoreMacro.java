@@ -27,7 +27,17 @@ public class NewScoreMacro implements Runnable {
     }
 
     public void run() {
+        robot.lift.deactivateSlideSupport();
         extendOutRunnable.start();
+
+        if (state.horizontalPos > 1200) {
+            while (true) {
+                if (robot.lift.getHorizontalSlidePosition() > 1000) {
+                    break;
+                }
+            }
+            robot.lift.activateSlideSupport();
+        }
 
         while (true) {
             if (robot.lift.horizontalSlide.getCurrentPosition() <= state.horizontalPos + 10 &&
@@ -52,6 +62,15 @@ public class NewScoreMacro implements Runnable {
         }
 
         this.transferRunnable.start();
+
+        if (state.horizontalPos > 1200) {
+            while (true) {
+                if (robot.lift.getHorizontalSlidePosition() < 1000) {
+                    break;
+                }
+            }
+            robot.lift.deactivateSlideSupport();
+        }
 
         while (true) {
             if (robot.lift.horizontalSlide.getCurrentPosition() <= 10 &&
@@ -106,6 +125,15 @@ public class NewScoreMacro implements Runnable {
 
         if (state.horizontalPos > 700)
             this.robot.lift.setHorizontalSlide(state.horizontalPos - 700);
+
+        if ((state.horizontalPos - 700) > 1200) {
+            while (true) {
+                if (robot.lift.getHorizontalSlidePosition() > 1000) {
+                    break;
+                }
+            }
+            robot.lift.activateSlideSupport();
+        }
 
 
         while (true) {
