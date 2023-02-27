@@ -30,6 +30,9 @@ public class TeleOP extends LinearOpMode {
             
             this.telemetry.addData("angle", drive.odometry.getHeading());
             this.telemetry.addData("vertical lift position", drive.lift.getVerticalLiftPosition());
+            this.telemetry.addData("horizontal slide position", drive.lift.getHorizontalSlidePosition());
+            this.telemetry.addData("Horizontal Limit Switched Pressed: ", drive.lift.horizontalLimitSwitch.isPressed());
+            this.telemetry.addData("Vertical Limit Switched Pressed: ", drive.lift.verticalLimitSwitch.isPressed());
             telemetry.update();
 
 

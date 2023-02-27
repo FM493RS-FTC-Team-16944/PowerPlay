@@ -19,8 +19,8 @@ public class LiftSubsystem implements Subsystem {
     private final LiftPIDController verticalPID;
     private final LiftPIDController horizontalPID;
     private final Servo slideSupport;
-    private final TouchSensor horizontalLimitSwitch;
-    private final TouchSensor verticalLimitSwitch;
+    public final TouchSensor horizontalLimitSwitch;
+    public final TouchSensor verticalLimitSwitch;
     public DcMotorEx verticalLiftEncoder;
     public DcMotorEx horizontalSlide;
     boolean verticalLiftZero = true;
@@ -46,8 +46,8 @@ public class LiftSubsystem implements Subsystem {
 
         slideSupport = hardwareMap.get(Servo.class, "slideSupport");
 
-        horizontalLimitSwitch = hardwareMap.get(TouchSensor.class, "verticalLimit");
-        verticalLimitSwitch = hardwareMap.get(TouchSensor.class, "horizontalLimit");
+        horizontalLimitSwitch = hardwareMap.get(TouchSensor.class, "horizontalLimit");
+        verticalLimitSwitch = hardwareMap.get(TouchSensor.class, "verticalLimit");
 
         horizontalPID = new LiftPIDController(
                 hardwareMap,
@@ -79,25 +79,25 @@ public class LiftSubsystem implements Subsystem {
         this.slideSupport.setPosition(DEACTIVE_SLIDE_POSITION);
     }
 
-    public void resetHorizontalSlide() {
-        if (!this.horizontalLimitSwitch.isPressed()) {
-            this.setHorizontalSlide(this.horizontalSlide.getTargetPosition() - 100);
-        }else {
-            this.horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            this.horizontalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-    }
-
-    public void resetVerticalLift() {
-        if (!this.verticalLimitSwitch.isPressed()) {
-            this.setHorizontalSlide(this.horizontalSlide.getTargetPosition() - 100);
-        }else{
-            this.verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            this.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-
-        this.resetVerticalSlidePosition();
-    }
+//    public void resetHorizontalSlide() {
+//        if (!this.horizontalLimitSwitch.isPressed()) {
+//            this.setHorizontalSlide(this.horizontalSlide.getTargetPosition() - 100);
+//        }else {
+//            this.horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            this.horizontalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
+//    }
+//
+//    public void resetVerticalLift() {
+//        if (!this.verticalLimitSwitch.isPressed()) {
+//            this.setHorizontalSlide(this.horizontalSlide.getTargetPosition() - 100);
+//        }else{
+//            this.verticalLiftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            this.verticalLiftEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
+//
+//        this.resetVerticalSlidePosition();
+//    }
 
     public void resetHorizontalSlidePosition() {
         horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -134,8 +134,8 @@ public class LiftSubsystem implements Subsystem {
         return this.verticalLiftEncoder.getCurrentPosition();
     }
 
-    public void resetLifts() {
-        this.resetHorizontalSlide();
-        this.resetVerticalLift();
-    }
+//    public void resetLifts() {
+//        this.resetHorizontalSlide();
+//        this.resetVerticalLift();
+//    }
 }

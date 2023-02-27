@@ -42,7 +42,7 @@ public class ArmConstants {
 
     public static int NEUTRAL_VERTICAL_LIFT_POSITION = 0;
     public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2220;
-    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1340;
+    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1350;
 
     public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 520;
 

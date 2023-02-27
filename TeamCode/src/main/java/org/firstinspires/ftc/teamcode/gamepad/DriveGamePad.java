@@ -13,7 +13,6 @@ public class DriveGamePad {
     private final MecanumDrive robot;
     private final Gamepad gamepad;
 
-    private final boolean macroMode = false;
 
 
     private boolean previousA = false;
@@ -38,7 +37,6 @@ public class DriveGamePad {
     public DriveGamePad(MecanumDrive robot, Gamepad gamepad) {
         this.robot = robot;
         this.gamepad = gamepad;
-        this.robot.lift.verticalLiftEncoder.setTargetPosition(0);
     }
 
     public void updateRobot() {
@@ -105,21 +103,25 @@ public class DriveGamePad {
         }
         previousPadLeft = gamepad.dpad_left;
 
-        if (intakePosition % 5 == 0 && !retrievingCone) {
-            this.robot.intake.groundIntake(0.00);
-        } else if (intakePosition % 5 == 1 && !retrievingCone) {
-            this.robot.intake.hangingIntake();
-        } else if (intakePosition % 5 == 2 && !retrievingCone) {
-            this.robot.intake.rotatedHangingIntake();
-        } else if (intakePosition % 5 == 3 && !retrievingCone) {
-            this.robot.intake.transferIntake();
-        } else if (intakePosition % 5 == 4 && !retrievingCone) {
-            this.robot.intake.groundIntake(0.06);          //formerly 0.4
-        } else if (retrievalIndex % 2 == 0 && retrievingCone) {
-            this.robot.intake.retrievalIntake(invertedRetrieval);
-        } else if (retrievalIndex % 2 == 1 && retrievingCone) {
-            this.robot.intake.retrievalIntakeUP(invertedRetrieval);
+        if (!this.robot.macroMode) {
+            if (intakePosition % 5 == 0 && !retrievingCone) {
+                this.robot.intake.groundIntake(0.00);
+            } else if (intakePosition % 5 == 1 && !retrievingCone) {
+                this.robot.intake.hangingIntake();
+            } else if (intakePosition % 5 == 2 && !retrievingCone) {
+                this.robot.intake.rotatedHangingIntake();
+            } else if (intakePosition % 5 == 3 && !retrievingCone) {
+                this.robot.intake.transferIntake();
+            } else if (intakePosition % 5 == 4 && !retrievingCone) {
+                this.robot.intake.groundIntake(0.06);          //formerly 0.4
+            } else if (retrievalIndex % 2 == 0 && retrievingCone) {
+                this.robot.intake.retrievalIntake(invertedRetrieval);
+            } else if (retrievalIndex % 2 == 1 && retrievingCone) {
+                this.robot.intake.retrievalIntakeUP(invertedRetrieval);
+            }
         }
+
+
 
         if (gamepad.x && gamepad.x != previousX) {
             robot.resetOdom();
@@ -162,7 +164,7 @@ public class DriveGamePad {
         }
         previousB = gamepad.b;
 
-        this.robot.lift.setHorizontalSlide(0);
+
 
 
     }

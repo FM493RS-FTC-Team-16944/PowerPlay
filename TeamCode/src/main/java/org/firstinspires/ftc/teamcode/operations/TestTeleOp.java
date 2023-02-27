@@ -24,6 +24,8 @@ public class TestTeleOp extends LinearOpMode {
         drive.odometry.liftOdometry();
 
         while (opModeIsActive() && !isStopRequested()) {
+            this.telemetry.addData("Horizontal Limit Switched Pressed: ", drive.lift.horizontalLimitSwitch.isPressed());
+            this.telemetry.addData("Vertical Limit Switched Pressed: ", drive.lift.verticalLimitSwitch.isPressed());
             gamePad.updateRobot();
 
             telemetry.update();

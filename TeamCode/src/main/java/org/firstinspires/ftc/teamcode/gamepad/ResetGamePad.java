@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.models.ResetLiftMacro;
 
 public class ResetGamePad {
     private final MecanumDrive robot;
@@ -40,6 +41,8 @@ public class ResetGamePad {
     private boolean retrievingCone = false;
     private DcMotorEx selectedLift;
     NewScoreMacro scoringMac;
+    ResetLiftMacro vertMac;
+    ResetLiftMacro horizMac;
 
 
 
@@ -50,6 +53,10 @@ public class ResetGamePad {
         this.scoringMac = new NewScoreMacro(
                 robot, new GrabPosition(ARM_CLAW_POSITION_FIFTH_CONE, 1500)
         );
+        this.vertMac = new ResetLiftMacro(
+                robot,this.robot.lift.verticalLiftEncoder, this.robot.lift.verticalLimitSwitch
+        );
+        this.horizMac = new ResetLiftMacro(robot,this.robot.lift.horizontalSlide, this.robot.lift.horizontalLimitSwitch);
     }
 
     public void updateRobot() {
@@ -63,14 +70,17 @@ public class ResetGamePad {
 
 
 
-        if(gamepad.y && gamepad.y != previousY){
+        if(gamepad.y && !previousY){
             Thread thread = new Thread(scoringMac);
             thread.start();
         }
         previousY = gamepad.y;
 
         if(gamepad.a && !previousA){
-            robot.lift.resetLifts();
+            Thread vertThread = new Thread(vertMac);
+            vertThread.start();
+            Thread horizThread = new Thread(horizMac);
+            horizThread.start();
         }
         previousA = gamepad.a;
 

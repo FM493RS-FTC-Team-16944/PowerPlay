@@ -27,6 +27,7 @@ public class NewScoreMacro implements Runnable {
     }
 
     public void run() {
+        this.robot.macroMode = true;
         robot.lift.deactivateSlideSupport();
         extendOutRunnable.start();
 
@@ -157,7 +158,7 @@ public class NewScoreMacro implements Runnable {
 //        }
 
         this.finished = true;
-
+        this.robot.macroMode = false;
 
     }
 }

@@ -69,6 +69,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public final LiftSubsystem lift;
     public final MacroManager macroManager;
     private final HardwareMap hardwareMap;
+    public boolean macroMode = false;
 
     // TODO: might need to change kd back to 0 check roadrunner thing
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7, 0, 0.01);
