@@ -42,7 +42,7 @@ public class AutonomousOP extends LinearOpMode {
                 .splineTo(new Vector2d(35, -45), Math.toRadians(90))
                 .lineToSplineHeading(new Pose2d(35, -23, Math.toRadians(164)))
                 // .splineToSplineHeading(new Pose2d(39, -10, Math.toRadians(165.95)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(31.46, -5.04), Math.toRadians(100))
+                .splineToConstantHeading(new Vector2d(33.46, -5.04), Math.toRadians(100))
                 .build();
 
         TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end())
@@ -59,7 +59,7 @@ public class AutonomousOP extends LinearOpMode {
         TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(cyclePosition.end())
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
-                .forward(-22)
+                .forward(-23)
                 .build();
 
         TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
@@ -105,17 +105,6 @@ public class AutonomousOP extends LinearOpMode {
         }
 
         drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
-
-//        drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
-//        drive.intake.groundIntake(0);
-//
-//        while (true) {
-//            if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 10 &&
-//                    drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 10)
-//                break;
-//        }
-
-//        drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
         while (opModeIsActive()) {
             if (drive.macroManager.isFinished()) {

@@ -47,7 +47,7 @@ public class OneConeAutonomousOP extends LinearOpMode {
 
         TrajectorySequence polePosition = drive.trajectorySequenceBuilder(loadFromStartPosition.end())
                 .setReversed(true)
-                .lineToSplineHeading(new Pose2d(0, -23, Math.toRadians(224)))
+                .lineToSplineHeading(new Pose2d(5.65, -22, Math.toRadians(224)))
                 .build();
 
         TrajectorySequence loadPosition = drive.trajectorySequenceBuilder(polePosition.end())
@@ -55,21 +55,21 @@ public class OneConeAutonomousOP extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(31, -14.25, Math.toRadians(180)))
                 .build();
 
-        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(polePosition.end())
+        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(loadPosition.end())
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
-                .forward(22)
+                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(90)), Math.toRadians(90))
+                .strafeLeft(22)
                 .build();
 
-        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(polePosition.end())
+        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(loadPosition.end())
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(90)), Math.toRadians(90))
                 .build();
 
-        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(polePosition.end())
+        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(loadPosition.end())
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
-                .forward(-22)
+                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(90)), Math.toRadians(90))
+                .strafeLeft(-23)
                 .build();
 
         TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
@@ -78,8 +78,6 @@ public class OneConeAutonomousOP extends LinearOpMode {
         drive.odometry.lowerOdometry();
 
         waitForStart();
-
-
 
         drive.intake.rotatedHangingIntake();
         drive.intake.openClaw();

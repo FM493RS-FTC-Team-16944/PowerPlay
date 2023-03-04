@@ -12,9 +12,9 @@ public class ArmConstants {
 
     //TODO: NOTE: Arm claw positions changed as a result of switching to a 5 turn servo. As such, each of the current values are 5 turn values. Conversion Rate is (5turn value) = OG value * 0.175
 
-    public static double ARM_CLAW_POSITION_FIRST_CONE = 0.0472;           // For regular torque: 0.27
-    public static double ARM_CLAW_POSITION_SECOND_CONE = 0.0355;         // For regular torque: 0.203
-    public static double ARM_CLAW_POSITION_THIRD_CONE = 0.0175;           // For regular torque: 0.15
+    public static double ARM_CLAW_POSITION_FIRST_CONE = 0.0355; // 0.0452;           // For regular torque: 0.27
+    public static double ARM_CLAW_POSITION_SECOND_CONE = 0.0255;         // For regular torque: 0.203
+    public static double ARM_CLAW_POSITION_THIRD_CONE = 0.0205;           // For regular torque: 0.15
     public static double ARM_CLAW_POSITION_FOURTH_CONE = 0.01;          // For regular torque: 0.10
     public static double ARM_CLAW_POSITION_FIFTH_CONE = 0.00;           // For regular torque: 0.00
     public static double ARM_CLAW_POSITION_NEUTRAL = 0.20;              // For regular torque: 0.20
@@ -41,16 +41,16 @@ public class ArmConstants {
     public static double ONE_EIGHTY_ROTATOR_POSITION = 0.915; //changed to 0.39 for a 5 turn servo (old rev one was 0.95)
 
     public static int NEUTRAL_VERTICAL_LIFT_POSITION = 0;
-    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2380;
+    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2230;
     public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1400;
 
     public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 570;
 
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 2020; //2394
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE = 1880; //2186
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE = 1810; //2107
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE = 1785; //2059
-    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE = 1746; //1963
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 1750; //2394
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE = 1650; //2186
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_THIRD_CONE = 1650; //2107
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FOURTH_CONE = 1600; //2059
+    public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIFTH_CONE = 1600; //1963
     public static int HORIZONTAL_SLIDE_NEUTRAL_POSITION = 0;
 
     public static double LEFT_ODOM_RETRACTED = 0;

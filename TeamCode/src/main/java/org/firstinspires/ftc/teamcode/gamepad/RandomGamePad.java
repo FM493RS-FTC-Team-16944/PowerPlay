@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSI
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_SECOND_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_THIRD_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.MEDIUM_SCORE_VERTICAL_LIFT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.OPEN_CLAW_POSITION;
 
@@ -27,6 +28,7 @@ public class RandomGamePad {
     private boolean previousY = false;
     private boolean previousRight = false;
     private boolean previousLeft = false;
+    private boolean previousDpadUp = false;
 
 
     public RandomGamePad(MecanumDrive robot, Gamepad gamepad) {
@@ -61,10 +63,17 @@ public class RandomGamePad {
         }
         previousRight = gamepad.right_bumper;
 
+        if(gamepad.left_bumper && gamepad.left_bumper != previousLeft) {
+            robot.lift.setHorizontalSlide(HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE);
+        }
 
+        previousLeft = gamepad.left_bumper;
 
+        if(gamepad.dpad_up && gamepad.dpad_up != previousDpadUp) {
+            robot.lift.setVerticalLift(HIGH_SCORE_VERTICAL_LIFT_POSITION);
+        }
 
-
+        previousDpadUp = gamepad.dpad_up;
     }
 
 

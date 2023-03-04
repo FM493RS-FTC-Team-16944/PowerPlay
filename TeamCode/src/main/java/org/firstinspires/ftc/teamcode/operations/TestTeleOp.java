@@ -29,7 +29,6 @@ public class TestTeleOp extends LinearOpMode {
             gamePad.updateRobot();
 
             telemetry.update();
-
         }
     }
 }

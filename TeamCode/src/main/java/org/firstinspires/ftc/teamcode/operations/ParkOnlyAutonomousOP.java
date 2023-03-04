@@ -37,29 +37,21 @@ public class ParkOnlyAutonomousOP extends LinearOpMode {
 //                .splineToConstantHeading(new Vector2d(31.96, -5.29), Math.toRadians(90))
 //                .build();
 
-        TrajectorySequence cyclePosition = drive.trajectorySequenceBuilder(startPose)
+        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
-                .splineTo(new Vector2d(35, -45), Math.toRadians(90))
-                .lineToSplineHeading(new Pose2d(35, -23, Math.toRadians(164)))
-                // .splineToSplineHeading(new Pose2d(39, -10, Math.toRadians(165.95)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(31.46, -3.54), Math.toRadians(100))
+                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(90)), Math.toRadians(90))
+                .strafeLeft(22)
                 .build();
 
-        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end())
+        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
-                .forward(22)
+                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(90)), Math.toRadians(90))
                 .build();
 
-        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
+        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
-                .build();
-
-        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(cyclePosition.end())
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
-                .forward(-22)
+                .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(90)), Math.toRadians(90))
+                .strafeLeft(-23)
                 .build();
 
         TrajectorySequence[] parkingSpots = {parkingSpot1, parkingSpot2, parkingSpot3};
