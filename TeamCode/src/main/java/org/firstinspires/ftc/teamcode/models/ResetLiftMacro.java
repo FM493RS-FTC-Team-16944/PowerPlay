@@ -30,6 +30,7 @@ public class ResetLiftMacro implements Runnable {
 
         while (true) {
             if(this.sensor.isPressed()){
+                this.lift.setPower(0);
                 this.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 this.robot.macroMode = false;

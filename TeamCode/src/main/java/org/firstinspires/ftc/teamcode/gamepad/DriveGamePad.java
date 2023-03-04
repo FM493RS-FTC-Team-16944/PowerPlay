@@ -23,6 +23,8 @@ public class DriveGamePad {
     private boolean previousBumpLeft = false;
     private boolean previousPadRight = false;
     private boolean previousPadLeft = false;
+    private boolean previousRightTrigger = false;
+    private boolean previousLeftTrigger = false;
     private boolean highPole = false;
     private boolean mediumPole = false;
 
@@ -61,8 +63,14 @@ public class DriveGamePad {
 //            selectedLift = robot.lift.verticalLiftEncoder;
 //        }
 
-        //robot.lift.horizontalSlide.setPower(0);
+        if (!robot.macroMode) {
+            robot.lift.setHorizontalSlide(0);
+        }
+
+
         //robot.lift.verticalLiftEncoder.setPower(0);
+
+
 
         if (gamepad.a && gamepad.a != previousA) {
             if (this.robot.intake.clawOpen) {
@@ -128,6 +136,55 @@ public class DriveGamePad {
             //robot.lift.resetLifts();
         }
         previousX = gamepad.x;
+
+
+        if (gamepad.right_trigger > 0.25) {
+            this.robot.intake.openClaw();
+        }
+        if (gamepad.right_trigger > 0.70 & !previousRightTrigger) {
+            previousRightTrigger = true;
+            if (intakePosition % 5 == 2 || intakePosition % 5 == 3) {
+                intakePosition = 21;
+                this.robot.intake.openClaw();
+            }
+            if (!highPole) {
+                this.robot.lift.setVerticalLift(HIGH_SCORE_VERTICAL_LIFT_POSITION);
+                highPole = true;
+                mediumPole = false;
+            } else {
+                this.robot.lift.setVerticalLift(0);
+                highPole = false;
+                mediumPole = false;
+            }
+        }
+        if (gamepad.right_trigger < 0.70) {
+            previousRightTrigger = false;
+        }
+
+        if (gamepad.left_trigger > 0.25) {
+            this.robot.intake.openClaw();
+        }
+        if (gamepad.left_trigger > 0.70 & !previousLeftTrigger) {
+            previousLeftTrigger = true;
+            if (intakePosition % 5 == 2 || intakePosition % 5 == 3) {
+                intakePosition = 21;
+                this.robot.intake.openClaw();
+            }
+            if (!mediumPole) {
+                this.robot.lift.setVerticalLift(MEDIUM_SCORE_VERTICAL_LIFT_POSITION);
+                mediumPole = true;
+                highPole = false;
+            } else {
+                this.robot.lift.setVerticalLift(0);
+                highPole = false;
+                mediumPole = false;
+            }
+
+        }
+        if (gamepad.left_trigger < 0.70) {
+            previousLeftTrigger = false;
+        }
+
 
 
         if (gamepad.y && gamepad.y != previousY) {

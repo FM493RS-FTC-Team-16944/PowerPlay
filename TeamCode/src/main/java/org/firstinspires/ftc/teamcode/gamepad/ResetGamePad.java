@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.gamepad;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FIFTH_CONE;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.ARM_CLAW_POSITION_FOURTH_CONE;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.MEDIUM_SCORE_VERTICAL_LIFT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.OPEN_CLAW_POSITION;
@@ -51,7 +52,7 @@ public class ResetGamePad {
         this.gamepad = gamepad;
         this.robot.lift.verticalLiftEncoder.setTargetPosition(0);
         this.scoringMac = new NewScoreMacro(
-                robot, new GrabPosition(ARM_CLAW_POSITION_FIFTH_CONE, 1500)
+                robot, new GrabPosition(0.005 , 1500)
         );
         this.vertMac = new ResetLiftMacro(
                 robot,this.robot.lift.verticalLiftEncoder, this.robot.lift.verticalLimitSwitch
