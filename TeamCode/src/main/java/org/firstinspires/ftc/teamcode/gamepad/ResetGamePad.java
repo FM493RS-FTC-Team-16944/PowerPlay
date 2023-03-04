@@ -75,6 +75,7 @@ public class ResetGamePad {
             Thread thread = new Thread(scoringMac);
             thread.start();
         }
+
         previousY = gamepad.y;
 
         if(gamepad.a && !previousA){
@@ -84,6 +85,11 @@ public class ResetGamePad {
             horizThread.start();
         }
         previousA = gamepad.a;
+
+        if(gamepad.left_bumper && !previousBumpLeft){
+            robot.lift.resetVerticalSlidePosition();
+        }
+        previousBumpLeft = gamepad.left_bumper;
 
     }
 

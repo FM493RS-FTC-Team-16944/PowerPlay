@@ -17,7 +17,7 @@ import org.openftc.apriltag.AprilTagDetection;
 
 @Autonomous
 @Config
-public class AutonomousOP extends LinearOpMode {
+public class OneConeAutonomousOP extends LinearOpMode {
     private MecanumDrive drive;
 
     @Override
@@ -37,26 +37,36 @@ public class AutonomousOP extends LinearOpMode {
 //                .splineToConstantHeading(new Vector2d(31.96, -5.29), Math.toRadians(90))
 //                .build();
 
-        TrajectorySequence cyclePosition = drive.trajectorySequenceBuilder(startPose)
+        TrajectorySequence loadFromStartPosition = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
                 .splineTo(new Vector2d(35, -45), Math.toRadians(90))
-                .lineToSplineHeading(new Pose2d(35, -23, Math.toRadians(164)))
+                .lineToSplineHeading(new Pose2d(35, -23, Math.toRadians(180)))
                 // .splineToSplineHeading(new Pose2d(39, -10, Math.toRadians(165.95)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(31.46, -5.04), Math.toRadians(100))
+                .splineToConstantHeading(new Vector2d(31, -14.25), Math.toRadians(100))
                 .build();
 
-        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end())
+        TrajectorySequence polePosition = drive.trajectorySequenceBuilder(loadFromStartPosition.end())
+                .setReversed(true)
+                .lineToSplineHeading(new Pose2d(0, -23, Math.toRadians(224)))
+                .build();
+
+        TrajectorySequence loadPosition = drive.trajectorySequenceBuilder(polePosition.end())
+                .setReversed(true)
+                .lineToSplineHeading(new Pose2d(31, -14.25, Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(polePosition.end())
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
                 .forward(22)
                 .build();
 
-        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(cyclePosition.end())
+        TrajectorySequence parkingSpot2 = drive.trajectorySequenceBuilder(polePosition.end())
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
                 .build();
 
-        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(cyclePosition.end())
+        TrajectorySequence parkingSpot3 = drive.trajectorySequenceBuilder(polePosition.end())
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(33, -12, Math.toRadians(180)), Math.toRadians(90))
                 .forward(-22)
@@ -93,7 +103,8 @@ public class AutonomousOP extends LinearOpMode {
             }
         }
 
-        drive.followTrajectorySequence(cyclePosition);
+        drive.followTrajectorySequence(loadFromStartPosition);
+        drive.followTrajectorySequence(polePosition);
 
         drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
         drive.intake.groundIntake(0);
@@ -106,30 +117,18 @@ public class AutonomousOP extends LinearOpMode {
 
         drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
-//        drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
-//        drive.intake.groundIntake(0);
-//
-//        while (true) {
-//            if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 10 &&
-//                    drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 10)
-//                break;
-//        }
+        drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
+        drive.intake.groundIntake(0);
 
-//        drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
-
-        while (opModeIsActive()) {
-            if (drive.macroManager.isFinished()) {
+        while (true) {
+            if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 10 &&
+                    drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 10)
                 break;
-            }
-
-            Pose2d poseEstimate = drive.getPoseEstimate();
-            telemetry.addData("finalX", poseEstimate.getX());
-            telemetry.addData("finalY", poseEstimate.getY());
-            telemetry.addData("finalHeading", poseEstimate.getHeading());
-            telemetry.update();
-
-            drive.macroManager.startScoring();
         }
+
+        drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
+
+        drive.followTrajectorySequence(loadPosition);
 
         drive.intake.rotatedHangingIntake();
         drive.lift.verticalLiftEncoder.setTargetPosition(0);

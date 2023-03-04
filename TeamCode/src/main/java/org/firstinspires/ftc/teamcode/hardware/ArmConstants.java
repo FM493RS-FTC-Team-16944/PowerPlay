@@ -41,10 +41,10 @@ public class ArmConstants {
     public static double ONE_EIGHTY_ROTATOR_POSITION = 0.915; //changed to 0.39 for a 5 turn servo (old rev one was 0.95)
 
     public static int NEUTRAL_VERTICAL_LIFT_POSITION = 0;
-    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2220;
-    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1350;
+    public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2380;
+    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1400;
 
-    public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 520;
+    public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 570;
 
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 2020; //2394
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE = 1880; //2186
