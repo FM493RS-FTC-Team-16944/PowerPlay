@@ -26,6 +26,12 @@ public class TestTeleOp extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             this.telemetry.addData("Horizontal Limit Switched Pressed: ", drive.lift.horizontalLimitSwitch.isPressed());
             this.telemetry.addData("Vertical Limit Switched Pressed: ", drive.lift.verticalLimitSwitch.isPressed());
+            this.telemetry.addData("vertical lift position", drive.lift.getVerticalLiftPosition());
+            this.telemetry.addData("horizontal slide position", drive.lift.getHorizontalSlidePosition());
+            this.telemetry.addData(" x axis", drive.imu.getAngularOrientation().firstAngle);
+            this.telemetry.addData(" y axis", drive.imu.getAngularOrientation().secondAngle);
+            this.telemetry.addData(" z axis", drive.imu.getAngularOrientation().thirdAngle);
+
             gamePad.updateRobot();
 
             telemetry.update();

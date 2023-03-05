@@ -42,9 +42,13 @@ public class ArmConstants {
 
     public static int NEUTRAL_VERTICAL_LIFT_POSITION = 0;
     public static int HIGH_SCORE_VERTICAL_LIFT_POSITION = 2230;
-    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1400;
+    public static int MEDIUM_SCORE_VERTICAL_LIFT_POSITION = 1350;
+
+    public static int RANGE_OF_UNSAFE_VERTICAL_LIFT = 500;
 
     public static int LOW_SCORE_VERTICAL_LIFT_POSITION = 570;
+
+    public static double TILT_THRESHOLD = Math.toRadians(5);
 
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_FIRST_CONE = 1750; //2394
     public static int HORIZONTAL_SLIDE_AUTON_POSITION_SECOND_CONE = 1650; //2186

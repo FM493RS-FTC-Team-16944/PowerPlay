@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.operations;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.RANGE_OF_UNSAFE_VERTICAL_LIFT;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.TILT_THRESHOLD;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -107,6 +110,8 @@ public class OneConeAutonomousOP extends LinearOpMode {
         drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
         drive.intake.groundIntake(0);
 
+        boolean tipping = false;
+
         while (true) {
             if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 6 &&
                     drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 6)
@@ -115,16 +120,16 @@ public class OneConeAutonomousOP extends LinearOpMode {
 
         drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
-        drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
-        drive.intake.groundIntake(0);
-
         while (true) {
-            if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 10 &&
-                    drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 10)
+            if (Math.abs(drive.imu.getAngularOrientation().secondAngle) > TILT_THRESHOLD ||
+                    Math.abs(drive.imu.getAngularOrientation().thirdAngle) > TILT_THRESHOLD) {
+                this.drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
+                tipping = true;
                 break;
+            } else if (drive.lift.getVerticalLiftPosition() < ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - RANGE_OF_UNSAFE_VERTICAL_LIFT) {
+                break;
+            }
         }
-
-        drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
         drive.followTrajectorySequence(loadPosition);
 
@@ -132,6 +137,7 @@ public class OneConeAutonomousOP extends LinearOpMode {
         drive.lift.verticalLiftEncoder.setTargetPosition(0);
         drive.lift.horizontalSlide.setTargetPosition(0);
         drive.followTrajectorySequence(parkingSpots[destinationIndex]);
+        drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
         PoseStorage.currentPos = drive.getPoseEstimate();
     }

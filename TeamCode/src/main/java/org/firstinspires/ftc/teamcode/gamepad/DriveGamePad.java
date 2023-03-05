@@ -3,11 +3,16 @@ package org.firstinspires.ftc.teamcode.gamepad;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.MEDIUM_SCORE_VERTICAL_LIFT_POSITION;
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.OPEN_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.RANGE_OF_UNSAFE_VERTICAL_LIFT;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.TILT_THRESHOLD;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.operations.AutonomousOP;
+import org.firstinspires.ftc.teamcode.operations.AutonomousOPLeft;
 
 public class DriveGamePad {
     private final MecanumDrive robot;
@@ -215,6 +220,7 @@ public class DriveGamePad {
                 highPole = false;
             } else {
                 this.robot.lift.setVerticalLift(0);
+
                 highPole = false;
                 mediumPole = false;
             }

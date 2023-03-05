@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.models;
 
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 
 public class NewSafeLoadScoreMacro implements Runnable {
@@ -62,6 +64,7 @@ public class NewSafeLoadScoreMacro implements Runnable {
         }
 
         this.transferRunnable.start();
+        ElapsedTime timer = new ElapsedTime();
 
 //        if (state.horizontalPos > 1200) {
 //            while (true) {
@@ -76,6 +79,9 @@ public class NewSafeLoadScoreMacro implements Runnable {
             if (robot.lift.horizontalSlide.getCurrentPosition() <= 10 &&
                     robot.lift.horizontalSlide.getCurrentPosition() >= -10)
                 break;
+            else if (timer.seconds() > 1.5) {
+                break;
+            }
         }
 
         while (true) {

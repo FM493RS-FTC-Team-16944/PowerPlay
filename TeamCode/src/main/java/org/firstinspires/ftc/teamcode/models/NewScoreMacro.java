@@ -1,9 +1,15 @@
 package org.firstinspires.ftc.teamcode.models;
 
 import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.CLOSE_CLAW_POSITION;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.RANGE_OF_UNSAFE_VERTICAL_LIFT;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.TILT_THRESHOLD;
+
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.operations.AutonomousOP;
+import org.firstinspires.ftc.teamcode.operations.AutonomousOPLeft;
 
 public class NewScoreMacro implements Runnable {
     private final GrabPosition state;
@@ -62,6 +68,7 @@ public class NewScoreMacro implements Runnable {
         }
 
         this.transferRunnable.start();
+        ElapsedTime timer = new ElapsedTime();
 
 //        if (state.horizontalPos > 1200) {
 //            while (true) {
@@ -72,10 +79,14 @@ public class NewScoreMacro implements Runnable {
 //            robot.lift.deactivateSlideSupport();
 //        }
 
+
         while (true) {
             if (robot.lift.horizontalSlide.getCurrentPosition() <= 10 &&
                     robot.lift.horizontalSlide.getCurrentPosition() >= -10)
                 break;
+            else if (timer.seconds() > 1.5) {
+                break;
+            }
         }
 
         while (true) {
@@ -106,7 +117,7 @@ public class NewScoreMacro implements Runnable {
         this.robot.intake.openClaw();
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(150);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -152,11 +163,17 @@ public class NewScoreMacro implements Runnable {
 
         this.robot.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
-//        while (true) {
-//            if (robot.lift.getVerticalLiftPosition() <= NEUTRAL_VERTICAL_LIFT_POSITION + 6 &&
-//                    robot.lift.getVerticalLiftPosition() >= NEUTRAL_VERTICAL_LIFT_POSITION - 6)
-//                break;
-//        }
+        while (true) {
+            if (Math.abs(this.robot.imu.getAngularOrientation().secondAngle) > TILT_THRESHOLD ||
+                    Math.abs(this.robot.imu.getAngularOrientation().thirdAngle) > TILT_THRESHOLD) {
+                this.robot.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
+                AutonomousOP.tipping = true;
+                AutonomousOPLeft.tipping = true;
+                break;
+            } else if (this.robot.lift.getVerticalLiftPosition() < ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - RANGE_OF_UNSAFE_VERTICAL_LIFT) {
+                break;
+            }
+        }
 
         this.finished = true;
         this.robot.macroMode = false;

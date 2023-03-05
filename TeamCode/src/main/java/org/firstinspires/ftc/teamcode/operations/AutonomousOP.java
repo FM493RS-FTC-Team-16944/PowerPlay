@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.operations;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.RANGE_OF_UNSAFE_VERTICAL_LIFT;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.TILT_THRESHOLD;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -7,6 +10,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
@@ -19,6 +23,8 @@ import org.openftc.apriltag.AprilTagDetection;
 @Config
 public class AutonomousOP extends LinearOpMode {
     private MecanumDrive drive;
+
+    public static boolean tipping = false;
 
     @Override
     public void runOpMode() {
@@ -42,7 +48,7 @@ public class AutonomousOP extends LinearOpMode {
                 .splineTo(new Vector2d(35, -45), Math.toRadians(90))
                 .lineToSplineHeading(new Pose2d(35, -23, Math.toRadians(164)))
                 // .splineToSplineHeading(new Pose2d(39, -10, Math.toRadians(165.95)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(33.46, -5.04), Math.toRadians(100))
+                .splineToConstantHeading(new Vector2d(32.96, -4.04), Math.toRadians(100))
                 .build();
 
         TrajectorySequence parkingSpot1 = drive.trajectorySequenceBuilder(cyclePosition.end())
@@ -68,8 +74,6 @@ public class AutonomousOP extends LinearOpMode {
         drive.odometry.lowerOdometry();
 
         waitForStart();
-
-
 
         drive.intake.rotatedHangingIntake();
         drive.intake.openClaw();
@@ -98,6 +102,8 @@ public class AutonomousOP extends LinearOpMode {
         drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
         drive.intake.groundIntake(0);
 
+        sleep(500);
+
         while (true) {
             if (drive.lift.getVerticalLiftPosition() <= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION + 6 &&
                     drive.lift.getVerticalLiftPosition() >= ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - 6)
@@ -106,7 +112,19 @@ public class AutonomousOP extends LinearOpMode {
 
         drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
-        while (opModeIsActive()) {
+        while (true) {
+            if (Math.abs(drive.imu.getAngularOrientation().secondAngle) > TILT_THRESHOLD ||
+                    Math.abs(drive.imu.getAngularOrientation().thirdAngle) > TILT_THRESHOLD) {
+                this.drive.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
+                AutonomousOP.tipping = true;
+                break;
+            } else if (drive.lift.getVerticalLiftPosition() < ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - RANGE_OF_UNSAFE_VERTICAL_LIFT) {
+                break;
+            }
+        }
+
+        this.drive.setMotorPowers(0, 0,0, 0);
+        while (opModeIsActive() && !AutonomousOP.tipping) {
             if (drive.macroManager.isFinished()) {
                 break;
             }
@@ -124,6 +142,8 @@ public class AutonomousOP extends LinearOpMode {
         drive.lift.verticalLiftEncoder.setTargetPosition(0);
         drive.lift.horizontalSlide.setTargetPosition(0);
         drive.followTrajectorySequence(parkingSpots[destinationIndex]);
+
+        drive.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
         PoseStorage.currentPos = drive.getPoseEstimate();
     }

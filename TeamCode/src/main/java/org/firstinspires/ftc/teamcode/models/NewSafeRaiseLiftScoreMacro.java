@@ -1,7 +1,12 @@
 package org.firstinspires.ftc.teamcode.models;
 
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.RANGE_OF_UNSAFE_VERTICAL_LIFT;
+import static org.firstinspires.ftc.teamcode.hardware.ArmConstants.TILT_THRESHOLD;
+
 import org.firstinspires.ftc.teamcode.hardware.ArmConstants;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.operations.AutonomousOP;
+import org.firstinspires.ftc.teamcode.operations.AutonomousOPLeft;
 
 public class NewSafeRaiseLiftScoreMacro implements Runnable {
     private final GrabPosition state;
@@ -53,11 +58,16 @@ public class NewSafeRaiseLiftScoreMacro implements Runnable {
 
         this.robot.lift.setVerticalLift(ArmConstants.NEUTRAL_VERTICAL_LIFT_POSITION);
 
-//        while (true) {
-//            if (robot.lift.getVerticalLiftPosition() <= NEUTRAL_VERTICAL_LIFT_POSITION + 6 &&
-//                    robot.lift.getVerticalLiftPosition() >= NEUTRAL_VERTICAL_LIFT_POSITION - 6)
-//                break;
-//        }
-
+        while (true) {
+            if (Math.abs(this.robot.imu.getAngularOrientation().secondAngle) > TILT_THRESHOLD ||
+                    Math.abs(this.robot.imu.getAngularOrientation().thirdAngle) > TILT_THRESHOLD) {
+                this.robot.lift.setVerticalLift(ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION);
+                AutonomousOP.tipping = true;
+                AutonomousOPLeft.tipping = true;
+                break;
+            } else if (this.robot.lift.getVerticalLiftPosition() < ArmConstants.HIGH_SCORE_VERTICAL_LIFT_POSITION - RANGE_OF_UNSAFE_VERTICAL_LIFT) {
+                break;
+            }
+        }
     }
 }
